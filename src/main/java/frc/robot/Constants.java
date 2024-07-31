@@ -25,7 +25,6 @@ import edu.wpi.first.units.Velocity;
 import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.a.TunableNumber;
-import edu.wpi.first.wpilibj.smartdashboard.*;
 
 public class Constants {
 	public static final boolean TUNING = true;
@@ -33,7 +32,7 @@ public class Constants {
 
 	public class RobotConstants {
 
-		public static String CAN_BUS_NAME = "6941CANivore1";
+		public static String CAN_BUS_NAME = "rio";
 
 		public static final CommandXboxController driverController = new CommandXboxController(0);
 
@@ -43,7 +42,7 @@ public class Constants {
 
 	public class SwerveDrivetrian {
 
-		public static final int PIGEON_ID = 1;
+		public static final int PIGEON_ID = 14;
 
 		public static final SwerveDrivetrainConstants DrivetrainConstants = new SwerveDrivetrainConstants()
 				.withCANbusName(RobotConstants.CAN_BUS_NAME)
@@ -51,7 +50,7 @@ public class Constants {
 				.withPigeon2Configs(null); // optional
 
 		/** The max speed of the swerve (should not larger than speedAt12Volts) */
-		public static final Measure<Velocity<Distance>> maxSpeed = MetersPerSecond.of(6);
+		public static final Measure<Velocity<Distance>> maxSpeed = MetersPerSecond.of(3);
 		/** The max turning speed of the swerve */
 		public static final Measure<Velocity<Angle>> maxAngularRate = RotationsPerSecond.of(1.5 * Math.PI);
 
@@ -158,34 +157,34 @@ public class Constants {
 				.withSteerMotorInverted(STEER_MOTOR_REVERSED);
 
 		// Front Left
-		private static final int FRONT_LEFT_DRIVE_MOTOR_ID = 15;
-		private static final int FRONT_LEFT_STEER_MOTOR_ID = 14;
-		private static final int FRONT_LEFT_ENCODER_ID = 20;
-		private static final double FRONT_LEFT_ENCODER_OFFSET = 0.053734;// 0.052955;//0.127686//0.5329550781
+		private static final int FRONT_LEFT_DRIVE_MOTOR_ID = 13;
+		private static final int FRONT_LEFT_STEER_MOTOR_ID = 4;
+		private static final int FRONT_LEFT_ENCODER_ID = 8;
+		private static final double FRONT_LEFT_ENCODER_OFFSET = -0.60466015625;// 0.052955;//0.127686//0.5329550781
 		private static final Measure<Distance> frontLeftXPos = Meters.of(0.5);
 		private static final Measure<Distance> frontLeftYPos = Meters.of(0.5);
 
 		// Front Right
-		private static final int FRONT_RIGHT_DRIVE_MOTOR_ID = 2;
-		private static final int FRONT_RIGHT_STEER_MOTOR_ID = 7;
-		private static final int FRONT_RIGHT_ENCODER_ID = 21;
-		private static final double FRONT_RIGHT_ENCODER_OFFSET = 0.127441;// 0.125685;//0.13623046875//0.117686//0.046875
+		private static final int FRONT_RIGHT_DRIVE_MOTOR_ID = 1;
+		private static final int FRONT_RIGHT_STEER_MOTOR_ID = 5;
+		private static final int FRONT_RIGHT_ENCODER_ID = 9;
+		private static final double FRONT_RIGHT_ENCODER_OFFSET = 0.309041015625;// 0.125685;//0.13623046875//0.117686//0.046875
 		private static final Measure<Distance> frontRightXPos = Meters.of(0.5);
 		private static final Measure<Distance> frontRightYPos = Meters.of(-0.5);
 
 		// Back Left
-		private static final int BACK_LEFT_DRIVE_MOTOR_ID = 5;
-		private static final int BACK_LEFT_STEER_MOTOR_ID = 3;
-		private static final int BACK_LEFT_ENCODER_ID = 9;
-		private static final double BACK_LEFT_ENCODER_OFFSET = 0.775681;// 0.773925;//-0.223//0.401611//0.77392578125
+		private static final int BACK_LEFT_DRIVE_MOTOR_ID = 2;
+		private static final int BACK_LEFT_STEER_MOTOR_ID = 6;
+		private static final int BACK_LEFT_ENCODER_ID = 10;
+		private static final double BACK_LEFT_ENCODER_OFFSET = 0.666462890625;// 0.773925;//-0.223//0.401611//0.77392578125
 		private static final Measure<Distance> backLeftXPos = Meters.of(-0.5);
 		private static final Measure<Distance> backLeftYPos = Meters.of(0.5);
 
 		// Back Right
-		private static final int BACK_RIGHT_DRIVE_MOTOR_ID = 10;
-		private static final int BACK_RIGHT_STEER_MOTOR_ID = 6;
-		private static final int BACK_RIGHT_ENCODER_ID = 12;
-		private static final double BACK_RIGHT_ENCODER_OFFSET = 0.434814;// 0.422119;//-0.5684550781//-0.064453//0.432279296875
+		private static final int BACK_RIGHT_DRIVE_MOTOR_ID = 3;
+		private static final int BACK_RIGHT_STEER_MOTOR_ID = 7;
+		private static final int BACK_RIGHT_ENCODER_ID = 11;
+		private static final double BACK_RIGHT_ENCODER_OFFSET = 0.257337890625;// 0.422119;//-0.5684550781//-0.064453//0.432279296875
 		private static final Measure<Distance> backRightXPos = Meters.of(-0.5);
 		private static final Measure<Distance> backRightYPos = Meters.of(-0.5);
 
