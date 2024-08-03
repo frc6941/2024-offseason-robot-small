@@ -39,13 +39,6 @@ public class Constants {
 		public static final CommandXboxController operatorController = new CommandXboxController(1);
 
 	}
-	
-	public static class IntakerConstants {
-        public static final int INTAKE_MOTOR_ID = 30;
-
-        public static final Measure<Voltage> intakeVoltage = Volts.of(5);
-    }
-
 
 	public class SwerveDrivetrian {
 
