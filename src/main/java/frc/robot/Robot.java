@@ -78,7 +78,10 @@ public class Robot extends TimedRobot {
 	}
 
 	@Override
-	public void teleopPeriodic() {
+	public void teleopPeriodic() 
+	{
+						SmartDashboard.putNumber("lt", Constants.RobotConstants.driverController.getLeftTriggerAxis());
+
 		// FL.updateSignals();
 		// FL.setDesiredState(new SwerveModuleState(
 		// 		driverController.getLeftY() * 3,
@@ -91,6 +94,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopExit() {
 		robotContainer.getUpdateManager().invokeStop();
+
 	}
 
 	@Override
@@ -99,7 +103,9 @@ public class Robot extends TimedRobot {
 	}
 
 	@Override
-	public void testPeriodic() {}
+	public void testPeriodic() {
+
+	}
 
 	@Override
 	public void testExit() {}
