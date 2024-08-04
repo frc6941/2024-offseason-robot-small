@@ -6,13 +6,14 @@ import frc.robot.subsystems.intaker.intaker;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class shootercommand extends Command {
+/** An example command that uses an example subsystem. */
+public class shooteramp extends Command {
     private shooter shooter;
     private double Voltage;
     private intaker intaker;
-    private boolean flag;
+    // private BeamBreak intakerBeamBreak = new BeamBreak(3);
 
-    public shootercommand(shooter shooter, intaker intaker, double Voltage) {
+    public shooteramp(shooter shooter, intaker intaker, double Voltage) {
         this.shooter = shooter;
         this.Voltage = Voltage;
         this.intaker = intaker;
@@ -21,20 +22,8 @@ public class shootercommand extends Command {
 
     @Override
     public void execute() {
-        if (flag) {
-            shooter.setshooter(Voltage);
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            intaker.setintaker(1.0);
-            flag = false;
-        } else if (!flag) {
-            flag = true;
-            shooter.setshooter(0);
-            intaker.setintaker(0);
-        }
+        intaker.setintaker(1.0);
+        shooter.setshooter(Voltage);
     }
 
     @Override

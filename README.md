@@ -19,3 +19,25 @@
 [Localhost](http://limelight.local:5801/)
 
 [Limelight](https://docs.limelightvision.io/docs/docs-limelight/getting-started/programming)
+
+
+# 功能
+
+## intake
+
+- 按下按钮开始吸球，直到beam break检测到，加个震动提示 RB
+- 按下按钮停止（可选）RB
+- 反转 RT
+
+## shooter
+
+- 按键发射
+  - amp X
+  - speaker LB
+- 自瞄 LT
+
+## swerve
+
+- 按键旋转
+- lockheading true false A B
+- field oriented start button
