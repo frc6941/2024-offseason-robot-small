@@ -4,20 +4,40 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.commands.ControllerDriveCommand;
-import frc.robot.subsystems.swerve.Swerve;
-import lombok.Getter;
+import frc.robot.drivers.BeamBreak;
+import org.frcteam6941.drivers.Gyro;
 import org.frcteam6941.looper.UpdateManager;
 
+import com.ctre.phoenix6.hardware.Pigeon2;
+import com.team254.lib.geometry.Rotation2d;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import static edu.wpi.first.units.Units.Seconds;
+import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.commands.intakercommand;
+import frc.robot.commands.intakerout;
+import frc.robot.commands.shootercommand;
+import frc.robot.commands.shooteramp;
+import frc.robot.commands.rumblecommand;
+import frc.robot.subsystems.intaker.intaker;
+import frc.robot.subsystems.shooter.shooter;
+import lombok.Getter;
+
+import org.frcteam6941.drivers.Pigeon2Gyro;
+
 public class RobotContainer {
-	Swerve swerve = Swerve.getInstance();
-	CommandXboxController driverController = new CommandXboxController(0);
-	@Getter
+    private BeamBreak intakerBeamBreak = new BeamBreak(3);
+    Swerve swerve = Swerve.getInstance();
+    intaker intaker = new intaker(Constants.IntakerConstants.INTAKE_MOTOR_ID, Constants.RobotConstants.CAN_BUS_NAME);
+    shooter shooter = new shooter(Constants.ShooterConstants.SHOOTER_MOTORH_ID,
+            Constants.ShooterConstants.SHOOTER_MOTORL_ID, Constants.RobotConstants.CAN_BUS_NAME);
+    int cnt = 0;
+
+    @Getter
     private UpdateManager updateManager;
 
     public RobotContainer() {
@@ -28,63 +48,57 @@ public class RobotContainer {
         System.out.println("Init Completed!");
     }
 
-    /**
-     * Bind controller keys to commands
-     */
+    /** Bind controller keys to commands */
     private void configureBindings() {
-        //Drive mode 1
+        // Drive mode 1
+        swerve.setDefaultCommand(Commands
+                .runOnce(() -> swerve.drive(
+                        new Translation2d(
+                                -Constants.RobotConstants.driverController.getLeftY()
+                                        * Constants.SwerveDrivetrian.maxSpeed.magnitude(),
+                                -Constants.RobotConstants.driverController.getLeftX()
+                                        * Constants.SwerveDrivetrian.maxSpeed.magnitude()),
+                        -Constants.RobotConstants.driverController.getRightX()
+                                * Constants.SwerveDrivetrian.maxAngularRate.magnitude(),
+                        true,
+                        false),
+                        swerve));
+
+        // Drive mode 2
         // swerve.setDefaultCommand(Commands
-        //         .runOnce(() -> swerve.drive(
-        //                         new Translation2d(
-        //                                 -driverController.getLeftY() * Constants.SwerveDrivetrain.maxSpeed.magnitude(),
-        //                                 -driverController.getLeftX() * Constants.SwerveDrivetrain.maxSpeed.magnitude()),
-        //                         -Constants.RobotConstants.driverController.getRightX() * Constants.SwerveDrivetrain.maxAngularRate.magnitude(),
-        //                         true,
-        //                         false),
-        //                 swerve));
-        //Drive mode 2
-        // swerve.setDefaultCommand(Commands
-        // 		.runOnce(() -> swerve.drive(
-        // 				new Translation2d(
-        // 						- driverController.getLeftY()*Constants.SwerveDrivetrian.maxSpeed.magnitude(),
-        // 						- driverController.getRightX()*Constants.SwerveDrivetrian.maxSpeed.magnitude()),
-        // 				(-Constants.RobotConstants.driverController.getRightTriggerAxis()
-        // 						+ Constants.RobotConstants.driverController.getLeftTriggerAxis())
-        // 						* Constants.SwerveDrivetrian.maxAngularRate.magnitude(),
-        // 				true,
-        // 				false),
-		// 				swerve));
-		//Drive test 1
-		swerve.setDefaultCommand(new ControllerDriveCommand(swerve,
-				() -> -driverController.getLeftY(),
-				() -> -driverController.getLeftX(),
-				() -> -driverController.getRightX()));
-        //Point Wheel
-        // swerve.setDefaultCommand(Commands.runOnce(() -> swerve.pointWheelsAt(
-        // 		new edu.wpi.first.math.geometry.Rotation2d(
-        // 				driverController.getLeftX()*Math.PI/2)),
-        // 		swerve));
-        //field relative heading
-        // driverController.a().
-        driverController.a().onTrue(Commands.runOnce(() -> {
-            swerve.setLockHeading(true);
-            swerve.setHeadingTarget(0.0);
-        }, swerve));
-        driverController.b().onTrue(Commands.runOnce(() -> swerve.setLockHeading(false), swerve));
-        driverController.start().onTrue(Commands.runOnce(() -> {
-			swerve.resetHeadingController();
-			ControllerDriveCommand.facingAngle = 0.0;
-            //Pigeon2 mPigeon2 = new Pigeon2(Constants.SwerveDrivetrian.PIGEON_ID, Constants.RobotConstants.CAN_BUS_NAME);
-            edu.wpi.first.math.geometry.Rotation2d a = swerve.getLocalizer().getLatestPose().getRotation();//new edu.wpi.first.math.geometry.Rotation2d(mPigeon2.getYaw().getValueAsDouble());
-            //swerve.getGyro().getYaw().;//.getLocalizer().getLatestPose().getRotation();
+        // .runOnce(() -> swerve.drive(
+        // new Translation2d(
+        // -
+        // Constants.RobotConstants.driverController.getLeftY()*Constants.SwerveDrivetrian.maxSpeed.magnitude(),
+        // -
+        // Constants.RobotConstants.driverController.getRightX()*Constants.SwerveDrivetrian.maxSpeed.magnitude()),
+        // (-Constants.RobotConstants.driverController.getRightTriggerAxis()
+        // + Constants.RobotConstants.driverController.getLeftTriggerAxis())
+        // * Constants.SwerveDrivetrian.maxAngularRate.magnitude(),
+        // true,
+        // true),
+        // swerve));
+        // }
+
+        // 1111111111111111
+        Constants.RobotConstants.driverController.start().onTrue(Commands.runOnce(() -> {
+            edu.wpi.first.math.geometry.Rotation2d a = swerve.getLocalizer().getLatestPose().getRotation();
             System.out.println("A = " + a);
             Pose2d b = new Pose2d(new Translation2d(0, 0), a);
             swerve.resetPose(b);
         }));
+        Constants.RobotConstants.driverController.rightBumper().onTrue(
+                Commands.sequence(
+                        Commands.parallel(
+                                new rumblecommand(Seconds.of(0.5), Constants.RobotConstants.driverController.getHID()),
+                                new intakercommand(intaker, shooter, 0.6, intakerBeamBreak)),
+                        new rumblecommand(Seconds.of(1), Constants.RobotConstants.driverController.getHID())));
+        Constants.RobotConstants.driverController.leftBumper().whileTrue(new shootercommand(shooter, intaker, 0.95));
+        Constants.RobotConstants.driverController.b().whileTrue(new intakerout(intaker));
+        Constants.RobotConstants.driverController.y().whileTrue(new shooteramp(shooter, intaker, 0.25));
     }
 
     public Command getAutonomousCommand() {
-        //return new CharacterizationDriveCommand(swerve, 3, 1.5, 6);
         return Commands.print("No autonomous command configured");
     }
 }
