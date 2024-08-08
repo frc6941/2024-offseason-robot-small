@@ -9,7 +9,6 @@ public class shootercommand extends Command {
     private shooter shooter;
     private double Voltage;
     private intaker intaker;
-    private boolean flag;
 
     public shootercommand(shooter shooter, intaker intaker, double Voltage) {
         this.shooter = shooter;
@@ -27,7 +26,6 @@ public class shootercommand extends Command {
             e.printStackTrace();
         }
         intaker.setintaker(1.0);
-        flag = false;
     }
 
     @Override

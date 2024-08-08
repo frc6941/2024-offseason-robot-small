@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -10,7 +6,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 public class Robot extends TimedRobot {
-    // public static Timer timer;
     private Command m_autonomousCommand;
 
     private RobotContainer robotContainer;
@@ -19,13 +14,11 @@ public class Robot extends TimedRobot {
     public void robotInit() {
         robotContainer = new RobotContainer();
         DriverStation.silenceJoystickConnectionWarning(true);
-        // //robotContainer.getUpdateManager().startEnableLoop(Constants.LOOPER_DT);
 
     }
 
     @Override
     public void robotPeriodic() {
-        // timer.UpdateTimer();
         CommandScheduler.getInstance().run();
         robotContainer.getUpdateManager().runEnableSingle();
     }
@@ -72,14 +65,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
-
-        // FL.updateSignals();
-        // FL.setDesiredState(new SwerveModuleState(
-        // driverController.getLeftY() * 3,
-        // new Rotation2d(driverController.getRightX() * 2 * Math.PI)),
-        // true,
-        // false);
-        // System.out.println(Swerve.getInstance().getLocalizer().getLatestPose().getRotation());
+        
     }
 
     @Override
