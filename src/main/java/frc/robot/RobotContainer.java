@@ -81,7 +81,7 @@ public class RobotContainer {
                                 new intakercommand(intaker, shooter, 0.6, intakerBeamBreak)),
                         new rumblecommand(Seconds.of(1), Constants.RobotConstants.driverController.getHID())));
         Constants.RobotConstants.driverController.leftBumper().whileTrue(new shootercommand(shooter, intaker, 0.95));
-        Constants.RobotConstants.driverController.b().whileTrue(new intakerout(intaker));
+        Constants.RobotConstants.driverController.b().whileTrue(new intakerout(intaker, shooter));
         Constants.RobotConstants.driverController.y().whileTrue(new shooteramp(shooter, intaker, 0.25));
     }
 
