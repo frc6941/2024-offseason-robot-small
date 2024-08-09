@@ -1,9 +1,19 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
 package frc.robot;
 
 import frc.robot.drivers.BeamBreak;
+import org.frcteam6941.drivers.Gyro;
 import org.frcteam6941.looper.UpdateManager;
+
+import com.ctre.phoenix6.hardware.Pigeon2;
+import com.team254.lib.geometry.Rotation2d;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import static edu.wpi.first.units.Units.Seconds;
@@ -16,6 +26,8 @@ import frc.robot.commands.rumblecommand;
 import frc.robot.subsystems.intaker.intaker;
 import frc.robot.subsystems.shooter.shooter;
 import lombok.Getter;
+
+import org.frcteam6941.drivers.Pigeon2Gyro;
 
 public class RobotContainer {
     private BeamBreak intakerBeamBreak = new BeamBreak(3);
@@ -68,6 +80,7 @@ public class RobotContainer {
         // swerve));
         // }
 
+        // 1111111111111111
         Constants.RobotConstants.driverController.start().onTrue(Commands.runOnce(() -> {
             edu.wpi.first.math.geometry.Rotation2d a = swerve.getLocalizer().getLatestPose().getRotation();
             System.out.println("A = " + a);
@@ -80,12 +93,13 @@ public class RobotContainer {
                                 new rumblecommand(Seconds.of(0.5), Constants.RobotConstants.driverController.getHID()),
                                 new intakercommand(intaker, shooter, 0.6, intakerBeamBreak)),
                         new rumblecommand(Seconds.of(1), Constants.RobotConstants.driverController.getHID())));
-        Constants.RobotConstants.driverController.leftBumper().whileTrue(new shootercommand(shooter, intaker, 0.95));
-        Constants.RobotConstants.driverController.b().whileTrue(new intakerout(intaker, shooter));
-        Constants.RobotConstants.driverController.y().whileTrue(new shooteramp(shooter, intaker, 0.25));
+        Constants.RobotConstants.driverController.leftBumper().whileTrue(new shootercommand(shooter, intaker, 0.95 , 0.95));
+        Constants.RobotConstants.driverController.b().whileTrue(new intakerout(intaker,shooter));
+        Constants.RobotConstants.driverController.y().whileTrue(new shooteramp(shooter, intaker, 0.25 , 0.25));
     }
 
     public Command getAutonomousCommand() {
         return Commands.print("No autonomous command configured");
     }
 }
+
