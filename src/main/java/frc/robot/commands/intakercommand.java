@@ -1,32 +1,32 @@
 package frc.robot.commands;
 
+import frc.robot.Constants;
 import frc.robot.drivers.BeamBreak;
 import frc.robot.subsystems.intaker.*;
 import frc.robot.subsystems.shooter.*;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
 public class intakercommand extends Command {
 
     private final intaker intaker;
-    private final double Voltage;
     private final shooter shooter;
-    private final BeamBreak intakerbeambreak;
+    private final BeamBreak intakerbeambreakH;
+    private final BeamBreak intakerbeambreakL;
 
-    public intakercommand(intaker intaker, shooter shooter, double Voltage, BeamBreak intakerbeambreak) {
+    public intakercommand(intaker intaker, shooter shooter, BeamBreak intakerbeambreakH , BeamBreak intakerbeambreakL) {
         this.intaker = intaker;
-        this.Voltage = Voltage;
         this.shooter = shooter;
-        this.intakerbeambreak = intakerbeambreak;
+        this.intakerbeambreakH = intakerbeambreakH;
+        this.intakerbeambreakL = intakerbeambreakL;
         addRequirements(intaker, shooter);
     }
 
     @Override
     public void execute() {
-        intaker.setintaker(Voltage);
-        shooter.setshooter(0.5 , 0.5);
+        intaker.setintaker(Constants.IntakerConstants.INTAKER_IN_SPEED);
+        shooter.setshooter(Constants.ShooterConstants.SHOOTER_IDLE_SPEED, Constants.ShooterConstants.SHOOTER_IDLE_SPEED);
     }
 
     @Override
@@ -36,9 +36,7 @@ public class intakercommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return intakerbeambreak.get();
-        
-            
+        return (intakerbeambreakH.get() || intakerbeambreakL.get());
     }
 }
 

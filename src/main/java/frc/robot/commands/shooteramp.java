@@ -1,31 +1,31 @@
 package frc.robot.commands;
 
+import frc.robot.Constants;
 import frc.robot.subsystems.shooter.shooter;
 import frc.robot.subsystems.intaker.intaker;
 // import frc.robot.drivers.BeamBreak;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-/** An example command that uses an example subsystem. */
 public class shooteramp extends Command {
     private shooter shooter;
-    private double VoltageL;
-    private double VoltageH;
     private intaker intaker;
-    // private BeamBreak intakerBeamBreak = new BeamBreak(3);
 
-    public shooteramp(shooter shooter, intaker intaker, double VoltageL, double VoltageH) {
+    public shooteramp(shooter shooter, intaker intaker) {
         this.shooter = shooter;
-        this.VoltageL = VoltageL;
-        this.VoltageH = VoltageH;
         this.intaker = intaker;
         addRequirements(shooter, intaker);
     }
 
     @Override
     public void execute() {
-        intaker.setintaker(1.0);
-        shooter.setshooter(VoltageL , VoltageH);
+        shooter.setshooter(Constants.ShooterConstants.SHOOTERL_AMP_SPEED,Constants.ShooterConstants.SHOOTERH_AMP_SPEED);
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        intaker.setintaker(Constants.IntakerConstants.INTAKER_SHOOT_SPEED);
     }
 
     @Override

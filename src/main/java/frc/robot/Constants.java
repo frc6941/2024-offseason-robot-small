@@ -43,16 +43,32 @@ public class Constants {
     public static class IntakerConstants {
         public static final int INTAKE_MOTOR_ID = 15;
 
-        public static final int INTAKER_BEAMBREAK_ID = 3;
+        public static final int INTAKER_BEAMBREAKH_ID = 3;
+        public static final int INTAKER_BEAMBREAKL_ID = 2;
 
-        public static final Measure<Voltage> intakeVoltage = Volts.of(5);
+        public static final double INTAKER_IN_SPEED = 0.5;
+        public static final double INTAKER_OUT_SPEED = -0.8;
+        public static final double INTAKER_SHOOT_SPEED = 1.0;
     }
 
     public static class ShooterConstants {
         public static final int SHOOTER_MOTORH_ID = 17;
-
         public static final int SHOOTER_MOTORL_ID = 16;
 
+        public static final double SHOOTERH_SPEAKER_SPEED = 0.98;
+        public static final double SHOOTERL_SPEAKER_SPEED = 0.94;
+
+        public static final double SHOOTERH_AMP_SPEED = 0.17;
+        public static final double SHOOTERL_AMP_SPEED = 0.25;
+
+        public static final double SHOOTER_OUT_SPEED = -0.8;
+
+        public static final double SHOOTER_IDLE_SPEED = 0.5;
+    }
+
+    public static class LedConstants {
+        public static final int LED_PORT = 0;
+        public static final int LED_BUFFER_LENGTH = 40;
     }
 
     public class SwerveDrivetrian {
@@ -98,10 +114,10 @@ public class Constants {
         public static class driveGainsClass {
             public static final TunableNumber DRIVE_KP = new TunableNumber("DRIVE PID/kp", 0.03);
             public static final TunableNumber DRIVE_KI = new TunableNumber("DRIVE PID/ki", 0);
-            public static final TunableNumber DRIVE_KD = new TunableNumber("DRIVE PID/kd", 0);
+            public static final TunableNumber DRIVE_KD = new TunableNumber("DRIVE PID/kd", 0.0001);
             public static final TunableNumber DRIVE_KA = new TunableNumber("DRIVE PID/ka", 0);
             public static final TunableNumber DRIVE_KV = new TunableNumber("DRIVE PID/kv", 0.12);
-            public static final TunableNumber DRIVE_KS = new TunableNumber("DRIVE PID/ks", 0);
+            public static final TunableNumber DRIVE_KS = new TunableNumber("DRIVE PID/ks", 0.14);
         }
 
         /** Swerve steering gains */
@@ -115,11 +131,11 @@ public class Constants {
 
         /** Swerve driving gains */
         private static final Slot0Configs driveGains = new Slot0Configs()
-                .withKP(1)// 0.3
+                .withKP(1)
                 .withKI(0)
                 .withKD(0)
                 .withKS(0)
-                .withKV(0.12)// 2//0.00001
+                .withKV(0.12)
                 .withKA(0);
 
         /**

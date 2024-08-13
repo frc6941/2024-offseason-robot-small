@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import frc.robot.Constants;
 import frc.robot.subsystems.intaker.*;
 import frc.robot.subsystems.shooter.*;
 
@@ -19,13 +20,14 @@ public class intakerout extends Command {
 
     @Override
     public void execute() {
-        intaker.setintaker(-0.7);
-        shooter.setshooter(0 , 0);
+        intaker.setintaker(Constants.IntakerConstants.INTAKER_OUT_SPEED);
+        shooter.setshooter(Constants.ShooterConstants.SHOOTER_OUT_SPEED, Constants.ShooterConstants.SHOOTER_OUT_SPEED);
     }
 
     @Override
     public void end(boolean interrupted) {
         intaker.setintaker(0);
+        shooter.setshooter(0,0);
     }
 
     

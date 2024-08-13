@@ -20,22 +20,27 @@ import static edu.wpi.first.units.Units.Seconds;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.commands.intakercommand;
 import frc.robot.commands.intakerout;
+import frc.robot.commands.ledcommand;
+// import frc.robot.commands.passcommand;
 import frc.robot.commands.shootercommand;
 import frc.robot.commands.shooteramp;
 import frc.robot.commands.rumblecommand;
 import frc.robot.subsystems.intaker.intaker;
 import frc.robot.subsystems.shooter.shooter;
+import frc.robot.subsystems.led.led;
 import lombok.Getter;
 
 import org.frcteam6941.drivers.Pigeon2Gyro;
 
 public class RobotContainer {
-    private BeamBreak intakerBeamBreak = new BeamBreak(3);
+    private BeamBreak intakerBeamBreakH = new BeamBreak(3);
+    private BeamBreak intakerBeamBreakL = new BeamBreak(2);
     Swerve swerve = Swerve.getInstance();
     intaker intaker = new intaker(Constants.IntakerConstants.INTAKE_MOTOR_ID, Constants.RobotConstants.CAN_BUS_NAME);
     shooter shooter = new shooter(Constants.ShooterConstants.SHOOTER_MOTORH_ID,
-            Constants.ShooterConstants.SHOOTER_MOTORL_ID, Constants.RobotConstants.CAN_BUS_NAME);
-    int cnt = 0;
+            Constants.ShooterConstants.SHOOTER_MOTORL_ID,
+            Constants.RobotConstants.CAN_BUS_NAME);
+    led led = new led();
 
     @Getter
     private UpdateManager updateManager;
@@ -81,25 +86,39 @@ public class RobotContainer {
         // }
 
         // 1111111111111111
-        Constants.RobotConstants.driverController.start().onTrue(Commands.runOnce(() -> {
-            edu.wpi.first.math.geometry.Rotation2d a = swerve.getLocalizer().getLatestPose().getRotation();
-            System.out.println("A = " + a);
-            Pose2d b = new Pose2d(new Translation2d(0, 0), a);
-            swerve.resetPose(b);
-        }));
+        Constants.RobotConstants.driverController.start().onTrue(
+                Commands.runOnce(() -> {
+                    edu.wpi.first.math.geometry.Rotation2d a = swerve.getLocalizer().getLatestPose().getRotation();
+                    System.out.println("A = " + a);
+                    Pose2d b = new Pose2d(new Translation2d(0, 0), a);
+                    swerve.resetPose(b);
+                }));
         Constants.RobotConstants.driverController.rightBumper().onTrue(
                 Commands.sequence(
                         Commands.parallel(
-                                new rumblecommand(Seconds.of(0.5), Constants.RobotConstants.driverController.getHID()),
-                                new intakercommand(intaker, shooter, 0.6, intakerBeamBreak)),
-                        new rumblecommand(Seconds.of(1), Constants.RobotConstants.driverController.getHID())));
-        Constants.RobotConstants.driverController.leftBumper().whileTrue(new shootercommand(shooter, intaker, 0.95 , 0.95));
-        Constants.RobotConstants.driverController.b().whileTrue(new intakerout(intaker,shooter));
-        Constants.RobotConstants.driverController.y().whileTrue(new shooteramp(shooter, intaker, 0.25 , 0.25));
+                                new ledcommand(led, 255, 0, 0),
+                                new intakercommand(intaker, shooter, intakerBeamBreakH, intakerBeamBreakL),
+                                new rumblecommand(Seconds.of(0.5),
+                                        Constants.RobotConstants.driverController.getHID())),
+                        Commands.parallel(
+                                new ledcommand(led, 0, 255, 0),
+                                new rumblecommand(Seconds.of(1),
+                                        Constants.RobotConstants.driverController.getHID()))));
+
+        Constants.RobotConstants.driverController.leftBumper().whileTrue(
+                Commands.parallel(
+                        new shootercommand(shooter, intaker),
+                        new ledcommand(led, 0, 0, 0)));
+
+        Constants.RobotConstants.driverController.b().whileTrue(new intakerout(intaker, shooter));
+
+        Constants.RobotConstants.driverController.y().whileTrue(
+                Commands.parallel(
+                        new shooteramp(shooter, intaker),
+                        new ledcommand(led, 0, 0, 0)));
     }
 
     public Command getAutonomousCommand() {
         return Commands.print("No autonomous command configured");
     }
 }
-
