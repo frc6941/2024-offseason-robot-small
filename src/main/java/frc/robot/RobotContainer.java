@@ -53,9 +53,7 @@ public class RobotContainer {
         System.out.println("Init Completed!");
     }
 
-    /** Bind controller keys to commands */
     private void configureBindings() {
-        // Drive mode 1
         swerve.setDefaultCommand(Commands
                 .runOnce(() -> swerve.drive(
                         new Translation2d(
@@ -69,23 +67,6 @@ public class RobotContainer {
                         false),
                         swerve));
 
-        // Drive mode 2
-        // swerve.setDefaultCommand(Commands
-        // .runOnce(() -> swerve.drive(
-        // new Translation2d(
-        // -
-        // Constants.RobotConstants.driverController.getLeftY()*Constants.SwerveDrivetrian.maxSpeed.magnitude(),
-        // -
-        // Constants.RobotConstants.driverController.getRightX()*Constants.SwerveDrivetrian.maxSpeed.magnitude()),
-        // (-Constants.RobotConstants.driverController.getRightTriggerAxis()
-        // + Constants.RobotConstants.driverController.getLeftTriggerAxis())
-        // * Constants.SwerveDrivetrian.maxAngularRate.magnitude(),
-        // true,
-        // true),
-        // swerve));
-        // }
-
-        // 1111111111111111
         Constants.RobotConstants.driverController.start().onTrue(
                 Commands.runOnce(() -> {
                     edu.wpi.first.math.geometry.Rotation2d a = swerve.getLocalizer().getLatestPose().getRotation();
@@ -93,6 +74,7 @@ public class RobotContainer {
                     Pose2d b = new Pose2d(new Translation2d(0, 0), a);
                     swerve.resetPose(b);
                 }));
+
         Constants.RobotConstants.driverController.rightBumper().onTrue(
                 Commands.sequence(
                         Commands.parallel(
@@ -110,7 +92,9 @@ public class RobotContainer {
                         new shootercommand(shooter, intaker),
                         new ledcommand(led, 0, 0, 0)));
 
-        Constants.RobotConstants.driverController.b().whileTrue(new intakerout(intaker, shooter));
+        Constants.RobotConstants.driverController.b().whileTrue(Commands.parallel(
+                new intakerout(intaker,shooter),
+                new ledcommand(led, 0, 0, 0)));
 
         Constants.RobotConstants.driverController.y().whileTrue(
                 Commands.parallel(

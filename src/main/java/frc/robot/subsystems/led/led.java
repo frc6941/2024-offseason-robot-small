@@ -3,6 +3,7 @@ package frc.robot.subsystems.led;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class led extends SubsystemBase {
 
@@ -10,8 +11,8 @@ public class led extends SubsystemBase {
     private AddressableLEDBuffer m_Buffer;
 
     public led() {
-        m_led = new AddressableLED(0);
-        m_Buffer = new AddressableLEDBuffer(40);
+        m_led = new AddressableLED(Constants.LedConstants.LED_PORT);
+        m_Buffer = new AddressableLEDBuffer(Constants.LedConstants.LED_BUFFER_LENGTH);
         m_led.setLength(m_Buffer.getLength());
         m_led.setData(m_Buffer);
         m_led.start();
