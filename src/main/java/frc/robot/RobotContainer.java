@@ -4,24 +4,20 @@
 
 package frc.robot;
 
+import frc.robot.commands.ledcommand.blinklight;
+import frc.robot.commands.ledcommand.constlight;
 import frc.robot.drivers.BeamBreak;
-import org.frcteam6941.drivers.Gyro;
 import org.frcteam6941.looper.UpdateManager;
-
-import com.ctre.phoenix6.hardware.Pigeon2;
-import com.team254.lib.geometry.Rotation2d;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import static edu.wpi.first.units.Units.Seconds;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.commands.intakercommand;
 import frc.robot.commands.intakerout;
-import frc.robot.commands.ledcommand;
-// import frc.robot.commands.passcommand;
+import frc.robot.commands.passcommand;
 import frc.robot.commands.shootercommand;
 import frc.robot.commands.shooteramp;
 import frc.robot.commands.rumblecommand;
@@ -29,8 +25,6 @@ import frc.robot.subsystems.intaker.intaker;
 import frc.robot.subsystems.shooter.shooter;
 import frc.robot.subsystems.led.led;
 import lombok.Getter;
-
-import org.frcteam6941.drivers.Pigeon2Gyro;
 
 public class RobotContainer {
     private BeamBreak intakerBeamBreakH = new BeamBreak(3);
@@ -54,6 +48,7 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
+        // swerve
         swerve.setDefaultCommand(Commands
                 .runOnce(() -> swerve.drive(
                         new Translation2d(
@@ -67,6 +62,7 @@ public class RobotContainer {
                         false),
                         swerve));
 
+        // reset
         Constants.RobotConstants.driverController.start().onTrue(
                 Commands.runOnce(() -> {
                     edu.wpi.first.math.geometry.Rotation2d a = swerve.getLocalizer().getLatestPose().getRotation();
@@ -75,31 +71,42 @@ public class RobotContainer {
                     swerve.resetPose(b);
                 }));
 
+        // intake
         Constants.RobotConstants.driverController.rightBumper().onTrue(
                 Commands.sequence(
                         Commands.parallel(
-                                new ledcommand(led, 255, 0, 0),
+                                new constlight(led, 255, 0, 0),
                                 new intakercommand(intaker, shooter, intakerBeamBreakH, intakerBeamBreakL),
                                 new rumblecommand(Seconds.of(0.5),
                                         Constants.RobotConstants.driverController.getHID())),
                         Commands.parallel(
-                                new ledcommand(led, 0, 255, 0),
                                 new rumblecommand(Seconds.of(1),
-                                        Constants.RobotConstants.driverController.getHID()))));
+                                        Constants.RobotConstants.driverController.getHID()),
+                                Commands.sequence(
+                                        new blinklight(led, Seconds.of(1), 0, 255, 0),
+                                        new constlight(led, 0, 255, 0)))));
 
+        // shoot speaker
         Constants.RobotConstants.driverController.leftBumper().whileTrue(
                 Commands.parallel(
                         new shootercommand(shooter, intaker),
-                        new ledcommand(led, 0, 0, 0)));
+                        new constlight(led, 0, 0, 0)));
 
+        // intake out
         Constants.RobotConstants.driverController.b().whileTrue(Commands.parallel(
-                new intakerout(intaker,shooter),
-                new ledcommand(led, 0, 0, 0)));
+                new intakerout(intaker, shooter),
+                new constlight(led, 0, 0, 0)));
 
+        // shoot amp
         Constants.RobotConstants.driverController.y().whileTrue(
                 Commands.parallel(
                         new shooteramp(shooter, intaker),
-                        new ledcommand(led, 0, 0, 0)));
+                        new constlight(led, 0, 0, 0)));
+
+        Constants.RobotConstants.driverController.x().whileTrue(
+                Commands.parallel(
+                        new passcommand(shooter, intaker),
+                        new constlight(led, 0, 0, 0)));
     }
 
     public Command getAutonomousCommand() {

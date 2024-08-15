@@ -1,5 +1,8 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import org.frcteam6941.swerve.SwerveSetpointGenerator.KinematicLimits;
 
 import com.ctre.phoenix6.configs.Slot0Configs;
@@ -55,11 +58,14 @@ public class Constants {
         public static final int SHOOTER_MOTORH_ID = 17;
         public static final int SHOOTER_MOTORL_ID = 16;
 
-        public static final double SHOOTERH_SPEAKER_SPEED = 0.98;
-        public static final double SHOOTERL_SPEAKER_SPEED = 0.94;
+        public static final double SHOOTERH_SPEAKER_SPEED = 0.75;
+        public static final double SHOOTERL_SPEAKER_SPEED = 0.65;
 
         public static final double SHOOTERH_AMP_SPEED = 0.17;
         public static final double SHOOTERL_AMP_SPEED = 0.25;
+
+        public static final double SHOOTERH_PASS_SPEED = 0.98;
+        public static final double SHOOTERL_PASS_SPEED = 0.98;
 
         public static final double SHOOTER_OUT_SPEED = -0.8;
 
@@ -83,10 +89,10 @@ public class Constants {
         /** The max speed of the swerve (should not larger than speedAt12Volts) */
         public static final Measure<Velocity<Distance>> maxSpeed = MetersPerSecond.of(4.5);
         /** The max turning speed of the swerve */
-        public static final Measure<Velocity<Angle>> maxAngularRate = RotationsPerSecond.of(1.5 * Math.PI);
+        public static final Measure<Velocity<Angle>> maxAngularRate = RotationsPerSecond.of(1.2 * Math.PI);
 
-        public static final double deadband = maxSpeed.magnitude() * 0.1;
-        public static final double rotationalDeadband = maxAngularRate.magnitude() * 0.1;
+        public static final double deadband = maxSpeed.magnitude() * 0.01;
+        public static final double rotationalDeadband = maxAngularRate.magnitude() * 0.01;
 
         public static final SlewRateLimiter xLimiter = new SlewRateLimiter(3, -3.25, 0);
         public static final SlewRateLimiter yLimiter = new SlewRateLimiter(3, -3.25, 0);
@@ -290,6 +296,7 @@ public class Constants {
                 .withKP(0.04)
                 .withKI(0)
                 .withKD(0);
+
 
     }
 

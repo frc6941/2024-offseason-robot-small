@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import frc.robot.subsystems.shooter.shooter;
 import frc.robot.subsystems.intaker.intaker;
+import frc.robot.Constants;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -17,9 +18,10 @@ public class passcommand extends Command {
 
     @Override
     public void execute() {
-        shooter.setshooter(0.95, 0.85);
+        shooter.setshooter(Constants.ShooterConstants.SHOOTERL_PASS_SPEED,
+                Constants.ShooterConstants.SHOOTERH_PASS_SPEED);
         try {
-            Thread.sleep(100);
+            Thread.sleep(250);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
