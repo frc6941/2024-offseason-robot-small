@@ -5,15 +5,10 @@
 package frc.robot;
 
 import frc.robot.drivers.BeamBreak;
-import org.frcteam6941.drivers.Gyro;
 import org.frcteam6941.looper.UpdateManager;
-
-import com.ctre.phoenix6.hardware.Pigeon2;
-import com.team254.lib.geometry.Rotation2d;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import static edu.wpi.first.units.Units.Seconds;
@@ -29,8 +24,6 @@ import frc.robot.subsystems.intaker.intaker;
 import frc.robot.subsystems.shooter.shooter;
 import frc.robot.subsystems.led.led;
 import lombok.Getter;
-
-import org.frcteam6941.drivers.Pigeon2Gyro;
 
 public class RobotContainer {
     private BeamBreak intakerBeamBreakH = new BeamBreak(3);
@@ -60,11 +53,11 @@ public class RobotContainer {
                 .runOnce(() -> swerve.drive(
                         new Translation2d(
                                 -Constants.RobotConstants.driverController.getLeftY()
-                                        * Constants.SwerveDrivetrian.maxSpeed.magnitude(),
+                                        * Constants.SwerveConstants.maxSpeed.magnitude(),
                                 -Constants.RobotConstants.driverController.getLeftX()
-                                        * Constants.SwerveDrivetrian.maxSpeed.magnitude()),
+                                        * Constants.SwerveConstants.maxSpeed.magnitude()),
                         -Constants.RobotConstants.driverController.getRightX()
-                                * Constants.SwerveDrivetrian.maxAngularRate.magnitude(),
+                                * Constants.SwerveConstants.maxAngularRate.magnitude(),
                         true,
                         false),
                         swerve));
@@ -74,12 +67,12 @@ public class RobotContainer {
         // .runOnce(() -> swerve.drive(
         // new Translation2d(
         // -
-        // Constants.RobotConstants.driverController.getLeftY()*Constants.SwerveDrivetrian.maxSpeed.magnitude(),
+        // Constants.RobotConstants.driverController.getLeftY()*Constants.SwerveConstants.maxSpeed.magnitude(),
         // -
-        // Constants.RobotConstants.driverController.getRightX()*Constants.SwerveDrivetrian.maxSpeed.magnitude()),
+        // Constants.RobotConstants.driverController.getRightX()*Constants.SwerveConstants.maxSpeed.magnitude()),
         // (-Constants.RobotConstants.driverController.getRightTriggerAxis()
         // + Constants.RobotConstants.driverController.getLeftTriggerAxis())
-        // * Constants.SwerveDrivetrian.maxAngularRate.magnitude(),
+        // * Constants.SwerveConstants.maxAngularRate.magnitude(),
         // true,
         // true),
         // swerve));

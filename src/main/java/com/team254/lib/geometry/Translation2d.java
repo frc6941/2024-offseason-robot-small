@@ -42,6 +42,10 @@ public class Translation2d implements ITranslation2d<Translation2d> {
         y_ = other.getY();
     }
 
+        
+    public static Translation2d fromPolar(Rotation2d direction, double magnitude){
+    	return new Translation2d(direction.cos() * magnitude, direction.sin() * magnitude);
+    }
 
     /**
      * The "norm" of a transform is the Euclidean distance in x and y.
@@ -130,6 +134,15 @@ public class Translation2d implements ITranslation2d<Translation2d> {
     public Translation2d scale(double s) {
         return new Translation2d(x_ * s, y_ * s);
     }
+
+    public Translation2d mirrorAboutX(double xValue) {
+        return new Translation2d(xValue + (xValue - x_), y_);
+    }
+
+    public Translation2d mirrorAboutY(double yValue) {
+        return new Translation2d(x_, yValue + (yValue - y_));
+    }
+
 
     public boolean epsilonEquals(final Translation2d other, double epsilon) {
         return Util.epsilonEquals(x(), other.x(), epsilon) && Util.epsilonEquals(y(), other.y(), epsilon);

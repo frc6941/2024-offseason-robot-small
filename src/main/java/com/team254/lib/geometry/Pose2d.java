@@ -39,10 +39,7 @@ public class Pose2d implements IPose2d<Pose2d> {
         rotation_ = new Rotation2d(other.rotation_);
     }
 
-    public Pose2d(final Pose2dWithCurvature other) {
-        translation_ = new Translation2d(other.getTranslation());
-        rotation_ = new Rotation2d(other.getRotation());
-    }
+
 
     public Pose2d(final edu.wpi.first.math.geometry.Pose2d other) {
         translation_ = new Translation2d(other.getTranslation());
@@ -251,5 +248,15 @@ public class Pose2d implements IPose2d<Pose2d> {
     @Override
     public Pose2d mirror() {
         return new Pose2d(new Translation2d(getTranslation().x(), -getTranslation().y()), getRotation().inverse());
+    }
+
+    @Override
+    public Pose2d mirrorAboutX(double xValue) {
+        return new Pose2d(getTranslation().mirrorAboutX(xValue), getRotation().mirrorAboutX());
+    }
+
+    @Override
+    public Pose2d mirrorAboutY(double yValue) {
+        return new Pose2d(getTranslation().mirrorAboutY(yValue), getRotation().mirrorAboutY());
     }
 }
