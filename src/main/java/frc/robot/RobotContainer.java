@@ -4,7 +4,11 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.display.Display;
 import frc.robot.drivers.BeamBreak;
+import frc.robot.subsystems.limelight.Limelight;
+import frc.robot.utils.AllianceFlipUtil;
 import org.frcteam6941.looper.UpdateManager;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -34,12 +38,16 @@ public class RobotContainer {
             Constants.ShooterConstants.SHOOTER_MOTORL_ID,
             Constants.RobotConstants.CAN_BUS_NAME);
     led led = new led();
+    Limelight limelight = Limelight.getInstance();
+    Display display = Display.getInstance();
 
     @Getter
     private UpdateManager updateManager;
 
     public RobotContainer() {
-        updateManager = new UpdateManager(swerve);
+        updateManager = new UpdateManager(swerve,
+                limelight,
+                display);
         updateManager.registerAll();
 
         configureBindings();
@@ -81,10 +89,10 @@ public class RobotContainer {
         // 1111111111111111
         Constants.RobotConstants.driverController.start().onTrue(
                 Commands.runOnce(() -> {
-                    edu.wpi.first.math.geometry.Rotation2d a = swerve.getLocalizer().getLatestPose().getRotation();
-                    System.out.println("A = " + a);
-                    Pose2d b = new Pose2d(new Translation2d(0, 0), a);
-                    swerve.resetPose(b);
+                    swerve.resetHeadingController();
+                    swerve.resetPose(
+                            new Pose2d(AllianceFlipUtil.apply(Constants.FieldConstants.Speaker.centerSpeakerOpening.toTranslation2d()),
+                                    Rotation2d.fromDegrees(swerve.getLocalizer().getLatestPose().getRotation().getDegrees())));
                 }));
         Constants.RobotConstants.driverController.rightBumper().onTrue(
                 Commands.sequence(

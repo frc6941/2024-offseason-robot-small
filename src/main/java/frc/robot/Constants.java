@@ -221,10 +221,10 @@ public class Constants {
         /** The max speed of the swerve (should not larger than speedAt12Volts) */
         public static final Measure<Velocity<Distance>> maxSpeed = MetersPerSecond.of(4.5);
         /** The max turning speed of the swerve */
-        public static final Measure<Velocity<Angle>> maxAngularRate = RotationsPerSecond.of(1.5 * Math.PI);
+        public static final Measure<Velocity<Angle>> maxAngularRate = RotationsPerSecond.of(1.2 * Math.PI);
 
-        public static final double deadband = maxSpeed.magnitude() * 0.1;
-        public static final double rotationalDeadband = maxAngularRate.magnitude() * 0.1;
+        public static final double deadband = maxSpeed.magnitude() * 0.01;
+        public static final double rotationalDeadband = maxAngularRate.magnitude() * 0.01;
 
         public static final SlewRateLimiter xLimiter = new SlewRateLimiter(3, -3.25, 0);
         public static final SlewRateLimiter yLimiter = new SlewRateLimiter(3, -3.25, 0);
