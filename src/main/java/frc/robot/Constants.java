@@ -183,11 +183,14 @@ public class Constants {
         public static final int SHOOTER_MOTORH_ID = 17;
         public static final int SHOOTER_MOTORL_ID = 16;
 
-        public static final double SHOOTERH_SPEAKER_SPEED = 0.98;
-        public static final double SHOOTERL_SPEAKER_SPEED = 0.94;
+        public static final double SHOOTERH_SPEAKER_SPEED = 0.75;
+        public static final double SHOOTERL_SPEAKER_SPEED = 0.65;
 
         public static final double SHOOTERH_AMP_SPEED = 0.17;
         public static final double SHOOTERL_AMP_SPEED = 0.25;
+
+        public static final double SHOOTERH_PASS_SPEED = 0.98;
+        public static final double SHOOTERL_PASS_SPEED = 0.98;
 
         public static final double SHOOTER_OUT_SPEED = -0.8;
 

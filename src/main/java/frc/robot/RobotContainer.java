@@ -15,8 +15,10 @@ import frc.robot.drivers.BeamBreak;
 import frc.robot.subsystems.limelight.Limelight;
 import frc.robot.utils.AllianceFlipUtil;
 import frc.robot.utils.Utils;
+import frc.robot.commands.ledcommand.blinklight;
+import frc.robot.commands.ledcommand.constlight;
+import frc.robot.drivers.BeamBreak;
 import org.frcteam6941.looper.UpdateManager;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -25,8 +27,7 @@ import static edu.wpi.first.units.Units.Seconds;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.commands.intakercommand;
 import frc.robot.commands.intakerout;
-import frc.robot.commands.ledcommand;
-// import frc.robot.commands.passcommand;
+import frc.robot.commands.passcommand;
 import frc.robot.commands.shootercommand;
 import frc.robot.commands.shooteramp;
 import frc.robot.commands.rumblecommand;
@@ -101,7 +102,7 @@ public class RobotContainer {
     }
     /** Bind controller keys to commands */
     private void configureBindings() {
-        // Drive mode 1
+        // swerve
         swerve.setDefaultCommand(Commands
                 .runOnce(() -> swerve.drive(
                         new Translation2d(
@@ -115,23 +116,6 @@ public class RobotContainer {
                         false),
                         swerve));
 
-        // Drive mode 2
-        // swerve.setDefaultCommand(Commands
-        // .runOnce(() -> swerve.drive(
-        // new Translation2d(
-        // -
-        // Constants.RobotConstants.driverController.getLeftY()*Constants.SwerveConstants.maxSpeed.magnitude(),
-        // -
-        // Constants.RobotConstants.driverController.getRightX()*Constants.SwerveConstants.maxSpeed.magnitude()),
-        // (-Constants.RobotConstants.driverController.getRightTriggerAxis()
-        // + Constants.RobotConstants.driverController.getLeftTriggerAxis())
-        // * Constants.SwerveConstants.maxAngularRate.magnitude(),
-        // true,
-        // true),
-        // swerve));
-        // }
-
-        // 1111111111111111
         Constants.RobotConstants.driverController.start().onTrue(
                 Commands.runOnce(() -> {
                     swerve.resetHeadingController();
@@ -139,29 +123,43 @@ public class RobotContainer {
                             new Pose2d(AllianceFlipUtil.apply(Constants.FieldConstants.Speaker.centerSpeakerOpening.toTranslation2d()),
                                     Rotation2d.fromDegrees(swerve.getLocalizer().getLatestPose().getRotation().getDegrees())));
                 }));
+
+        // intake
         Constants.RobotConstants.driverController.rightBumper().onTrue(
                 Commands.sequence(
                         Commands.parallel(
-                                new ledcommand(led, 255, 0, 0),
+                                new constlight(led, 255, 0, 0),
                                 new intakercommand(intaker, shooter, intakerBeamBreakH, intakerBeamBreakL),
                                 new rumblecommand(Seconds.of(0.5),
                                         Constants.RobotConstants.driverController.getHID())),
                         Commands.parallel(
-                                new ledcommand(led, 0, 255, 0),
                                 new rumblecommand(Seconds.of(1),
-                                        Constants.RobotConstants.driverController.getHID()))));
+                                        Constants.RobotConstants.driverController.getHID()),
+                                Commands.sequence(
+                                        new blinklight(led, Seconds.of(1), 0, 255, 0),
+                                        new constlight(led, 0, 255, 0)))));
 
+        // shoot speaker
         Constants.RobotConstants.driverController.leftBumper().whileTrue(
                 Commands.parallel(
                         new shootercommand(shooter, intaker),
-                        new ledcommand(led, 0, 0, 0)));
+                        new constlight(led, 0, 0, 0)));
 
-        Constants.RobotConstants.driverController.b().whileTrue(new intakerout(intaker, shooter));
+        // intake out
+        Constants.RobotConstants.driverController.b().whileTrue(Commands.parallel(
+                new intakerout(intaker, shooter),
+                new constlight(led, 0, 0, 0)));
 
+        // shoot amp
         Constants.RobotConstants.driverController.y().whileTrue(
                 Commands.parallel(
                         new shooteramp(shooter, intaker),
-                        new ledcommand(led, 0, 0, 0)));
+                        new constlight(led, 0, 0, 0)));
+
+        Constants.RobotConstants.driverController.x().whileTrue(
+                Commands.parallel(
+                        new passcommand(shooter, intaker),
+                        new constlight(led, 0, 0, 0)));
     }
 
     public Command getAutonomousCommand() {

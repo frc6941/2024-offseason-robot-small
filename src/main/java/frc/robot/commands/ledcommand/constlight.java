@@ -1,11 +1,10 @@
-package frc.robot.commands;
+package frc.robot.commands.ledcommand;
 
-import frc.robot.Constants;
 import frc.robot.subsystems.led.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class ledcommand extends Command {
+public class constlight extends Command {
 
     private led led;
     private int R;
@@ -13,7 +12,7 @@ public class ledcommand extends Command {
     private int B;
     private boolean flag = false;
 
-    public ledcommand(led led, int R, int G, int B) {
+    public constlight(led led, int R, int G, int B) {
         this.led = led;
         this.R = R;
         this.G = G;
