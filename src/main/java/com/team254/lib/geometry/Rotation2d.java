@@ -142,6 +142,15 @@ public class Rotation2d implements IRotation2d<Rotation2d> {
         return rotateBy(other.unaryMinus());
     }
 
+    public Rotation2d mirrorAboutX() {
+        ensureTrigComputed();
+        return new Rotation2d(-cos_angle_, sin_angle_, false);
+    }
+
+    public Rotation2d mirrorAboutY() {
+        return new Rotation2d(cos_angle_, -sin_angle_, false);
+    }
+
     public Rotation2d times(double scalar) {
         return new Rotation2d(radians_ * scalar, true);
     }
