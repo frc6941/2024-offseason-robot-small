@@ -3,15 +3,14 @@ package frc.robot.commands;
 import frc.robot.Constants;
 import frc.robot.subsystems.shooter.shooter;
 import frc.robot.subsystems.intaker.intaker;
-// import frc.robot.drivers.BeamBreak;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class shooteramp extends Command {
+public class ShooterCommand extends Command {
     private shooter shooter;
     private intaker intaker;
 
-    public shooteramp(shooter shooter, intaker intaker) {
+    public ShooterCommand(shooter shooter, intaker intaker) {
         this.shooter = shooter;
         this.intaker = intaker;
         addRequirements(shooter, intaker);
@@ -19,7 +18,8 @@ public class shooteramp extends Command {
 
     @Override
     public void execute() {
-        shooter.setShooterDutyCycle(Constants.ShooterConstants.SHOOTERL_AMP_SPEED,Constants.ShooterConstants.SHOOTERH_AMP_SPEED);
+        shooter.setShooterDutyCycle(Constants.ShooterConstants.SHOOTERL_SPEAKER_SPEED,
+                Constants.ShooterConstants.SHOOTERH_SPEAKER_SPEED);
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
@@ -30,8 +30,7 @@ public class shooteramp extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        shooter.setShooterDutyCycle(0,0);
+        shooter.setShooterDutyCycle(0, 0);
         intaker.setIntakerDutyCycle(0);
     }
 }
-

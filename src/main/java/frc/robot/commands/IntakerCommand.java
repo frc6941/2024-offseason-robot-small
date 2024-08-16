@@ -8,14 +8,14 @@ import frc.robot.subsystems.shooter.*;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
-public class intakercommand extends Command {
+public class IntakerCommand extends Command {
 
     private final intaker intaker;
     private final shooter shooter;
     private final BeamBreak intakerbeambreakH;
     private final BeamBreak intakerbeambreakL;
 
-    public intakercommand(intaker intaker, shooter shooter, BeamBreak intakerbeambreakH , BeamBreak intakerbeambreakL) {
+    public IntakerCommand(intaker intaker, shooter shooter, BeamBreak intakerbeambreakH , BeamBreak intakerbeambreakL) {
         this.intaker = intaker;
         this.shooter = shooter;
         this.intakerbeambreakH = intakerbeambreakH;

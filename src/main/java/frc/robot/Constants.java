@@ -195,6 +195,15 @@ public class Constants {
         public static final double SHOOTER_OUT_SPEED = -0.8;
 
         public static final double SHOOTER_IDLE_SPEED = 0.5;
+
+        public static class shooterGainsClass {
+            public static final TunableNumber SHOOTER_KP = new TunableNumber("SHOOTER PID/kp", 0.2);
+            public static final TunableNumber SHOOTER_KI = new TunableNumber("SHOOTER PID/ki", 0);
+            public static final TunableNumber SHOOTER_KD = new TunableNumber("SHOOTER PID/kd", 0.001);
+            public static final TunableNumber SHOOTER_KA = new TunableNumber("SHOOTER PID/ka", 0.0037512677);
+            public static final TunableNumber SHOOTER_KV = new TunableNumber("SHOOTER PID/kv", 0.113);// 0.107853495
+            public static final TunableNumber SHOOTER_KS = new TunableNumber("SHOOTER PID/ks", 0.28475008);
+        }
     }
 
     public static class LedConstants {
