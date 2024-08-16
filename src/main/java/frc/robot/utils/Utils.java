@@ -7,11 +7,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import static edu.wpi.first.units.Units.Volts;
 
 public class Utils {
-	public static boolean autoIntaking = false;
-
 	public static boolean blind = false;
-
-	public static boolean armReachedClimb = false;
 
 	public static Measure<Voltage> autoShootVoltage = Volts.of(-9);
 
