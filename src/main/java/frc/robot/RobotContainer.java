@@ -5,17 +5,20 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.commands.ledPattern.ConstLight;
-import frc.robot.commands.ledPattern.BlinkLight;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.display.Display;
 import frc.robot.drivers.BeamBreak;
 import frc.robot.subsystems.limelight.Limelight;
 import frc.robot.utils.AllianceFlipUtil;
 import frc.robot.utils.Utils;
+import frc.robot.commands.ledPattern.BlinkLight;
+import frc.robot.commands.ledPattern.ConstLight;
+import frc.robot.commands.ledPattern.ConstLight;
+import frc.robot.drivers.BeamBreak;
 import org.frcteam6941.looper.UpdateManager;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -23,8 +26,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import static edu.wpi.first.units.Units.Seconds;
 import frc.robot.subsystems.swerve.Swerve;
-import frc.robot.commands.IntakerCommand;
 import frc.robot.commands.IntakerOut;
+import frc.robot.commands.IntakerCommand;
 import frc.robot.commands.PassCommand;
 import frc.robot.commands.ShooterCommand;
 import frc.robot.commands.ShooterAmp;
@@ -65,8 +68,9 @@ public class RobotContainer {
 
     /** Bind Auto */
     private void configureAuto() {
-        //TODO: register commands
-//        NamedCommands.registerCommand("AutoShoot", speakerAutoShot().withTimeout(2.0));
+        
+        NamedCommands.registerCommand("shoot", shoot());
+        NamedCommands.registerCommand("intake", intake());
         AutoBuilder.configureHolonomic(
                 () -> Swerve.getInstance().getLocalizer().getCoarseFieldPose(0),
                 (Pose2d pose2d) -> Swerve.getInstance().resetPose(pose2d),
@@ -76,28 +80,28 @@ public class RobotContainer {
                         Constants.SwerveConstants.maxSpeed.magnitude(),
                         0.55,
                         new ReplanningConfig()),
-//                new HolonomicPathFollowerConfig(
-//                        new PIDConstants(
-//                                Constants.AutoConstants.swerveXGainsClass.swerveX_KP.get(),
-//                                Constants.AutoConstants.swerveXGainsClass.swerveX_KI.get(),
-//                                Constants.AutoConstants.swerveXGainsClass.swerveX_KD.get()
-//                        ),
-//                        new PIDConstants(
-//                                Constants.AutoConstants.swerveOmegaGainsClass.swerveOmega_KP.get(),
-//                                Constants.AutoConstants.swerveOmegaGainsClass.swerveOmega_KI.get(),
-//                                Constants.AutoConstants.swerveOmegaGainsClass.swerveOmega_KD.get()
-//                        ),
-//                        Constants.SwerveConstants.maxSpeed.magnitude(),
-//                        0.55,
-//                        new ReplanningConfig()),
+                // new HolonomicPathFollowerConfig(
+                // new PIDConstants(
+                // Constants.AutoConstants.swerveXGainsClass.swerveX_KP.get(),
+                // Constants.AutoConstants.swerveXGainsClass.swerveX_KI.get(),
+                // Constants.AutoConstants.swerveXGainsClass.swerveX_KD.get()
+                // ),
+                // new PIDConstants(
+                // Constants.AutoConstants.swerveOmegaGainsClass.swerveOmega_KP.get(),
+                // Constants.AutoConstants.swerveOmegaGainsClass.swerveOmega_KI.get(),
+                // Constants.AutoConstants.swerveOmegaGainsClass.swerveOmega_KD.get()
+                // ),
+                // Constants.SwerveConstants.maxSpeed.magnitude(),
+                // 0.55,
+                // new ReplanningConfig()),
                 Utils::flip,
-                swerve
-        );
+                swerve);
 
         autoChooser = new LoggedDashboardChooser<>("Chooser", AutoBuilder.buildAutoChooser());
-        //TODO: operator dashboard
-//        dashboard.registerAutoSelector(autoChooser.getSendableChooser());
+        // TODO: operator dashboard
+        // dashboard.registerAutoSelector(autoChooser.getSendableChooser());
     }
+
     /** Bind controller keys to commands */
     private void configureBindings() {
         // swerve
@@ -118,8 +122,11 @@ public class RobotContainer {
                 Commands.runOnce(() -> {
                     swerve.resetHeadingController();
                     swerve.resetPose(
-                            new Pose2d(AllianceFlipUtil.apply(Constants.FieldConstants.Speaker.centerSpeakerOpening.toTranslation2d()),
-                                    Rotation2d.fromDegrees(swerve.getLocalizer().getLatestPose().getRotation().getDegrees())));
+                            new Pose2d(
+                                    AllianceFlipUtil.apply(
+                                            Constants.FieldConstants.Speaker.centerSpeakerOpening.toTranslation2d()),
+                                    Rotation2d.fromDegrees(
+                                            swerve.getLocalizer().getLatestPose().getRotation().getDegrees())));
                 }));
 
         // intake
@@ -161,7 +168,16 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-//       return Commands.print("No autonomous command configured");
         return autoChooser.get();
+
+    }
+
+    // commands
+    private Command shoot() {
+        return new ShooterCommand(shooter, intaker);
+    }
+
+    private Command intake() {
+        return new IntakerCommand(intaker, shooter, intakerBeamBreakH, intakerBeamBreakL);
     }
 }

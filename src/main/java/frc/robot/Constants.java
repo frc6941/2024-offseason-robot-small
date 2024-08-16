@@ -239,7 +239,7 @@ public class Constants {
                 .withPigeon2Configs(null); // optional
 
         /** The max speed of the swerve (should not larger than speedAt12Volts) */
-        public static final Measure<Velocity<Distance>> maxSpeed = MetersPerSecond.of(4.5);
+        public static final Measure<Velocity<Distance>> maxSpeed = MetersPerSecond.of(5);
         /** The max turning speed of the swerve */
         public static final Measure<Velocity<Angle>> maxAngularRate = RotationsPerSecond.of(1.2 * Math.PI);
 
