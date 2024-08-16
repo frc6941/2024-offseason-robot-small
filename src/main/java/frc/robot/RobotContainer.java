@@ -10,7 +10,9 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.display.Display;
+import frc.robot.display.OperatorDashboard;
 import frc.robot.drivers.BeamBreak;
 import frc.robot.subsystems.limelight.Limelight;
 import frc.robot.utils.AllianceFlipUtil;
@@ -52,6 +54,8 @@ public class RobotContainer {
     @Getter
     private LoggedDashboardChooser<Command> autoChooser;
 
+    OperatorDashboard dashboard = OperatorDashboard.getInstance();
+
     @Getter
     private UpdateManager updateManager;
 
@@ -68,7 +72,6 @@ public class RobotContainer {
 
     /** Bind Auto */
     private void configureAuto() {
-        
         NamedCommands.registerCommand("shoot", shoot());
         NamedCommands.registerCommand("intake", intake());
         AutoBuilder.configureHolonomic(
@@ -98,8 +101,10 @@ public class RobotContainer {
                 swerve);
 
         autoChooser = new LoggedDashboardChooser<>("Chooser", AutoBuilder.buildAutoChooser());
+        SmartDashboard.putBoolean("Swerve/autoConfigured",AutoBuilder.isConfigured());
+        SmartDashboard.putBoolean("Swerve/autoPathConfigured",AutoBuilder.isPathfindingConfigured());
         // TODO: operator dashboard
-        // dashboard.registerAutoSelector(autoChooser.getSendableChooser());
+        dashboard.registerAutoSelector(autoChooser.getSendableChooser());
     }
 
     /** Bind controller keys to commands */
@@ -168,8 +173,8 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return autoChooser.get();
-
+        //return autoChooser.get();
+        return AutoBuilder.buildAuto("R1");
     }
 
     // commands

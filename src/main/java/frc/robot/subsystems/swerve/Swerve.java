@@ -509,6 +509,7 @@ public class Swerve implements Updatable, Subsystem {
 
     @Override
     public void telemetry() {
+        SmartDashboard.putBoolean("Swerve/isAuto",state==State.PATH_FOLLOWING);
         Pose2d latestPose = swerveLocalizer.getLatestPose();
         dataTable.getEntry("Pose").setDoubleArray(
                 new double[] {
