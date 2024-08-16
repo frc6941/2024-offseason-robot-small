@@ -1,4 +1,4 @@
-package frc.robot.commands.LedCommand;
+package frc.robot.commands.ledPattern;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.led.led;

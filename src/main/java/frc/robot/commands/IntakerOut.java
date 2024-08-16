@@ -20,13 +20,13 @@ public class IntakerOut extends Command {
     @Override
     public void execute() {
         intaker.setIntakerDutyCycle(Constants.IntakerConstants.INTAKER_OUT_SPEED);
-        shooter.setShooterDutyCycle(Constants.ShooterConstants.SHOOTER_OUT_SPEED, Constants.ShooterConstants.SHOOTER_OUT_SPEED);
+        shooter.setShooterVelocity(Constants.ShooterConstants.SHOOTER_OUT_VELOCITY);
     }
 
     @Override
     public void end(boolean interrupted) {
         intaker.setIntakerDutyCycle(0);
-        shooter.setShooterDutyCycle(0,0);
+        shooter.setShooterVelocity(0);
     }
 
     

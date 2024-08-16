@@ -1,4 +1,4 @@
-package frc.robot.commands.LedCommand;
+package frc.robot.commands.ledPattern;
 
 import frc.robot.subsystems.led.*;
 

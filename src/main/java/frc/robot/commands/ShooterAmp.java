@@ -19,7 +19,7 @@ public class ShooterAmp extends Command {
 
     @Override
     public void execute() {
-        shooter.setShooterDutyCycle(Constants.ShooterConstants.SHOOTERL_AMP_SPEED,Constants.ShooterConstants.SHOOTERH_AMP_SPEED);
+        shooter.setShooterVelocity(Constants.ShooterConstants.SHOOTERL_AMP_VELOCITY,Constants.ShooterConstants.SHOOTERH_AMP_VELOCITY);
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
@@ -30,7 +30,7 @@ public class ShooterAmp extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        shooter.setShooterDutyCycle(0,0);
+        shooter.setShooterVelocity(0.0);
         intaker.setIntakerDutyCycle(0);
     }
 }

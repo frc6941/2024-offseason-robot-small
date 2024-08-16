@@ -37,10 +37,10 @@ public class shooter extends SubsystemBase {
     }
 
     public void setShooterVelocity(double RPM_L, double RPM_H) {
-        SmartDashboard.putNumber("Shooter/SHOOTER-L ACT",shooterMotorL.getVelocity().getValue());
-        SmartDashboard.putNumber("Shooter/SHOOTER-L REQ", Units.rotationsPerMinuteToRadiansPerSecond(RPM_L));
+//        SmartDashboard.putNumber("Shooter/SHOOTER-L ACT",shooterMotorL.getVelocity().getValue());
+//        SmartDashboard.putNumber("Shooter/SHOOTER-L REQ", Units.rotationsPerMinuteToRadiansPerSecond(RPM_L));
         shooterMotorL.setControl(new VelocityVoltage(
-                Units.radiansToRotations(Units.rotationsPerMinuteToRadiansPerSecond(RPM_L)),
+                Units.radiansToRotations(Units.rotationsPerMinuteToRadiansPerSecond(-RPM_L)),
                 0.0,
                 true,
                 0,
@@ -50,10 +50,38 @@ public class shooter extends SubsystemBase {
                 false
         ));
 
-        SmartDashboard.putNumber("Shooter/SHOOTER-H ACT",shooterMotorH.getVelocity().getValue());
-        SmartDashboard.putNumber("Shooter/SHOOTER-H REQ", Units.rotationsPerMinuteToRadiansPerSecond(RPM_H));
+//        SmartDashboard.putNumber("Shooter/SHOOTER-H ACT",shooterMotorH.getVelocity().getValue());
+//        SmartDashboard.putNumber("Shooter/SHOOTER-H REQ", Units.rotationsPerMinuteToRadiansPerSecond(RPM_H));
         shooterMotorH.setControl(new VelocityVoltage(
-                Units.radiansToRotations(Units.rotationsPerMinuteToRadiansPerSecond(RPM_H)),
+                Units.radiansToRotations(Units.rotationsPerMinuteToRadiansPerSecond(-RPM_H)),
+                0.0,
+                true,
+                0,
+                0,
+                false,
+                false,
+                false
+        ));
+    }
+
+    public void setShooterVelocity(double RPM) {
+//        SmartDashboard.putNumber("Shooter/SHOOTER-L ACT",shooterMotorL.getVelocity().getValue());
+//        SmartDashboard.putNumber("Shooter/SHOOTER-L REQ", Units.rotationsPerMinuteToRadiansPerSecond(RPM));
+        shooterMotorL.setControl(new VelocityVoltage(
+                Units.radiansToRotations(Units.rotationsPerMinuteToRadiansPerSecond(-RPM)),
+                0.0,
+                true,
+                0,
+                0,
+                false,
+                false,
+                false
+        ));
+
+//        SmartDashboard.putNumber("Shooter/SHOOTER-H ACT",shooterMotorH.getVelocity().getValue());
+//        SmartDashboard.putNumber("Shooter/SHOOTER-H REQ", Units.rotationsPerMinuteToRadiansPerSecond(RPM));
+        shooterMotorH.setControl(new VelocityVoltage(
+                Units.radiansToRotations(Units.rotationsPerMinuteToRadiansPerSecond(-RPM)),
                 0.0,
                 true,
                 0,

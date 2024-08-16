@@ -18,8 +18,8 @@ public class PassCommand extends Command {
 
     @Override
     public void execute() {
-        shooter.setShooterDutyCycle(Constants.ShooterConstants.SHOOTERL_PASS_SPEED,
-                Constants.ShooterConstants.SHOOTERH_PASS_SPEED);
+        shooter.setShooterVelocity(Constants.ShooterConstants.SHOOTERL_PASS_VELOCITY,
+                Constants.ShooterConstants.SHOOTERH_PASS_VELOCITY);
         try {
             Thread.sleep(250);
         } catch (InterruptedException e) {
@@ -30,7 +30,7 @@ public class PassCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        shooter.setShooterDutyCycle(0, 0);
+        shooter.setShooterVelocity(0.0);
         intaker.setIntakerDutyCycle(0);
     }
 }

@@ -7,8 +7,8 @@ import frc.robot.subsystems.intaker.intaker;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class ShooterCommand extends Command {
-    private shooter shooter;
-    private intaker intaker;
+    private final shooter shooter;
+    private final intaker intaker;
 
     public ShooterCommand(shooter shooter, intaker intaker) {
         this.shooter = shooter;
@@ -18,8 +18,8 @@ public class ShooterCommand extends Command {
 
     @Override
     public void execute() {
-        shooter.setShooterDutyCycle(Constants.ShooterConstants.SHOOTERL_SPEAKER_SPEED,
-                Constants.ShooterConstants.SHOOTERH_SPEAKER_SPEED);
+        shooter.setShooterVelocity(Constants.ShooterConstants.SHOOTERL_SPEAKER_VELOCITY,
+                Constants.ShooterConstants.SHOOTERH_SPEAKER_VELOCITY);
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
@@ -30,7 +30,7 @@ public class ShooterCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        shooter.setShooterDutyCycle(0, 0);
+        shooter.setShooterVelocity(0.0);
         intaker.setIntakerDutyCycle(0);
     }
 }

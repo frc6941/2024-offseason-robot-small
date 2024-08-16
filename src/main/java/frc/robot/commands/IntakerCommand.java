@@ -26,7 +26,7 @@ public class IntakerCommand extends Command {
     @Override
     public void execute() {
         intaker.setIntakerDutyCycle(Constants.IntakerConstants.INTAKER_IN_SPEED);
-        shooter.setShooterDutyCycle(Constants.ShooterConstants.SHOOTER_IDLE_SPEED, Constants.ShooterConstants.SHOOTER_IDLE_SPEED);
+        shooter.setShooterVelocity(Constants.ShooterConstants.SHOOTER_IDLE_VELOCITY);
     }
 
     @Override
