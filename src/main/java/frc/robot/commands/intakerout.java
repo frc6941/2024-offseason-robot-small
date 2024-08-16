@@ -4,7 +4,6 @@ import frc.robot.Constants;
 import frc.robot.subsystems.intaker.*;
 import frc.robot.subsystems.shooter.*;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
@@ -20,14 +19,14 @@ public class intakerout extends Command {
 
     @Override
     public void execute() {
-        intaker.setintaker(Constants.IntakerConstants.INTAKER_OUT_SPEED);
-        shooter.setshooter(Constants.ShooterConstants.SHOOTER_OUT_SPEED, Constants.ShooterConstants.SHOOTER_OUT_SPEED);
+        intaker.setIntakerDutyCycle(Constants.IntakerConstants.INTAKER_OUT_SPEED);
+        shooter.setShooterDutyCycle(Constants.ShooterConstants.SHOOTER_OUT_SPEED, Constants.ShooterConstants.SHOOTER_OUT_SPEED);
     }
 
     @Override
     public void end(boolean interrupted) {
-        intaker.setintaker(0);
-        shooter.setshooter(0,0);
+        intaker.setIntakerDutyCycle(0);
+        shooter.setShooterDutyCycle(0,0);
     }
 
     

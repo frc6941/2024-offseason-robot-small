@@ -1,12 +1,8 @@
 package frc.robot.subsystems.shooter;
 
-import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import org.frcteam6941.swerve.SwerveModuleBase;
 
 public class shooter extends SubsystemBase {
     private TalonFX shootermotorH;
@@ -29,9 +25,9 @@ public class shooter extends SubsystemBase {
     public void periodic() {
     }
 
-    public void setshooter(double VoltageL, double VoltageH) {
-        shootermotorL.set(-VoltageL);
-        shootermotorH.set(-VoltageH);
+    public void setShooterDutyCycle(double dutyCycleL, double dutyCycleH) {
+        shootermotorL.set(-dutyCycleL);
+        shootermotorH.set(-dutyCycleH);
         // shootermotorL.setControl(new VelocityVoltage(-VoltageL));
         // shootermotorH.setControl(new VelocityVoltage(-VoltageH));
         // SmartDashboard.putNumber("SHOOTERH ACT",

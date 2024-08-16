@@ -18,19 +18,19 @@ public class shootercommand extends Command {
 
     @Override
     public void execute() {
-        shooter.setshooter(Constants.ShooterConstants.SHOOTERL_SPEAKER_SPEED,
+        shooter.setShooterDutyCycle(Constants.ShooterConstants.SHOOTERL_SPEAKER_SPEED,
                 Constants.ShooterConstants.SHOOTERH_SPEAKER_SPEED);
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        intaker.setintaker(Constants.IntakerConstants.INTAKER_SHOOT_SPEED);
+        intaker.setIntakerDutyCycle(Constants.IntakerConstants.INTAKER_SHOOT_SPEED);
     }
 
     @Override
     public void end(boolean interrupted) {
-        shooter.setshooter(0, 0);
-        intaker.setintaker(0);
+        shooter.setShooterDutyCycle(0, 0);
+        intaker.setIntakerDutyCycle(0);
     }
 }

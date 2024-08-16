@@ -25,13 +25,13 @@ public class intakercommand extends Command {
 
     @Override
     public void execute() {
-        intaker.setintaker(Constants.IntakerConstants.INTAKER_IN_SPEED);
-        shooter.setshooter(Constants.ShooterConstants.SHOOTER_IDLE_SPEED, Constants.ShooterConstants.SHOOTER_IDLE_SPEED);
+        intaker.setIntakerDutyCycle(Constants.IntakerConstants.INTAKER_IN_SPEED);
+        shooter.setShooterDutyCycle(Constants.ShooterConstants.SHOOTER_IDLE_SPEED, Constants.ShooterConstants.SHOOTER_IDLE_SPEED);
     }
 
     @Override
     public void end(boolean interrupted) {
-        intaker.setintaker(0);
+        intaker.setIntakerDutyCycle(0);
     }
 
     @Override

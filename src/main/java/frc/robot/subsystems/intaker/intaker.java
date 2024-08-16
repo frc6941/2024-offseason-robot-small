@@ -15,8 +15,8 @@ public class intaker extends SubsystemBase {
     public void periodic() {
     }
 
-    public void setintaker(double Voltage) {
-        intakermotor.set(Voltage);
+    public void setIntakerDutyCycle(double dutyCycle) {
+        intakermotor.set(dutyCycle);
     }
 
 }
