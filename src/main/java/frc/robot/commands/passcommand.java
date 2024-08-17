@@ -3,7 +3,7 @@ package frc.robot.commands;
 import frc.robot.subsystems.shooter.shooter;
 import frc.robot.subsystems.intaker.intaker;
 import frc.robot.Constants;
-
+import frc.robot.display.OperatorDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class PassCommand extends Command {
@@ -32,5 +32,8 @@ public class PassCommand extends Command {
     public void end(boolean interrupted) {
         shooter.setShooterVelocity(0.0);
         intaker.setIntakerDutyCycle(0);
+        OperatorDashboard.getInstance().updateRobotStatus(
+                false,
+                false);
     }
 }

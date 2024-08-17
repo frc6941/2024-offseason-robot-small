@@ -46,17 +46,15 @@ public class ShootingDecider implements Updatable {
         speakerParams.loadParameter(3.9, 0, 0);// 20240808
         speakerParams.ready();
 
-        highFerryParams.loadParameter(5.0, 4000, 3500);
-        highFerryParams.loadParameter(6.5, 4200, 3700);
-        highFerryParams.loadParameter(8.0, 4400, 4000);
-        highFerryParams.loadParameter(9.5, 4600, 4300);
-        highFerryParams.loadParameter(11.0, 4700, 4500);
+        highFerryParams.loadParameter(5.0, 3800 - 1000, 3800 - 1000);
+        highFerryParams.loadParameter(6.5, 5100 - 1000, 5100 - 1000);
+        highFerryParams.loadParameter(8.0, 5400 - 1000, 5400 - 1000);
+        highFerryParams.loadParameter(9.5, 4800, 4800);
+        highFerryParams.loadParameter(11.0, 4800, 4800);
+
         highFerryParams.ready();
-        lowFerryParams.loadParameter(1.5, 2000.0, 2000);
-        lowFerryParams.loadParameter(3.1, 3000, 2000);
-        lowFerryParams.loadParameter(3.2, 3500, 2000);
-        lowFerryParams.loadParameter(3.3, 3700, 2200);
-        lowFerryParams.loadParameter(3.4, 3900, 2500);
+        lowFerryParams.loadParameter(1.5, 1000, 1000);
+        lowFerryParams.loadParameter(3.4, 1000, 1000);
         lowFerryParams.ready();
     }
 
@@ -92,7 +90,6 @@ public class ShootingDecider implements Updatable {
                 target = useMid ? AllianceFlipUtil.apply(kMidUpperTarget) : AllianceFlipUtil.apply(kCornerTarget);
                 Display.getInstance().setFerryLocation(target);
                 delta = target.minus(robotPose.getTranslation());
-
                 launchParam = useMid ? lowFerryParams.getParameters(delta.getNorm())
                         : highFerryParams.getParameters(delta.getNorm());
                 return new ShootingParameters(delta.getNorm(), launchParam.getFirst(), launchParam.getSecond(),

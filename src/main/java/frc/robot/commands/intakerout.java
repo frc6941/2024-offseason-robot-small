@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import frc.robot.Constants;
+import frc.robot.display.OperatorDashboard;
 import frc.robot.subsystems.intaker.*;
 import frc.robot.subsystems.shooter.*;
 
@@ -11,10 +12,10 @@ public class IntakerOut extends Command {
     private final intaker intaker;
     private final shooter shooter;
 
-    public IntakerOut(intaker intaker , shooter shooter) {
+    public IntakerOut(intaker intaker, shooter shooter) {
         this.intaker = intaker;
         this.shooter = shooter;
-        addRequirements(intaker , shooter);
+        addRequirements(intaker, shooter);
     }
 
     @Override
@@ -27,8 +28,9 @@ public class IntakerOut extends Command {
     public void end(boolean interrupted) {
         intaker.setIntakerDutyCycle(0);
         shooter.setShooterVelocity(0);
+        OperatorDashboard.getInstance().updateRobotStatus(
+                false,
+                false);
     }
-
-    
 
 }

@@ -16,7 +16,7 @@ public class IntakerCommand extends Command {
     private final BeamBreak intakerbeambreakH;
     private final BeamBreak intakerbeambreakL;
 
-    public IntakerCommand(intaker intaker, shooter shooter, BeamBreak intakerbeambreakH , BeamBreak intakerbeambreakL) {
+    public IntakerCommand(intaker intaker, shooter shooter, BeamBreak intakerbeambreakH, BeamBreak intakerbeambreakL) {
         this.intaker = intaker;
         this.shooter = shooter;
         this.intakerbeambreakH = intakerbeambreakH;
@@ -36,6 +36,9 @@ public class IntakerCommand extends Command {
     @Override
     public void end(boolean interrupted) {
         intaker.setIntakerDutyCycle(0);
+        OperatorDashboard.getInstance().updateRobotStatus(
+                false,
+                true);
     }
 
     @Override
@@ -43,4 +46,3 @@ public class IntakerCommand extends Command {
         return (intakerbeambreakH.get() || intakerbeambreakL.get());
     }
 }
-

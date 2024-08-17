@@ -175,7 +175,7 @@ public class Constants {
         public static final int INTAKER_BEAMBREAKL_ID = 2;
 
         public static final double INTAKER_IN_SPEED = 0.5;
-        public static final double INTAKER_OUT_SPEED = -0.8;
+        public static final double INTAKER_OUT_SPEED = -1;
         public static final double INTAKER_SHOOT_SPEED = 1.0;
     }
 
@@ -185,24 +185,24 @@ public class Constants {
 
         public static final double SHOOTERH_SPEAKER_SPEED = 0.75;
         public static final double SHOOTERL_SPEAKER_SPEED = 0.65;
-        public static final double SHOOTERH_SPEAKER_VELOCITY = 0.75*4800;
-        public static final double SHOOTERL_SPEAKER_VELOCITY = 0.65*4800;
+        public static final double SHOOTERH_SPEAKER_VELOCITY = 0.75 * 4800;
+        public static final double SHOOTERL_SPEAKER_VELOCITY = 0.65 * 4800;
 
         public static final double SHOOTERH_AMP_SPEED = 0.17;
         public static final double SHOOTERL_AMP_SPEED = 0.25;
-        public static final double SHOOTERH_AMP_VELOCITY = 0.17*4800;
-        public static final double SHOOTERL_AMP_VELOCITY = 0.25*4800;
+        public static final double SHOOTERH_AMP_VELOCITY = 0.17 * 4800;
+        public static final double SHOOTERL_AMP_VELOCITY = 0.25 * 4800;
 
         public static final double SHOOTERH_PASS_SPEED = 0.98;
         public static final double SHOOTERL_PASS_SPEED = 0.98;
-        public static final double SHOOTERH_PASS_VELOCITY = 0.98*4800;
-        public static final double SHOOTERL_PASS_VELOCITY = 0.98*4800;
+        public static final double SHOOTERH_PASS_VELOCITY = 0.98 * 4800;
+        public static final double SHOOTERL_PASS_VELOCITY = 0.98 * 4800;
 
         public static final double SHOOTER_OUT_SPEED = -0.8;
-        public static final double SHOOTER_OUT_VELOCITY = -0.8*4800;
+        public static final double SHOOTER_OUT_VELOCITY = -0.8 * 4800;
 
         public static final double SHOOTER_IDLE_SPEED = 0.5;
-        public static final double SHOOTER_IDLE_VELOCITY = 0.5*4800;
+        public static final double SHOOTER_IDLE_VELOCITY = 0.7 * 4800;
 
         public static class shooterGainsClass {
             public static final TunableNumber SHOOTER_KP = new TunableNumber("SHOOTER PID/kp", 0.2);
@@ -221,7 +221,7 @@ public class Constants {
 
     public class SwerveConstants {
 
-        public static final double VOLTAGE_CLOSED_LOOP_RAMP_PERIOD = 0.0003;// 0.0003
+        public static final double VOLTAGE_CLOSED_LOOP_RAMP_PERIOD = 0.5;// 0.0003
 
         public static final double statorCurrent = 110;
         public static final double supplyCurrent = 50;
@@ -241,7 +241,7 @@ public class Constants {
         /** The max speed of the swerve (should not larger than speedAt12Volts) */
         public static final Measure<Velocity<Distance>> maxSpeed = MetersPerSecond.of(5);
         /** The max turning speed of the swerve */
-        public static final Measure<Velocity<Angle>> maxAngularRate = RotationsPerSecond.of(1.2 * Math.PI);
+        public static final Measure<Velocity<Angle>> maxAngularRate = RotationsPerSecond.of(1.5 * Math.PI);
 
         public static final double deadband = maxSpeed.magnitude() * 0.01;
         public static final double rotationalDeadband = maxAngularRate.magnitude() * 0.01;
@@ -450,10 +450,14 @@ public class Constants {
                 .withKD(0);
 
         public static class headingController {
-            public static final frc.robot.utils.TunableNumber HEADING_KP = new frc.robot.utils.TunableNumber("HEADING PID/kp", 0.08);
-            public static final frc.robot.utils.TunableNumber HEADING_KI = new frc.robot.utils.TunableNumber("HEADING PID/ki", 0.0002);
-            public static final frc.robot.utils.TunableNumber HEADING_KD = new frc.robot.utils.TunableNumber("HEADING PID/kd", 0.002);
-            public static final frc.robot.utils.TunableNumber MAX_ERROR_CORRECTION_ANGLE = new frc.robot.utils.TunableNumber("HEADING/Max Error Correction Angle", 90.0);
+            public static final frc.robot.utils.TunableNumber HEADING_KP = new frc.robot.utils.TunableNumber(
+                    "HEADING PID/kp", 0.08);
+            public static final frc.robot.utils.TunableNumber HEADING_KI = new frc.robot.utils.TunableNumber(
+                    "HEADING PID/ki", 0.0002);
+            public static final frc.robot.utils.TunableNumber HEADING_KD = new frc.robot.utils.TunableNumber(
+                    "HEADING PID/kd", 0.002);
+            public static final frc.robot.utils.TunableNumber MAX_ERROR_CORRECTION_ANGLE = new frc.robot.utils.TunableNumber(
+                    "HEADING/Max Error Correction Angle", 90.0);
             // TODO
         }
 
