@@ -6,11 +6,11 @@ import frc.robot.Constants;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class passcommand extends Command {
+public class PassCommand extends Command {
     private shooter shooter;
     private intaker intaker;
 
-    public passcommand(shooter shooter, intaker intaker) {
+    public PassCommand(shooter shooter, intaker intaker) {
         this.shooter = shooter;
         this.intaker = intaker;
         addRequirements(shooter, intaker);
@@ -18,19 +18,19 @@ public class passcommand extends Command {
 
     @Override
     public void execute() {
-        shooter.setshooter(Constants.ShooterConstants.SHOOTERL_PASS_SPEED,
-                Constants.ShooterConstants.SHOOTERH_PASS_SPEED);
+        shooter.setShooterVelocity(Constants.ShooterConstants.SHOOTERL_PASS_VELOCITY,
+                Constants.ShooterConstants.SHOOTERH_PASS_VELOCITY);
         try {
             Thread.sleep(250);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        intaker.setintaker(1.0);
+        intaker.setIntakerDutyCycle(1.0);
     }
 
     @Override
     public void end(boolean interrupted) {
-        shooter.setshooter(0, 0);
-        intaker.setintaker(0);
+        shooter.setShooterVelocity(0.0);
+        intaker.setIntakerDutyCycle(0);
     }
 }

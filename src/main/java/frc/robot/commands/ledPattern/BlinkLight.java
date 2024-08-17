@@ -1,13 +1,12 @@
-package frc.robot.commands.ledcommand;
+package frc.robot.commands.ledPattern;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.led.led;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Time;
 import edu.wpi.first.wpilibj.Timer;
-import static edu.wpi.first.units.Units.Seconds;
 
-public class blinklight extends Command {
+public class BlinkLight extends Command {
     private led led;
     private int R;
     private int G;
@@ -18,7 +17,7 @@ public class blinklight extends Command {
     private final double interval = 0.05;
     private boolean on = true;
 
-    public blinklight(led led, Measure<Time> seconds, int R, int G, int B) {
+    public BlinkLight(led led, Measure<Time> seconds, int R, int G, int B) {
         this.R = R;
         this.G = G;
         this.B = B;

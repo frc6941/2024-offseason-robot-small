@@ -28,7 +28,7 @@ import static edu.wpi.first.units.Units.Volts;
 import edu.wpi.first.units.Velocity;
 import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.a.TunableNumber;
+import frc.robot.utils.TunableNumber;
 
 public class Constants {
     public static final boolean TUNING = true;
@@ -36,7 +36,7 @@ public class Constants {
 
     public class RobotConstants {
 
-        public static String CAN_BUS_NAME = "rio";
+        public static String CAN_BUS_NAME = "9620CANivore1";
 
         public static final CommandXboxController driverController = new CommandXboxController(0);
 
@@ -185,16 +185,33 @@ public class Constants {
 
         public static final double SHOOTERH_SPEAKER_SPEED = 0.75;
         public static final double SHOOTERL_SPEAKER_SPEED = 0.65;
+        public static final double SHOOTERH_SPEAKER_VELOCITY = 0.75*4800;
+        public static final double SHOOTERL_SPEAKER_VELOCITY = 0.65*4800;
 
         public static final double SHOOTERH_AMP_SPEED = 0.17;
         public static final double SHOOTERL_AMP_SPEED = 0.25;
+        public static final double SHOOTERH_AMP_VELOCITY = 0.17*4800;
+        public static final double SHOOTERL_AMP_VELOCITY = 0.25*4800;
 
         public static final double SHOOTERH_PASS_SPEED = 0.98;
         public static final double SHOOTERL_PASS_SPEED = 0.98;
+        public static final double SHOOTERH_PASS_VELOCITY = 0.98*4800;
+        public static final double SHOOTERL_PASS_VELOCITY = 0.98*4800;
 
         public static final double SHOOTER_OUT_SPEED = -0.8;
+        public static final double SHOOTER_OUT_VELOCITY = -0.8*4800;
 
         public static final double SHOOTER_IDLE_SPEED = 0.5;
+        public static final double SHOOTER_IDLE_VELOCITY = 0.5*4800;
+
+        public static class shooterGainsClass {
+            public static final TunableNumber SHOOTER_KP = new TunableNumber("SHOOTER PID/kp", 0.2);
+            public static final TunableNumber SHOOTER_KI = new TunableNumber("SHOOTER PID/ki", 0);
+            public static final TunableNumber SHOOTER_KD = new TunableNumber("SHOOTER PID/kd", 0.001);
+            public static final TunableNumber SHOOTER_KA = new TunableNumber("SHOOTER PID/ka", 0.0037512677);
+            public static final TunableNumber SHOOTER_KV = new TunableNumber("SHOOTER PID/kv", 0.113);// 0.107853495
+            public static final TunableNumber SHOOTER_KS = new TunableNumber("SHOOTER PID/ks", 0.28475008);
+        }
     }
 
     public static class LedConstants {
@@ -222,7 +239,7 @@ public class Constants {
                 .withPigeon2Configs(null); // optional
 
         /** The max speed of the swerve (should not larger than speedAt12Volts) */
-        public static final Measure<Velocity<Distance>> maxSpeed = MetersPerSecond.of(4.5);
+        public static final Measure<Velocity<Distance>> maxSpeed = MetersPerSecond.of(5);
         /** The max turning speed of the swerve */
         public static final Measure<Velocity<Angle>> maxAngularRate = RotationsPerSecond.of(1.2 * Math.PI);
 

@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import frc.robot.Constants;
+import frc.robot.display.OperatorDashboard;
 import frc.robot.drivers.BeamBreak;
 import frc.robot.subsystems.intaker.*;
 import frc.robot.subsystems.shooter.*;
@@ -8,14 +9,14 @@ import frc.robot.subsystems.shooter.*;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
-public class intakercommand extends Command {
+public class IntakerCommand extends Command {
 
     private final intaker intaker;
     private final shooter shooter;
     private final BeamBreak intakerbeambreakH;
     private final BeamBreak intakerbeambreakL;
 
-    public intakercommand(intaker intaker, shooter shooter, BeamBreak intakerbeambreakH , BeamBreak intakerbeambreakL) {
+    public IntakerCommand(intaker intaker, shooter shooter, BeamBreak intakerbeambreakH , BeamBreak intakerbeambreakL) {
         this.intaker = intaker;
         this.shooter = shooter;
         this.intakerbeambreakH = intakerbeambreakH;
@@ -25,13 +26,16 @@ public class intakercommand extends Command {
 
     @Override
     public void execute() {
-        intaker.setintaker(Constants.IntakerConstants.INTAKER_IN_SPEED);
-        shooter.setshooter(Constants.ShooterConstants.SHOOTER_IDLE_SPEED, Constants.ShooterConstants.SHOOTER_IDLE_SPEED);
+        OperatorDashboard.getInstance().updateRobotStatus(
+                true,
+                false);
+        intaker.setIntakerDutyCycle(Constants.IntakerConstants.INTAKER_IN_SPEED);
+        shooter.setShooterVelocity(Constants.ShooterConstants.SHOOTER_IDLE_VELOCITY);
     }
 
     @Override
     public void end(boolean interrupted) {
-        intaker.setintaker(0);
+        intaker.setIntakerDutyCycle(0);
     }
 
     @Override

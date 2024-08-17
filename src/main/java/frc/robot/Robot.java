@@ -4,10 +4,14 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.swerve.Swerve;
+
 import org.littletonrobotics.junction.LoggedRobot;
 
 public class Robot extends LoggedRobot{
     private Command m_autonomousCommand;
+    private Swerve swerve=Swerve.getInstance();
+    
 
     private RobotContainer robotContainer;
 
@@ -44,6 +48,7 @@ public class Robot extends LoggedRobot{
             m_autonomousCommand.schedule();
         }
         robotContainer.getUpdateManager().invokeStart();
+        swerve.auto();
     }
 
     @Override
@@ -53,6 +58,7 @@ public class Robot extends LoggedRobot{
     @Override
     public void autonomousExit() {
         robotContainer.getUpdateManager().invokeStop();
+        swerve.normal();
     }
 
     @Override
