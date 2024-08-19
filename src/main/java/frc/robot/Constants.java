@@ -168,11 +168,13 @@ public class Constants {
         }
     }
 
-    public static class IntakerConstants {
-        public static final int INTAKE_MOTOR_ID = 15;
-
+    public static  class BeamBreakConstants {
         public static final int INTAKER_BEAMBREAKH_ID = 3;
         public static final int INTAKER_BEAMBREAKL_ID = 2;
+    }
+
+    public static class IntakerConstants {
+        public static final int INTAKE_MOTOR_ID = 15;
 
         public static final double INTAKER_IN_SPEED = 0.5;
         public static final double INTAKER_OUT_SPEED = -1;
@@ -183,10 +185,10 @@ public class Constants {
         public static final int SHOOTER_MOTORH_ID = 17;
         public static final int SHOOTER_MOTORL_ID = 16;
 
-        public static final double SHOOTERH_SPEAKER_SPEED = 0.75;
-        public static final double SHOOTERL_SPEAKER_SPEED = 0.65;
-        public static final double SHOOTERH_SPEAKER_VELOCITY = 0.75 * 4800;
-        public static final double SHOOTERL_SPEAKER_VELOCITY = 0.65 * 4800;
+        public static final double SHOOTERH_SPEAKER_SPEED = 0.85;
+        public static final double SHOOTERL_SPEAKER_SPEED = 0.75;
+        public static final double SHOOTERH_SPEAKER_VELOCITY = 0.85 * 4800;
+        public static final double SHOOTERL_SPEAKER_VELOCITY = 0.75 * 4800;
 
         public static final double SHOOTERH_AMP_SPEED = 0.17;
         public static final double SHOOTERL_AMP_SPEED = 0.25;

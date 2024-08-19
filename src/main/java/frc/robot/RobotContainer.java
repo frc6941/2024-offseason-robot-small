@@ -45,8 +45,8 @@ import frc.robot.subsystems.shooter.shooter;
 import frc.robot.subsystems.led.led;
 
 public class RobotContainer {
-    private BeamBreak intakerBeamBreakH = new BeamBreak(3);
-    private BeamBreak intakerBeamBreakL = new BeamBreak(2);
+    private BeamBreak intakerBeamBreakH = new BeamBreak(Constants.BeamBreakConstants.INTAKER_BEAMBREAKH_ID); //3
+    private BeamBreak intakerBeamBreakL = new BeamBreak(Constants.BeamBreakConstants.INTAKER_BEAMBREAKL_ID); //2
     private double distance;
     Supplier<ShootingDecider.Destination> destinationSupplier;
     Swerve swerve = Swerve.getInstance();

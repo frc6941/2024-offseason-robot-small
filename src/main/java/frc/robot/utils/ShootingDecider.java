@@ -46,9 +46,10 @@ public class ShootingDecider implements Updatable {
         speakerParams.loadParameter(3.9, 0, 0);// 20240808
         speakerParams.ready();
 
-        highFerryParams.loadParameter(5.0, 3800 - 1000, 3800 - 1000);
-        highFerryParams.loadParameter(6.5, 5100 - 1000, 5100 - 1000);
-        highFerryParams.loadParameter(8.0, 5400 - 1000, 5400 - 1000);
+        highFerryParams.loadParameter(3.0, 1000, 1000);
+        highFerryParams.loadParameter(5.0, 2800, 2800);
+        highFerryParams.loadParameter(6.5, 4100, 4100);
+        highFerryParams.loadParameter(8.0, 4400, 4400);
         highFerryParams.loadParameter(9.5, 4800, 4800);
         highFerryParams.loadParameter(11.0, 4800, 4800);
 
