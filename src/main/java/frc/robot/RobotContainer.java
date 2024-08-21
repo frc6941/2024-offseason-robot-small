@@ -45,8 +45,8 @@ import frc.robot.subsystems.shooter.shooter;
 import frc.robot.subsystems.led.led;
 
 public class RobotContainer {
-    private BeamBreak intakerBeamBreakH = new BeamBreak(Constants.BeamBreakConstants.INTAKER_BEAMBREAKH_ID); //3
-    private BeamBreak intakerBeamBreakL = new BeamBreak(Constants.BeamBreakConstants.INTAKER_BEAMBREAKL_ID); //2
+    private BeamBreak intakerBeamBreakH = new BeamBreak(Constants.BeamBreakConstants.INTAKER_BEAMBREAKH_ID); // 3
+    private BeamBreak intakerBeamBreakL = new BeamBreak(Constants.BeamBreakConstants.INTAKER_BEAMBREAKL_ID); // 2
     private double distance;
     Supplier<ShootingDecider.Destination> destinationSupplier;
     Swerve swerve = Swerve.getInstance();
@@ -118,6 +118,7 @@ public class RobotContainer {
                         false),
                         swerve));
 
+        // initial
         Constants.RobotConstants.driverController.start().onTrue(
                 Commands.runOnce(() -> {
                     swerve.resetHeadingController();
@@ -127,7 +128,7 @@ public class RobotContainer {
                                             Constants.FieldConstants.Speaker.centerSpeakerOpening.toTranslation2d()),
                                     Rotation2d.fromDegrees(
                                             swerve.getLocalizer().getLatestPose().getRotation().getDegrees())));
-                }));
+                }).ignoringDisable(true));
 
         // intake
         Constants.RobotConstants.driverController.rightBumper().onTrue(
