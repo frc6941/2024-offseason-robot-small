@@ -12,19 +12,20 @@ public class ShootingParameters {
     private double shootingVelocityH;
     private Rotation2d fieldAimingAngle;
     private edu.wpi.first.math.geometry.Translation2d delta;
+    private edu.wpi.first.math.geometry.Translation2d deltaChange;
 
     public ShootingParameters(double distance,
             double shootingVelocityL,
             double shootingVelocityH,
-            Rotation2d fieldAimingAngle, edu.wpi.first.math.geometry.Translation2d delta) {
+            Rotation2d fieldAimingAngle,
+            edu.wpi.first.math.geometry.Translation2d delta,
+            edu.wpi.first.math.geometry.Translation2d deltaChange) {
         this.distance = distance;
         this.shootingVelocityL = shootingVelocityL;
         this.shootingVelocityH = shootingVelocityH;
         this.fieldAimingAngle = fieldAimingAngle;
         this.delta = delta;
+        this.deltaChange = deltaChange;
     }
-
-
-
 
 }

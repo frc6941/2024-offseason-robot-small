@@ -43,10 +43,10 @@ public class ChassisAimSpeakerYAutoCommand extends Command {
                         0,
                         true,
                         false),
-                        swerve).withTimeout(shootingDecider.getShootingParameter(destinationSupplier.get(),
+                        swerve).withTimeout((shootingDecider.getShootingParameter(destinationSupplier.get(),
                         swerve.getLocalizer().getCoarseFieldPose(0))
-                        .getDelta().getY()/3.4));
-
+                        .getDeltaChange().getY())/3.4));
+        
 
     }
 

@@ -94,7 +94,7 @@ public class ShootingDecider implements Updatable {
                 launchParam = useMid ? lowFerryParams.getParameters(delta.getNorm())
                         : highFerryParams.getParameters(delta.getNorm());
                 return new ShootingParameters(delta.getNorm(), launchParam.getFirst(), launchParam.getSecond(),
-                        new Rotation2d(delta.getX(), delta.getY()).rotateBy(Rotation2d.fromDegrees(180)),delta);
+                        new Rotation2d(delta.getX(), delta.getY()).rotateBy(Rotation2d.fromDegrees(180)),delta,null);
             case SPEAKER:
                 target = AllianceFlipUtil.apply(FieldConstants.Speaker.centerSpeakerOpening).toTranslation2d();
                 targetChange1 = AllianceFlipUtil.apply(FieldConstants.Speaker.centerSpeakerOpeningChange).toTranslation2d();
@@ -104,7 +104,7 @@ public class ShootingDecider implements Updatable {
                 launchParam = speakerParams.getParameters(delta.getNorm());
 
                 return new ShootingParameters(delta.getNorm(), launchParam.getFirst(), launchParam.getSecond(),
-                        new Rotation2d(delta.getX(), delta.getY()).rotateBy(Rotation2d.fromDegrees(180)),deltaChange);
+                        new Rotation2d(delta.getX(), delta.getY()).rotateBy(Rotation2d.fromDegrees(180)),delta,deltaChange);
             default:
                 throw new IllegalArgumentException("Illegal destination: undefined.");
         }
