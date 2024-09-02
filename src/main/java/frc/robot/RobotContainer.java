@@ -83,7 +83,7 @@ public class RobotContainer {
 
         NamedCommands.registerCommand("shoot", shoot().withTimeout(0.2));
         NamedCommands.registerCommand("intake", intake().withTimeout(3));
-        NamedCommands.registerCommand("intake1", intake().withTimeout(4));
+        NamedCommands.registerCommand("intake1", intake().withTimeout(4.7));
         AutoBuilder.configureHolonomic(
                 () -> Swerve.getInstance().getLocalizer().getCoarseFieldPose(0),
                 (Pose2d pose2d) -> Swerve.getInstance().resetPose(pose2d),
@@ -176,8 +176,7 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
         // return autoChooser.get();
-        return AutoBuilder.buildAuto("B3");
-
+        return AutoBuilder.buildAuto("B4");
     }
 
     // commands
