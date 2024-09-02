@@ -93,8 +93,9 @@ public class Constants {
         public static final class Speaker {
 
             // corners (blue alliance origin)
-            public static final Translation3d topRightSpeaker = new Translation3d(
-                    edu.wpi.first.math.util.Units.inchesToMeters(18.055),
+
+            public static final Translation3d topRightSpeakerChange = new Translation3d(
+                    edu.wpi.first.math.util.Units.inchesToMeters(18.055+66*2),
                     edu.wpi.first.math.util.Units.inchesToMeters(238.815),
                     edu.wpi.first.math.util.Units.inchesToMeters(83.091));
 
@@ -106,14 +107,24 @@ public class Constants {
             public static final Translation3d bottomRightSpeaker = new Translation3d(0.0,
                     edu.wpi.first.math.util.Units.inchesToMeters(238.815),
                     edu.wpi.first.math.util.Units.inchesToMeters(78.324));
+            public static final Translation3d topRightSpeaker = new Translation3d(
+                    edu.wpi.first.math.util.Units.inchesToMeters(18.055),
+                    edu.wpi.first.math.util.Units.inchesToMeters(238.815),
+                    edu.wpi.first.math.util.Units.inchesToMeters(83.091));
             public static final Translation3d bottomLeftSpeaker = new Translation3d(0.0,
                     edu.wpi.first.math.util.Units.inchesToMeters(197.765),
                     edu.wpi.first.math.util.Units.inchesToMeters(78.324));
+            public static final Translation3d bottomLeftSpeakerChange = new Translation3d(0.0,
+                    edu.wpi.first.math.util.Units.inchesToMeters(197.765),
+                    edu.wpi.first.math.util.Units.inchesToMeters(78.324));
+
 
             /**
              * Center of the speaker opening (blue alliance)
              */
             public static final Translation3d centerSpeakerOpening = bottomLeftSpeaker.interpolate(topRightSpeaker,
+                    0.5);
+            public static final Translation3d centerSpeakerOpeningChange = bottomLeftSpeakerChange.interpolate(topRightSpeakerChange,
                     0.5);
         }
 
@@ -168,13 +179,11 @@ public class Constants {
         }
     }
 
-    public static  class BeamBreakConstants {
-        public static final int INTAKER_BEAMBREAKH_ID = 3;
-        public static final int INTAKER_BEAMBREAKL_ID = 2;
-    }
-
     public static class IntakerConstants {
         public static final int INTAKE_MOTOR_ID = 15;
+
+        public static final int INTAKER_BEAMBREAKH_ID = 3;
+        public static final int INTAKER_BEAMBREAKL_ID = 2;
 
         public static final double INTAKER_IN_SPEED = 0.5;
         public static final double INTAKER_OUT_SPEED = -1;
@@ -245,8 +254,8 @@ public class Constants {
         /** The max turning speed of the swerve */
         public static final Measure<Velocity<Angle>> maxAngularRate = RotationsPerSecond.of(1.5 * Math.PI);
 
-        public static final double deadband = maxSpeed.magnitude() * 0.01;
-        public static final double rotationalDeadband = maxAngularRate.magnitude() * 0.01;
+        public static final double deadband = maxSpeed.magnitude() * 0.1;
+        public static final double rotationalDeadband = maxAngularRate.magnitude() * 0.1;
 
         public static final SlewRateLimiter xLimiter = new SlewRateLimiter(3, -3.25, 0);
         public static final SlewRateLimiter yLimiter = new SlewRateLimiter(3, -3.25, 0);
