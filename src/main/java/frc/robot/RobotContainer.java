@@ -34,19 +34,21 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.commands.ledPattern.BlinkLight;
 import frc.robot.commands.ledPattern.ConstLight;
 import frc.robot.commands.ChassisAimAutoCommand;
-import frc.robot.commands.IntakerOut;
+import frc.robot.commands.ChassisAimSpeakerXAutoCommand;
+import frc.robot.commands.ChassisAimSpeakerYAutoCommand;
+import frc.robot.commands.intakerout;
 import frc.robot.commands.FlyWheelRampUp;
-import frc.robot.commands.IntakerCommand;
-import frc.robot.commands.ShooterCommand;
-import frc.robot.commands.ShooterAmp;
-import frc.robot.commands.RumbleCommand;
+import frc.robot.commands.intakercommand;
+import frc.robot.commands.shootercommand;
+import frc.robot.commands.shooteramp;
+import frc.robot.commands.rumblecommand;
 import frc.robot.subsystems.intaker.intaker;
 import frc.robot.subsystems.shooter.shooter;
 import frc.robot.subsystems.led.led;
 
 public class RobotContainer {
-    private BeamBreak intakerBeamBreakH = new BeamBreak(Constants.BeamBreakConstants.INTAKER_BEAMBREAKH_ID); // 3
-    private BeamBreak intakerBeamBreakL = new BeamBreak(Constants.BeamBreakConstants.INTAKER_BEAMBREAKL_ID); // 2
+    private BeamBreak intakerBeamBreakH = new BeamBreak(3);
+    private BeamBreak intakerBeamBreakL = new BeamBreak(2);
     private double distance;
     Supplier<ShootingDecider.Destination> destinationSupplier;
     Swerve swerve = Swerve.getInstance();
@@ -83,7 +85,7 @@ public class RobotContainer {
 
         NamedCommands.registerCommand("shoot", shoot().withTimeout(0.2));
         NamedCommands.registerCommand("intake", intake().withTimeout(3));
-        NamedCommands.registerCommand("intake1", intake().withTimeout(4));
+        NamedCommands.registerCommand("intake1", intake().withTimeout(6));
         AutoBuilder.configureHolonomic(
                 () -> Swerve.getInstance().getLocalizer().getCoarseFieldPose(0),
                 (Pose2d pose2d) -> Swerve.getInstance().resetPose(pose2d),
@@ -118,7 +120,6 @@ public class RobotContainer {
                         false),
                         swerve));
 
-        // initial
         Constants.RobotConstants.driverController.start().onTrue(
                 Commands.runOnce(() -> {
                     swerve.resetHeadingController();
@@ -135,11 +136,11 @@ public class RobotContainer {
                 Commands.sequence(
                         Commands.parallel(
                                 new ConstLight(led, 255, 0, 0),
-                                new IntakerCommand(intaker, shooter, intakerBeamBreakH, intakerBeamBreakL),
-                                new RumbleCommand(Seconds.of(0.5),
+                                new intakercommand(intaker, shooter, intakerBeamBreakH, intakerBeamBreakL),
+                                new rumblecommand(Seconds.of(0.5),
                                         Constants.RobotConstants.driverController.getHID())),
                         Commands.parallel(
-                                new RumbleCommand(Seconds.of(1),
+                                new rumblecommand(Seconds.of(1),
                                         Constants.RobotConstants.driverController.getHID()),
                                 Commands.sequence(
                                         new BlinkLight(led, Seconds.of(1), 0, 255, 0),
@@ -148,44 +149,53 @@ public class RobotContainer {
         // shoot speaker
         Constants.RobotConstants.driverController.leftBumper().whileTrue(
                 Commands.parallel(
-                        new ShooterCommand(shooter, intaker),
+                        new shootercommand(shooter, intaker),
                         new ConstLight(led, 0, 0, 0)));
         Constants.RobotConstants.driverController.leftTrigger().onTrue(
-                new ChassisAimAutoCommand(swerve, () -> Destination.SPEAKER).withTimeout(1.2));
+                Commands.sequence(
+                        Commands.parallel(
+                        Commands.parallel(
+                                new ChassisAimSpeakerXAutoCommand(swerve, () -> Destination.SPEAKER),
+                                new ChassisAimSpeakerYAutoCommand(swerve, () -> Destination.SPEAKER)
+                        ),new ChassisAimAutoCommand(swerve, () -> Destination.SPEAKER).withTimeout(1))
+                        ,new shootercommand(shooter, intaker))
+        );
+
+
 
         // pass
         Constants.RobotConstants.driverController.x().onTrue(
                 Commands.sequence(
-                        new ChassisAimAutoCommand(swerve, () -> Destination.FERRY).withTimeout(0.8),
+                        new ChassisAimAutoCommand(swerve, () -> Destination.FERRY).withTimeout(1),
                         Commands.parallel(
                                 new FlyWheelRampUp(intaker, shooter, intakerBeamBreakL, intakerBeamBreakH,
-                                        () -> Destination.FERRY),
+                                        () -> Destination.FERRY).withTimeout(2),
                                 new ConstLight(led, 0, 0, 0))));
 
         // intake out
         Constants.RobotConstants.driverController.b().whileTrue(Commands.parallel(
-                new IntakerOut(intaker, shooter),
+                new intakerout(intaker, shooter),
                 new ConstLight(led, 0, 0, 0)));
 
         // shoot amp
         Constants.RobotConstants.driverController.y().whileTrue(
                 Commands.parallel(
-                        new ShooterAmp(shooter, intaker),
+                        new shooteramp(shooter, intaker),
                         new ConstLight(led, 0, 0, 0)));
     }
 
     public Command getAutonomousCommand() {
         // return autoChooser.get();
-        return AutoBuilder.buildAuto("B3");
+        return AutoBuilder.buildAuto("B2");
 
     }
 
     // commands
     private Command shoot() {
-        return new ShooterCommand(shooter, intaker);
+        return new shootercommand(shooter, intaker);
     }
 
     private Command intake() {
-        return new IntakerCommand(intaker, shooter, intakerBeamBreakH, intakerBeamBreakL);
+        return new intakercommand(intaker, shooter, intakerBeamBreakH, intakerBeamBreakL);
     }
 }
