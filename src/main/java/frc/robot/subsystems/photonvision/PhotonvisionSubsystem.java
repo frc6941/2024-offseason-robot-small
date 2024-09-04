@@ -1,6 +1,6 @@
 package frc.robot.subsystems.photonvision;
 
-import static frc.alotobots.library.vision.photonvision.PhotonvisionSubsystemConstants.*;
+import static frc.robot.subsystems.photonvision.PhotonvisionSubsystemConstants.*;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
