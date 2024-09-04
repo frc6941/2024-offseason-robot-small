@@ -153,14 +153,19 @@ public class RobotContainer {
                         new ConstLight(led, 0, 0, 0)));
         Constants.RobotConstants.driverController.leftTrigger().onTrue(
                 Commands.sequence(
-                        Commands.sequence(new ChassisAimAutoCommand(swerve, () -> Destination.SPEAKER).withTimeout(1),
-                        Commands.parallel(
-                                new ChassisAimSpeakerXAutoCommand(swerve, () -> Destination.SPEAKER),
-                                new ChassisAimSpeakerYAutoCommand(swerve, () -> Destination.SPEAKER)
-
-                        ))
-
-                   ));
+                        Commands.sequence(
+                                Commands.sequence(
+                                        new ChassisAimAutoCommand(swerve, () -> Destination.SPEAKER).withTimeout(1),
+                                        Commands.parallel(
+                                            new ChassisAimSpeakerXAutoCommand(swerve, () -> Destination.SPEAKER),
+                                            new ChassisAimSpeakerYAutoCommand(swerve, () -> Destination.SPEAKER)
+                                        )
+                                )
+                                ,new ChassisAimAutoCommand(swerve, () -> Destination.SPEAKER).withTimeout(1)
+                        )
+                        ,new shootercommand(shooter, intaker)
+                )
+        );
 
 
 
