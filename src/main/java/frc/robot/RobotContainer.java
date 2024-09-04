@@ -10,17 +10,17 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.display.Display;
 import frc.robot.display.OperatorDashboard;
 import frc.robot.drivers.BeamBreak;
-import frc.robot.subsystems.limelight.Limelight;
+import frc.robot.subsystems.Vision.VisionIOLimelight;
+import frc.robot.subsystems.Vision.VisionSubsystem;
 import frc.robot.utils.AllianceFlipUtil;
 import frc.robot.utils.Utils;
 import frc.robot.commands.ledPattern.BlinkLight;
 import frc.robot.commands.ledPattern.ConstLight;
-import frc.robot.commands.ledPattern.ConstLight;
-import frc.robot.drivers.BeamBreak;
 import org.frcteam6941.looper.UpdateManager;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -49,25 +49,35 @@ public class RobotContainer {
             Constants.ShooterConstants.SHOOTER_MOTORL_ID,
             Constants.RobotConstants.CAN_BUS_NAME);
     led led = new led();
-    Limelight limelight = Limelight.getInstance();
     Display display = Display.getInstance();
     @Getter
     private LoggedDashboardChooser<Command> autoChooser;
 
     OperatorDashboard dashboard = OperatorDashboard.getInstance();
 
+    VisionSubsystem vision;
+
     @Getter
     private UpdateManager updateManager;
 
     public RobotContainer() {
-        updateManager = new UpdateManager(swerve,
-                limelight,
+        updateManager = new UpdateManager(
+                swerve,
                 display);
         updateManager.registerAll();
 
         configureAuto();
         configureBindings();
+        configureSubsystems();
         System.out.println("Init Completed!");
+    }
+
+    public void configureSubsystems() {
+        if (RobotBase.isReal()) {
+            vision = new VisionSubsystem(new VisionIOLimelight());
+        } else {
+            vision = new VisionSubsystem(new VisionIOLimelight());
+        }
     }
 
     /** Bind Auto */
