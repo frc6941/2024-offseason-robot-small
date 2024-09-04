@@ -157,9 +157,10 @@ public class RobotContainer {
                         Commands.parallel(
                                 new ChassisAimSpeakerXAutoCommand(swerve, () -> Destination.SPEAKER),
                                 new ChassisAimSpeakerYAutoCommand(swerve, () -> Destination.SPEAKER)
+
                         ))
-                        ,new shootercommand(shooter, intaker))
-        );
+
+                   ));
 
 
 
