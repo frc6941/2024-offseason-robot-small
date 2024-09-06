@@ -5,11 +5,11 @@ import frc.robot.subsystems.shooter.shooter;
 import frc.robot.subsystems.intaker.intaker;
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class ShooterCommand extends Command {
+public class shootercommand extends Command {
     private final shooter shooter;
     private final intaker intaker;
 
-    public ShooterCommand(shooter shooter, intaker intaker) {
+    public shootercommand(shooter shooter, intaker intaker) {
         this.shooter = shooter;
         this.intaker = intaker;
 

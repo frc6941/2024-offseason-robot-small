@@ -6,12 +6,12 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class RumbleCommand extends Command {
+public class rumblecommand extends Command {
     private final GenericHID[] hid;
     private final Timer timer = new Timer();
     private final Measure<Time> rumbleTime;
 
-    public RumbleCommand(Measure<Time> seconds, GenericHID... hid) {
+    public rumblecommand(Measure<Time> seconds, GenericHID... hid) {
         this.hid = hid;
         this.rumbleTime = seconds;
     }

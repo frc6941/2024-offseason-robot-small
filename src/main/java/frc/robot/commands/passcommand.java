@@ -6,11 +6,11 @@ import frc.robot.Constants;
 import frc.robot.display.OperatorDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class PassCommand extends Command {
+public class passcommand extends Command {
     private shooter shooter;
     private intaker intaker;
 
-    public PassCommand(shooter shooter, intaker intaker) {
+    public sasscommand(shooter shooter, intaker intaker) {
         this.shooter = shooter;
         this.intaker = intaker;
         addRequirements(shooter, intaker);

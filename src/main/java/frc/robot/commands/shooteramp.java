@@ -8,11 +8,11 @@ import frc.robot.subsystems.intaker.intaker;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class ShooterAmp extends Command {
+public class shooteramp extends Command {
     private shooter shooter;
     private intaker intaker;
 
-    public ShooterAmp(shooter shooter, intaker intaker) {
+    public shooteramp(shooter shooter, intaker intaker) {
         this.shooter = shooter;
         this.intaker = intaker;
         addRequirements(shooter, intaker);
