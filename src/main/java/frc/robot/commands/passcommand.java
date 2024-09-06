@@ -10,7 +10,7 @@ public class passcommand extends Command {
     private shooter shooter;
     private intaker intaker;
 
-    public sasscommand(shooter shooter, intaker intaker) {
+    public passcommand(shooter shooter, intaker intaker) {
         this.shooter = shooter;
         this.intaker = intaker;
         addRequirements(shooter, intaker);
