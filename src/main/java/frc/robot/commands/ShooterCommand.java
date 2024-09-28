@@ -1,21 +1,16 @@
 package frc.robot.commands;
 
 import frc.robot.Constants;
-import frc.robot.subsystems.shooter.shooter;
-import frc.robot.subsystems.swerve.Swerve;
-import frc.robot.subsystems.intaker.intaker;
-
-import java.util.function.DoubleSupplier;
+import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.intaker.Intaker;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 
 public class ShooterCommand extends Command {
-    private final shooter shooter;
-    private final intaker intaker;
+    private final Shooter shooter;
+    private final Intaker intaker;
 
-    public ShooterCommand(shooter shooter, intaker intaker) {
+    public ShooterCommand(Shooter shooter, Intaker intaker) {
         
         
         

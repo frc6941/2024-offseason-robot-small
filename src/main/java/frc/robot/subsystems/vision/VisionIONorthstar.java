@@ -1,9 +1,9 @@
-package frc.robot.subsystems.Vision;
+package frc.robot.subsystems.vision;
 
 import java.util.Optional;
 
-public class VisionIOPhotonVision implements VisionIO {
-	public VisionIOPhotonVision() {
+public class VisionIONorthstar implements VisionIO {
+	public VisionIONorthstar() {
 	}
 
 	@Override

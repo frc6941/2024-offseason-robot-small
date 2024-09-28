@@ -2,19 +2,19 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.subsystems.shooter.shooter;
+import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.utils.ShootingDecider;
 
 import java.util.function.Supplier;
 
 public class FlyWheelRampUp extends Command {
-    private final shooter shooter;
+    private final Shooter shooter;
     private final Supplier<ShootingDecider.Destination> destinationSupplier;
     private final ShootingDecider shootingDecider;
 
     public FlyWheelRampUp(
-            shooter shooter,
+            Shooter shooter,
             Supplier<ShootingDecider.Destination> destinationSupplier
 
     ) {

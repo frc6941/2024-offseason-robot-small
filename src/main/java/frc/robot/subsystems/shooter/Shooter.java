@@ -5,15 +5,14 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class shooter extends SubsystemBase {
+public class Shooter extends SubsystemBase {
     private final TalonFX shooterMotorH;
     private final TalonFX shooterMotorL;
 
-    public shooter(int idH, int idL, String canBusName) {
+    public Shooter(int idH, int idL, String canBusName) {
         shooterMotorH = new TalonFX(idH, canBusName);
         shooterMotorL = new TalonFX(idL, canBusName);
     }

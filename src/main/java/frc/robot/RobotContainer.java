@@ -15,8 +15,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.display.Display;
 import frc.robot.display.OperatorDashboard;
 import frc.robot.drivers.BeamBreak;
-import frc.robot.subsystems.Vision.VisionIOLimelight;
-import frc.robot.subsystems.Vision.VisionSubsystem;
+import frc.robot.subsystems.vision.VisionIOLimelight;
+import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.utils.AllianceFlipUtil;
 import frc.robot.utils.Utils;
 import frc.robot.commands.ledPattern.BlinkLight;
@@ -34,9 +34,9 @@ import frc.robot.commands.PassCommand;
 import frc.robot.commands.ShooterCommand;
 import frc.robot.commands.ShooterAmp;
 import frc.robot.commands.RumbleCommand;
-import frc.robot.subsystems.intaker.intaker;
-import frc.robot.subsystems.shooter.shooter;
-import frc.robot.subsystems.led.led;
+import frc.robot.subsystems.intaker.Intaker;
+import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.led.Led;
 import lombok.Getter;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -44,11 +44,11 @@ public class RobotContainer {
     private BeamBreak intakerBeamBreakH = new BeamBreak(3);
     private BeamBreak intakerBeamBreakL = new BeamBreak(2);
     Swerve swerve = Swerve.getInstance();
-    intaker intaker = new intaker(Constants.IntakerConstants.INTAKE_MOTOR_ID, Constants.RobotConstants.CAN_BUS_NAME);
-    shooter shooter = new shooter(Constants.ShooterConstants.SHOOTER_MOTORH_ID,
+    Intaker intaker = new Intaker(Constants.IntakerConstants.INTAKE_MOTOR_ID, Constants.RobotConstants.CAN_BUS_NAME);
+    Shooter shooter = new Shooter(Constants.ShooterConstants.SHOOTER_MOTORH_ID,
             Constants.ShooterConstants.SHOOTER_MOTORL_ID,
             Constants.RobotConstants.CAN_BUS_NAME);
-    led led = new led();
+    Led led = new Led();
     Display display = Display.getInstance();
     @Getter
     private LoggedDashboardChooser<Command> autoChooser;

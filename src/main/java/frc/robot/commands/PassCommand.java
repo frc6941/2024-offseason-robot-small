@@ -1,16 +1,16 @@
 package frc.robot.commands;
 
-import frc.robot.subsystems.shooter.shooter;
-import frc.robot.subsystems.intaker.intaker;
+import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.intaker.Intaker;
 import frc.robot.Constants;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class PassCommand extends Command {
-    private shooter shooter;
-    private intaker intaker;
+    private Shooter shooter;
+    private Intaker intaker;
 
-    public PassCommand(shooter shooter, intaker intaker) {
+    public PassCommand(Shooter shooter, Intaker intaker) {
         this.shooter = shooter;
         this.intaker = intaker;
         addRequirements(shooter, intaker);

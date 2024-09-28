@@ -8,10 +8,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
 public class IntakerOut extends Command {
-    private final intaker intaker;
-    private final shooter shooter;
+    private final Intaker intaker;
+    private final Shooter shooter;
 
-    public IntakerOut(intaker intaker , shooter shooter) {
+    public IntakerOut(Intaker intaker , Shooter shooter) {
         this.intaker = intaker;
         this.shooter = shooter;
         addRequirements(intaker , shooter);

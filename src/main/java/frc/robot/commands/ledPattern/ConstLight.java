@@ -6,13 +6,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 public class ConstLight extends Command {
 
-    private led led;
+    private Led led;
     private int R;
     private int G;
     private int B;
     private boolean flag = false;
 
-    public ConstLight(led led, int R, int G, int B) {
+    public ConstLight(Led led, int R, int G, int B) {
         this.led = led;
         this.R = R;
         this.G = G;
