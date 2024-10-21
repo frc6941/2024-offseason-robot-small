@@ -3,13 +3,16 @@ package frc.robot.display;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.FieldConstants;
+import org.littletonrobotics.junction.Logger;
 
 public class FieldView {
     private final Field2d mField2d = new Field2d();
-
+//    NetworkTableInstance.
     public FieldView() {
         SmartDashboard.putData(mField2d);
     }
@@ -34,6 +37,12 @@ public class FieldView {
 
         mField2d.setRobotPose(pose);
         mField2d.getObject("Ghost").setPose(ghost);
+        Logger.recordOutput("SouthStar",
+                new Pose2d(
+                        NetworkTableInstance.getDefault().getDoubleTopic("/orangePi5Plus/output/demo_observations/1").subscribe(0.0).get(),
+                        NetworkTableInstance.getDefault().getDoubleTopic("/orangePi5Plus/output/demo_observations/2").subscribe(0.0).get(),
+                Rotation2d.fromDegrees(NetworkTableInstance.getDefault().getDoubleTopic("/orangePi5Plus/output/demo_observations/3").subscribe(0.0).get()))
+        );
     }
 
 }
