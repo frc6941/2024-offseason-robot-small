@@ -1,48 +1,36 @@
 package frc.robot;
 
 import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation3d;
-import org.frcteam6941.swerve.SwerveSetpointGenerator.KinematicLimits;
-
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstantsFactory;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.units.Angle;
-import edu.wpi.first.units.Current;
-import edu.wpi.first.units.Distance;
-import edu.wpi.first.units.Measure;
-import static edu.wpi.first.units.Units.Amps;
-import static edu.wpi.first.units.Units.Inches;
-import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
-import static edu.wpi.first.units.Units.Volts;
-import edu.wpi.first.units.Velocity;
-import edu.wpi.first.units.Voltage;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.units.*;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.utils.TunableNumber;
+import lombok.Getter;
+import org.frcteam6941.swerve.SwerveSetpointGenerator.KinematicLimits;
+
+import java.io.IOException;
+import java.nio.file.Path;
+
+import static edu.wpi.first.units.Units.*;
 
 public class Constants {
+    public static final boolean disableHAL = false;
     public static final boolean TUNING = true;
     public static final double LOOPER_DT = 1 / 100.0;
-
-    public class RobotConstants {
-
-        public static String CAN_BUS_NAME = "9620CANivore1";
-
-        public static final CommandXboxController driverController = new CommandXboxController(0);
-
-        public static final CommandXboxController operatorController = new CommandXboxController(1);
-
-    }
 
     public static class FieldConstants {
         public static final double fieldLength = edu.wpi.first.math.util.Units.inchesToMeters(651.223);
@@ -51,10 +39,46 @@ public class Constants {
         public static final double wingOpponentX = fieldLength - wingX;
         public static final double podiumX = edu.wpi.first.math.util.Units.inchesToMeters(126.75);
         public static final double startingLineX = edu.wpi.first.math.util.Units.inchesToMeters(74.111);
-
         public static final Translation2d ampCenter = new Translation2d(
                 edu.wpi.first.math.util.Units.inchesToMeters(72.455), fieldWidth);
         public static final double aprilTagWidth = edu.wpi.first.math.util.Units.inchesToMeters(6.50);
+
+        public static final AprilTagLayoutType defaultAprilTagType = AprilTagLayoutType.OFFICIAL;
+
+        @Getter
+        public enum AprilTagLayoutType {
+            OFFICIAL("2024-official"),
+            SPEAKERS_ONLY("2024-speakers"),
+            AMPS_ONLY("2024-amps"),
+            WPI("2024-wpi");
+
+            private final AprilTagFieldLayout layout;
+            private final String layoutString;
+
+            private AprilTagLayoutType(String name) {
+                if (Constants.disableHAL) {
+                    layout = null;
+                } else {
+                    try {
+                        layout =
+                                new AprilTagFieldLayout(
+                                        Path.of(Filesystem.getDeployDirectory().getPath(), "apriltags", name + ".json"));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                if (layout == null) {
+                    layoutString = "";
+                } else {
+                    try {
+                        layoutString = new ObjectMapper().writeValueAsString(layout);
+                    } catch (JsonProcessingException e) {
+                        throw new RuntimeException(
+                                "Failed to serialize AprilTag layout JSON " + toString() + "for Northstar");
+                    }
+                }
+            }
+        }
 
         /**
          * Staging locations for each note
@@ -185,24 +209,24 @@ public class Constants {
 
         public static final double SHOOTERH_SPEAKER_SPEED = 0.75;
         public static final double SHOOTERL_SPEAKER_SPEED = 0.65;
-        public static final double SHOOTERH_SPEAKER_VELOCITY = 0.75*4800;
-        public static final double SHOOTERL_SPEAKER_VELOCITY = 0.65*4800;
+        public static final double SHOOTERH_SPEAKER_VELOCITY = 0.75 * 4800;
+        public static final double SHOOTERL_SPEAKER_VELOCITY = 0.65 * 4800;
 
         public static final double SHOOTERH_AMP_SPEED = 0.17;
         public static final double SHOOTERL_AMP_SPEED = 0.25;
-        public static final double SHOOTERH_AMP_VELOCITY = 0.17*4800;
-        public static final double SHOOTERL_AMP_VELOCITY = 0.25*4800;
+        public static final double SHOOTERH_AMP_VELOCITY = 0.17 * 4800;
+        public static final double SHOOTERL_AMP_VELOCITY = 0.25 * 4800;
 
         public static final double SHOOTERH_PASS_SPEED = 0.98;
         public static final double SHOOTERL_PASS_SPEED = 0.98;
-        public static final double SHOOTERH_PASS_VELOCITY = 0.98*4800;
-        public static final double SHOOTERL_PASS_VELOCITY = 0.98*4800;
+        public static final double SHOOTERH_PASS_VELOCITY = 0.98 * 4800;
+        public static final double SHOOTERL_PASS_VELOCITY = 0.98 * 4800;
 
         public static final double SHOOTER_OUT_SPEED = -0.8;
-        public static final double SHOOTER_OUT_VELOCITY = -0.8*4800;
+        public static final double SHOOTER_OUT_VELOCITY = -0.8 * 4800;
 
         public static final double SHOOTER_IDLE_SPEED = 0.5;
-        public static final double SHOOTER_IDLE_VELOCITY = 0.5*4800;
+        public static final double SHOOTER_IDLE_VELOCITY = 0.5 * 4800;
 
         public static class shooterGainsClass {
             public static final TunableNumber SHOOTER_KP = new TunableNumber("SHOOTER PID/kp", 0.2);
@@ -217,6 +241,21 @@ public class Constants {
     public static class LedConstants {
         public static final int LED_PORT = 0;
         public static final int LED_BUFFER_LENGTH = 40;
+    }
+
+    public static class VisionConstants {
+        public static final String AIM_LIMELIGHT_NAME = "limelight";
+
+        public static double REJECT_ANGULAR_SPEED = 360;// degree
+        public static double REJECT_LINEAR_SPEED = 2.5;// m/s
+    }
+
+    public class RobotConstants {
+
+        public static final CommandXboxController driverController = new CommandXboxController(0);
+        public static final CommandXboxController operatorController = new CommandXboxController(1);
+        public static String CAN_BUS_NAME = "9620CANivore1";
+
     }
 
     public class SwerveConstants {
@@ -238,9 +277,13 @@ public class Constants {
                 .withPigeon2Id(PIGEON_ID)
                 .withPigeon2Configs(null); // optional
 
-        /** The max speed of the swerve (should not larger than speedAt12Volts) */
+        /**
+         * The max speed of the swerve (should not larger than speedAt12Volts)
+         */
         public static final Measure<Velocity<Distance>> maxSpeed = MetersPerSecond.of(5);
-        /** The max turning speed of the swerve */
+        /**
+         * The max turning speed of the swerve
+         */
         public static final Measure<Velocity<Angle>> maxAngularRate = RotationsPerSecond.of(1.2 * Math.PI);
 
         public static final double deadband = maxSpeed.magnitude() * 0.01;
@@ -248,17 +291,190 @@ public class Constants {
 
         public static final SlewRateLimiter xLimiter = new SlewRateLimiter(3, -3.25, 0);
         public static final SlewRateLimiter yLimiter = new SlewRateLimiter(3, -3.25, 0);
-
-        /** Gearing between the drive motor output shaft and the wheel. */
+        /**
+         * Theoretical free speed (m/s) at 12v applied output;
+         */
+        public static final Measure<Velocity<Distance>> speedAt12Volts = MetersPerSecond.of(6.0);
+        public static final KinematicLimits DRIVETRAIN_UNCAPPED = new KinematicLimits(
+                4.5,
+                50.0,
+                2000.0);
+        public static final KinematicLimits DRIVETRAIN_SMOOTHED = new KinematicLimits(
+                4.5,
+                30.0,
+                200.0);
+        public static final KinematicLimits DRIVETRAIN_LIMITED = new KinematicLimits(
+                2.0,
+                10.0,
+                1200.0);
+        public static final KinematicLimits DRIVETRAIN_ROBOT_ORIENTED = new KinematicLimits(
+                2.0,
+                5.0,
+                1500.0);
+        public static final SimpleMotorFeedforward DRIVETRAIN_FEEDFORWARD = new SimpleMotorFeedforward(
+                0.69522, 2.3623, 0.19367);
+        /**
+         * Spin PID
+         */
+        public static final Slot0Configs headingGains = new Slot0Configs()
+                .withKP(0.04)
+                .withKI(0)
+                .withKD(0);
+        /**
+         * Gearing between the drive motor output shaft and the wheel.
+         */
         private static final double DRIVE_GEAR_RATIO = 6.7460317460317460317460317460317;
-        /** Gearing between the steer motor output shaft and the azimuth gear. */
+        /**
+         * Gearing between the steer motor output shaft and the azimuth gear.
+         */
         private static final double STEER_GEAR_RATIO = 21.428571428571428571428571428571;
-
-        /** Radius of the wheel in meters. */
+        /**
+         * Radius of the wheel in meters.
+         */
         private static final Measure<Distance> wheelRadius = Meters.of(0.05);
-
-        /** The stator current at which the wheels start to slip */
+        /**
+         * The stator current at which the wheels start to slip
+         */
         private static final Measure<Current> slipCurrent = Amps.of(150.0);
+        /**
+         * Swerve steering gains
+         */
+        private static final Slot0Configs steerGains = new Slot0Configs()
+                .withKP(120)// 120
+                .withKI(0.2)// 0.2
+                .withKD(0.005)// 0.005
+                .withKS(0)
+                .withKV(0)
+                .withKA(0);
+        /**
+         * Swerve driving gains
+         */
+        private static final Slot0Configs driveGains = new Slot0Configs()
+                .withKP(1)
+                .withKI(0)
+                .withKD(0)
+                .withKS(0)
+                .withKV(0.12)
+                .withKA(0);
+        /**
+         * The closed-loop output type to use for the steer motors;
+         * This affects the PID/FF gains for the steer motors
+         */
+        private static final SwerveModule.ClosedLoopOutputType steerClosedLoopOutput = SwerveModule.ClosedLoopOutputType.Voltage;
+        /**
+         * The closed-loop output type to use for the drive motors;
+         * This affects the PID/FF gains for the drive motors
+         */
+        private static final SwerveModule.ClosedLoopOutputType driveClosedLoopOutput = SwerveModule.ClosedLoopOutputType.Voltage;
+        /**
+         * Simulation only
+         */
+        private static final double STEER_INERTIA = 0.00001;
+        /**
+         * Simulation only
+         */
+        private static final double DRIVE_INERTIA = 0.001;
+        /**
+         * Simulation only
+         */
+        private static final Measure<Voltage> steerFrictionVoltage = Volts.of(0.25);
+        /**
+         * Simulation only
+         */
+        private static final Measure<Voltage> driveFrictionVoltage = Volts.of(0.25);
+        /**
+         * Every 1 rotation of the azimuth results in COUPLE_RATIO drive motor turns;
+         */
+        private static final double COUPLE_RATIO = 3.5;
+        private static final boolean STEER_MOTOR_REVERSED = true;
+        private static final SwerveModuleConstantsFactory ConstantCreator = new SwerveModuleConstantsFactory()
+                .withDriveMotorGearRatio(DRIVE_GEAR_RATIO)
+                .withSteerMotorGearRatio(STEER_GEAR_RATIO)
+                .withWheelRadius(wheelRadius.in(Inches))
+                .withSlipCurrent(slipCurrent.magnitude())
+                .withSteerMotorGains(steerGains)
+                .withDriveMotorGains(driveGains)
+                .withSteerMotorClosedLoopOutput(steerClosedLoopOutput)
+                .withDriveMotorClosedLoopOutput(driveClosedLoopOutput)
+                .withSpeedAt12VoltsMps(speedAt12Volts.magnitude())
+                .withSteerInertia(STEER_INERTIA)
+                .withDriveInertia(DRIVE_INERTIA)
+                .withSteerFrictionVoltage(steerFrictionVoltage.magnitude())
+                .withDriveFrictionVoltage(driveFrictionVoltage.magnitude())
+                .withFeedbackSource(SwerveModuleConstants.SteerFeedbackType.SyncCANcoder)
+                .withCouplingGearRatio(COUPLE_RATIO)
+                .withSteerMotorInverted(STEER_MOTOR_REVERSED);
+        // Front Left
+        private static final int FRONT_LEFT_DRIVE_MOTOR_ID = 13;
+        private static final int FRONT_LEFT_STEER_MOTOR_ID = 4;
+        private static final int FRONT_LEFT_ENCODER_ID = 8;
+        private static final double FRONT_LEFT_ENCODER_OFFSET = -0.60466015625;// 0.052955;//0.127686//0.5329550781
+        private static final Measure<Distance> frontLeftXPos = Meters.of(0.5);
+        private static final Measure<Distance> frontLeftYPos = Meters.of(0.5);
+        public static final SwerveModuleConstants FrontLeft = ConstantCreator.createModuleConstants(
+                FRONT_LEFT_STEER_MOTOR_ID,
+                FRONT_LEFT_DRIVE_MOTOR_ID,
+                FRONT_LEFT_ENCODER_ID,
+                FRONT_LEFT_ENCODER_OFFSET,
+                frontLeftXPos.magnitude(),
+                frontLeftYPos.magnitude(),
+                false);
+        // Front Right
+        private static final int FRONT_RIGHT_DRIVE_MOTOR_ID = 1;
+        private static final int FRONT_RIGHT_STEER_MOTOR_ID = 5;
+        private static final int FRONT_RIGHT_ENCODER_ID = 9;
+        private static final double FRONT_RIGHT_ENCODER_OFFSET = 0.309041015625;// 0.125685;//0.13623046875//0.117686//0.046875
+        private static final Measure<Distance> frontRightXPos = Meters.of(0.5);
+        private static final Measure<Distance> frontRightYPos = Meters.of(-0.5);
+        public static final SwerveModuleConstants FrontRight = ConstantCreator.createModuleConstants(
+                FRONT_RIGHT_STEER_MOTOR_ID,
+                FRONT_RIGHT_DRIVE_MOTOR_ID,
+                FRONT_RIGHT_ENCODER_ID,
+                FRONT_RIGHT_ENCODER_OFFSET,
+                frontRightXPos.magnitude(),
+                frontRightYPos.magnitude(),
+                true);
+        // Back Left
+        private static final int BACK_LEFT_DRIVE_MOTOR_ID = 2;
+        private static final int BACK_LEFT_STEER_MOTOR_ID = 6;
+        private static final int BACK_LEFT_ENCODER_ID = 10;
+        private static final double BACK_LEFT_ENCODER_OFFSET = 0.666462890625;// 0.773925;//-0.223//0.401611//0.77392578125
+        private static final Measure<Distance> backLeftXPos = Meters.of(-0.5);
+        private static final Measure<Distance> backLeftYPos = Meters.of(0.5);
+        public static final SwerveModuleConstants BackLeft = ConstantCreator.createModuleConstants(
+                BACK_LEFT_STEER_MOTOR_ID,
+                BACK_LEFT_DRIVE_MOTOR_ID,
+                BACK_LEFT_ENCODER_ID,
+                BACK_LEFT_ENCODER_OFFSET,
+                backLeftXPos.magnitude(),
+                backLeftYPos.magnitude(),
+                false);
+        // Back Right
+        private static final int BACK_RIGHT_DRIVE_MOTOR_ID = 3;
+        private static final int BACK_RIGHT_STEER_MOTOR_ID = 7;
+        private static final int BACK_RIGHT_ENCODER_ID = 11;
+        private static final double BACK_RIGHT_ENCODER_OFFSET = 0.257337890625;// 0.422119;//-0.5684550781//-0.064453//0.432279296875
+        private static final Measure<Distance> backRightXPos = Meters.of(-0.5);
+        private static final Measure<Distance> backRightYPos = Meters.of(-0.5);
+        public static final SwerveModuleConstants BackRight = ConstantCreator.createModuleConstants(
+                BACK_RIGHT_STEER_MOTOR_ID,
+                BACK_RIGHT_DRIVE_MOTOR_ID,
+                BACK_RIGHT_ENCODER_ID,
+                BACK_RIGHT_ENCODER_OFFSET,
+                backRightXPos.magnitude(),
+                backRightYPos.magnitude(),
+                true);
+        public static SwerveModuleConstants[] modules = {FrontLeft, FrontRight, BackLeft, BackRight};
+        public static final Translation2d[] modulePlacements = new Translation2d[]{
+                new Translation2d(SwerveConstants.FrontLeft.LocationX,
+                        SwerveConstants.FrontLeft.LocationY),
+                new Translation2d(SwerveConstants.FrontRight.LocationX,
+                        SwerveConstants.FrontRight.LocationY),
+                new Translation2d(SwerveConstants.BackLeft.LocationX,
+                        SwerveConstants.BackLeft.LocationY),
+                new Translation2d(SwerveConstants.BackRight.LocationX,
+                        SwerveConstants.BackRight.LocationY)
+        };
 
         public static class steerGainsClass {
             public static final TunableNumber STEER_KP = new TunableNumber("STEER PID/kp", 120);
@@ -278,177 +494,6 @@ public class Constants {
             public static final TunableNumber DRIVE_KS = new TunableNumber("DRIVE PID/ks", 0.14);
         }
 
-        /** Swerve steering gains */
-        private static final Slot0Configs steerGains = new Slot0Configs()
-                .withKP(120)// 120
-                .withKI(0.2)// 0.2
-                .withKD(0.005)// 0.005
-                .withKS(0)
-                .withKV(0)
-                .withKA(0);
-
-        /** Swerve driving gains */
-        private static final Slot0Configs driveGains = new Slot0Configs()
-                .withKP(1)
-                .withKI(0)
-                .withKD(0)
-                .withKS(0)
-                .withKV(0.12)
-                .withKA(0);
-
-        /**
-         * The closed-loop output type to use for the steer motors;
-         * This affects the PID/FF gains for the steer motors
-         */
-        private static final SwerveModule.ClosedLoopOutputType steerClosedLoopOutput = SwerveModule.ClosedLoopOutputType.Voltage;
-
-        /**
-         * The closed-loop output type to use for the drive motors;
-         * This affects the PID/FF gains for the drive motors
-         */
-        private static final SwerveModule.ClosedLoopOutputType driveClosedLoopOutput = SwerveModule.ClosedLoopOutputType.Voltage;
-
-        /** Theoretical free speed (m/s) at 12v applied output; */
-        public static final Measure<Velocity<Distance>> speedAt12Volts = MetersPerSecond.of(6.0);
-
-        /** Simulation only */
-        private static final double STEER_INERTIA = 0.00001;
-        /** Simulation only */
-        private static final double DRIVE_INERTIA = 0.001;
-        /** Simulation only */
-        private static final Measure<Voltage> steerFrictionVoltage = Volts.of(0.25);
-        /** Simulation only */
-        private static final Measure<Voltage> driveFrictionVoltage = Volts.of(0.25);
-
-        /**
-         * Every 1 rotation of the azimuth results in COUPLE_RATIO drive motor turns;
-         */
-        private static final double COUPLE_RATIO = 3.5;
-
-        private static final boolean STEER_MOTOR_REVERSED = true;
-
-        private static final SwerveModuleConstantsFactory ConstantCreator = new SwerveModuleConstantsFactory()
-                .withDriveMotorGearRatio(DRIVE_GEAR_RATIO)
-                .withSteerMotorGearRatio(STEER_GEAR_RATIO)
-                .withWheelRadius(wheelRadius.in(Inches))
-                .withSlipCurrent(slipCurrent.magnitude())
-                .withSteerMotorGains(steerGains)
-                .withDriveMotorGains(driveGains)
-                .withSteerMotorClosedLoopOutput(steerClosedLoopOutput)
-                .withDriveMotorClosedLoopOutput(driveClosedLoopOutput)
-                .withSpeedAt12VoltsMps(speedAt12Volts.magnitude())
-                .withSteerInertia(STEER_INERTIA)
-                .withDriveInertia(DRIVE_INERTIA)
-                .withSteerFrictionVoltage(steerFrictionVoltage.magnitude())
-                .withDriveFrictionVoltage(driveFrictionVoltage.magnitude())
-                .withFeedbackSource(SwerveModuleConstants.SteerFeedbackType.SyncCANcoder)
-                .withCouplingGearRatio(COUPLE_RATIO)
-                .withSteerMotorInverted(STEER_MOTOR_REVERSED);
-
-        // Front Left
-        private static final int FRONT_LEFT_DRIVE_MOTOR_ID = 13;
-        private static final int FRONT_LEFT_STEER_MOTOR_ID = 4;
-        private static final int FRONT_LEFT_ENCODER_ID = 8;
-        private static final double FRONT_LEFT_ENCODER_OFFSET = -0.60466015625;// 0.052955;//0.127686//0.5329550781
-        private static final Measure<Distance> frontLeftXPos = Meters.of(0.5);
-        private static final Measure<Distance> frontLeftYPos = Meters.of(0.5);
-
-        // Front Right
-        private static final int FRONT_RIGHT_DRIVE_MOTOR_ID = 1;
-        private static final int FRONT_RIGHT_STEER_MOTOR_ID = 5;
-        private static final int FRONT_RIGHT_ENCODER_ID = 9;
-        private static final double FRONT_RIGHT_ENCODER_OFFSET = 0.309041015625;// 0.125685;//0.13623046875//0.117686//0.046875
-        private static final Measure<Distance> frontRightXPos = Meters.of(0.5);
-        private static final Measure<Distance> frontRightYPos = Meters.of(-0.5);
-
-        // Back Left
-        private static final int BACK_LEFT_DRIVE_MOTOR_ID = 2;
-        private static final int BACK_LEFT_STEER_MOTOR_ID = 6;
-        private static final int BACK_LEFT_ENCODER_ID = 10;
-        private static final double BACK_LEFT_ENCODER_OFFSET = 0.666462890625;// 0.773925;//-0.223//0.401611//0.77392578125
-        private static final Measure<Distance> backLeftXPos = Meters.of(-0.5);
-        private static final Measure<Distance> backLeftYPos = Meters.of(0.5);
-
-        // Back Right
-        private static final int BACK_RIGHT_DRIVE_MOTOR_ID = 3;
-        private static final int BACK_RIGHT_STEER_MOTOR_ID = 7;
-        private static final int BACK_RIGHT_ENCODER_ID = 11;
-        private static final double BACK_RIGHT_ENCODER_OFFSET = 0.257337890625;// 0.422119;//-0.5684550781//-0.064453//0.432279296875
-        private static final Measure<Distance> backRightXPos = Meters.of(-0.5);
-        private static final Measure<Distance> backRightYPos = Meters.of(-0.5);
-
-        public static final SwerveModuleConstants FrontLeft = ConstantCreator.createModuleConstants(
-                FRONT_LEFT_STEER_MOTOR_ID,
-                FRONT_LEFT_DRIVE_MOTOR_ID,
-                FRONT_LEFT_ENCODER_ID,
-                FRONT_LEFT_ENCODER_OFFSET,
-                frontLeftXPos.magnitude(),
-                frontLeftYPos.magnitude(),
-                false);
-        public static final SwerveModuleConstants FrontRight = ConstantCreator.createModuleConstants(
-                FRONT_RIGHT_STEER_MOTOR_ID,
-                FRONT_RIGHT_DRIVE_MOTOR_ID,
-                FRONT_RIGHT_ENCODER_ID,
-                FRONT_RIGHT_ENCODER_OFFSET,
-                frontRightXPos.magnitude(),
-                frontRightYPos.magnitude(),
-                true);
-        public static final SwerveModuleConstants BackLeft = ConstantCreator.createModuleConstants(
-                BACK_LEFT_STEER_MOTOR_ID,
-                BACK_LEFT_DRIVE_MOTOR_ID,
-                BACK_LEFT_ENCODER_ID,
-                BACK_LEFT_ENCODER_OFFSET,
-                backLeftXPos.magnitude(),
-                backLeftYPos.magnitude(),
-                false);
-        public static final SwerveModuleConstants BackRight = ConstantCreator.createModuleConstants(
-                BACK_RIGHT_STEER_MOTOR_ID,
-                BACK_RIGHT_DRIVE_MOTOR_ID,
-                BACK_RIGHT_ENCODER_ID,
-                BACK_RIGHT_ENCODER_OFFSET,
-                backRightXPos.magnitude(),
-                backRightYPos.magnitude(),
-                true);
-
-        public static SwerveModuleConstants[] modules = { FrontLeft, FrontRight, BackLeft, BackRight };
-
-        public static final Translation2d[] modulePlacements = new Translation2d[] {
-                new Translation2d(SwerveConstants.FrontLeft.LocationX,
-                        SwerveConstants.FrontLeft.LocationY),
-                new Translation2d(SwerveConstants.FrontRight.LocationX,
-                        SwerveConstants.FrontRight.LocationY),
-                new Translation2d(SwerveConstants.BackLeft.LocationX,
-                        SwerveConstants.BackLeft.LocationY),
-                new Translation2d(SwerveConstants.BackRight.LocationX,
-                        SwerveConstants.BackRight.LocationY)
-        };
-
-        public static final KinematicLimits DRIVETRAIN_UNCAPPED = new KinematicLimits(
-                4.5,
-                50.0,
-                2000.0);
-        public static final KinematicLimits DRIVETRAIN_SMOOTHED = new KinematicLimits(
-                4.5,
-                30.0,
-                200.0);
-        public static final KinematicLimits DRIVETRAIN_LIMITED = new KinematicLimits(
-                2.0,
-                10.0,
-                1200.0);
-        public static final KinematicLimits DRIVETRAIN_ROBOT_ORIENTED = new KinematicLimits(
-                2.0,
-                5.0,
-                1500.0);
-
-        public static final SimpleMotorFeedforward DRIVETRAIN_FEEDFORWARD = new SimpleMotorFeedforward(
-                0.69522, 2.3623, 0.19367);
-
-        /** Spin PID */
-        public static final Slot0Configs headingGains = new Slot0Configs()
-                .withKP(0.04)
-                .withKI(0)
-                .withKD(0);
-
         public static class headingController {
             public static final frc.robot.utils.TunableNumber HEADING_KP = new frc.robot.utils.TunableNumber("HEADING PID/kp", 0.08);
             public static final frc.robot.utils.TunableNumber HEADING_KI = new frc.robot.utils.TunableNumber("HEADING PID/ki", 0.0002);
@@ -457,13 +502,6 @@ public class Constants {
             // TODO
         }
 
-    }
-
-    public static class VisionConstants {
-        public static final String AIM_LIMELIGHT_NAME = "limelight";
-
-        public static double REJECT_ANGULAR_SPEED = 360;// degree
-        public static double REJECT_LINEAR_SPEED = 2.5;// m/s
     }
 
 }
