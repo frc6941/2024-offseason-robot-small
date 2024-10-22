@@ -9,10 +9,14 @@ package frc.robot.subsystems.apriltagvision;
 
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.FieldConstants.AprilTagLayoutType;
+import frc.robot.display.Display;
+import lombok.Getter;
 import lombok.experimental.ExtensionMethod;
 import org.littletonrobotics.GeomUtil;
 import org.littletonrobotics.LoggedTunableNumber;
@@ -34,16 +38,20 @@ public class AprilTagVision extends SubsystemBase {
     private static final LoggedTunableNumber timestampOffset =
             new LoggedTunableNumber("AprilTagVision/TimestampOffset", -(1.0 / 50.0));
     private static final double demoTagPosePersistenceSecs = 0.5;
-
     private final Supplier<AprilTagLayoutType> aprilTagTypeSupplier;
     private final AprilTagVisionIO[] io;
     private final AprilTagVisionIOInputs[] inputs;
-
     private final Map<Integer, Double> lastFrameTimes = new HashMap<>();
     private final Map<Integer, Double> lastTagDetectionTimes = new HashMap<>();
-
+    StructPublisher<Pose3d> CameraPosePublisher = NetworkTableInstance.getDefault()
+            .getStructTopic("CameraPose", Pose3d.struct).publish();
     private Pose3d demoTagPose = null;
     private double lastDemoTagPoseTimestamp = 0.0;
+
+    @Getter
+    private Pose3d cameraPose;
+    @Getter
+    private Pose3d robotPose3d;
 
     public AprilTagVision(Supplier<AprilTagLayoutType> aprilTagTypeSupplier, AprilTagVisionIO... io) {
         this.aprilTagTypeSupplier = aprilTagTypeSupplier;
@@ -59,6 +67,7 @@ public class AprilTagVision extends SubsystemBase {
         }
     }
 
+    @Override
     public void periodic() {
         for (int i = 0; i < io.length; i++) {
             io[i].updateInputs(inputs[i]);
@@ -82,8 +91,8 @@ public class AprilTagVision extends SubsystemBase {
                 }
 
                 // Switch based on number of poses
-                Pose3d cameraPose = null;
-                Pose3d robotPose3d = null;
+                cameraPose = null;
+                robotPose3d = null;
                 boolean useVisionRotation = false;
                 switch ((int) values[0]) {
                     case 1:
@@ -316,5 +325,9 @@ public class AprilTagVision extends SubsystemBase {
                     .forEach(RobotState.getInstance()::addVisionObservation);
         }
         RobotState.getInstance().setDemoTagPose(demoTagPose);
+        if (cameraPose != null) {
+            Display.getInstance().updatePose(cameraPose.toPose2d());
+            CameraPosePublisher.set(cameraPose);
+        }
     }
 }

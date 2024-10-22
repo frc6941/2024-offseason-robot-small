@@ -38,6 +38,7 @@ import static edu.wpi.first.units.Units.Seconds;
 
 public class RobotContainer {
     Swerve swerve = Swerve.getInstance();
+    @Getter
     AprilTagVision aprilTagVision = new AprilTagVision(
             this::getAprilTagLayoutType,
             new AprilTagVisionIONorthstar(this::getAprilTagLayoutType, 0));

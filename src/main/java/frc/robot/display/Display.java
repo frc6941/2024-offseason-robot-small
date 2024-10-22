@@ -1,14 +1,14 @@
 package frc.robot.display;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.subsystems.swerve.Swerve;
 import org.frcteam6941.looper.Updatable;
 
 public class Display implements Updatable {
+    private static Display instance;
     FieldView fieldView;
     Swerve swerve;
-
-    private static Display instance;
 
     private Display() {
         swerve = Swerve.getInstance();
@@ -28,9 +28,16 @@ public class Display implements Updatable {
 
     @Override
     public void update(double time, double dt) {
+//        fieldView.update(
+//                swerve.getLocalizer().getCoarseFieldPose(time),
+//                swerve.getLocalizer().getPredictedPose(0.02)
+//        );
+    }
+
+    public void updatePose(Pose2d cameraPose) {
         fieldView.update(
-            swerve.getLocalizer().getCoarseFieldPose(time), 
-            swerve.getLocalizer().getPredictedPose(0.02)
+                cameraPose,
+                cameraPose
         );
     }
 }

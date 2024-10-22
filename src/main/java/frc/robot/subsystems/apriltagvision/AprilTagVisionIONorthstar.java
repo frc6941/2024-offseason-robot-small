@@ -19,8 +19,8 @@ import static frc.robot.subsystems.apriltagvision.AprilTagVisionConstants.camera
 import static frc.robot.subsystems.apriltagvision.AprilTagVisionConstants.instanceNames;
 
 public class AprilTagVisionIONorthstar implements AprilTagVisionIO {
-    private static final int cameraResolutionWidth = 1600;
-    private static final int cameraResolutionHeight = 1200;
+    private static final int cameraResolutionWidth = 1280;
+    private static final int cameraResolutionHeight = 720;
     private static final int cameraAutoExposure = 1;
     private static final int cameraExposure = 10;
     private static final int cameraGain = 25;

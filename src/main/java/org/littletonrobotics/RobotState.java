@@ -78,7 +78,7 @@ public class RobotState {
             TimeInterpolatableBuffer.createBuffer(poseBufferSizeSeconds);
     private final Matrix<N3, N1> qStdDevs = new Matrix<>(Nat.N3(), Nat.N1());
     // Odometry
-    private final SwerveDriveKinematics kinematics = new SwerveDriveKinematics();
+    private final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(new Translation2d(0, 0), new Translation2d(0, 0));
     @AutoLogOutput
     @Getter
     @Setter
