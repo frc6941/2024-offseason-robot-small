@@ -71,7 +71,6 @@ public class Swerve implements Updatable, Subsystem {
     private double headingVelocityFeedforward = 0.00;
     // Control Targets
     private HolonomicDriveSignal driveSignal = new HolonomicDriveSignal(new Translation2d(), 0.0, true, false);
-    private HolonomicDriveSignal autoDriveSignal = new HolonomicDriveSignal(new Translation2d(), 0.0, false, false);
 
     private SwerveSetpoint setpoint;
     private SwerveSetpoint previousSetpoint;
@@ -153,12 +152,6 @@ public class Swerve implements Updatable, Subsystem {
         return instance;
     }
 
-    public void driveSpeed(ChassisSpeeds speeds) {
-        autoDrive(new Translation2d(
-                speeds.vxMetersPerSecond,
-                speeds.vyMetersPerSecond), speeds.omegaRadiansPerSecond, false, false);
-        System.out.println(speeds.toString());
-    }
 
     public ChassisSpeeds getChassisSpeeds() {
         return swerveKinematics.toChassisSpeeds(getModuleStates());
@@ -280,11 +273,6 @@ public class Swerve implements Updatable, Subsystem {
         driveSignal = new HolonomicDriveSignal(translationalVelocity, rotationalVelocity, isFieldOriented, isOpenLoop);
     }
 
-    public void autoDrive(Translation2d translationalVelocity, double rotationalVelocity,
-                          boolean isFieldOriented, boolean isOpenLoop) {
-        autoDriveSignal = new HolonomicDriveSignal(translationalVelocity, rotationalVelocity, isFieldOriented,
-                isOpenLoop);
-    }
 
     public void pointWheelsAt(Rotation2d rotation2d) {
         for (SwerveModuleBase mod : swerveMods) {
@@ -468,13 +456,9 @@ public class Swerve implements Updatable, Subsystem {
                     .clamp(headingController.calculate(gyro.getYaw().getDegrees(), new TrapezoidProfile.State(
                             headingTarget, headingVelocityFeedforward)), -headingRotationLimit, headingRotationLimit);
 
-            if (this.state == State.PATH_FOLLOWING) {
-                autoDriveSignal = new HolonomicDriveSignal(autoDriveSignal.getTranslation(), rotation,
-                        autoDriveSignal.isFieldOriented(), autoDriveSignal.isOpenLoop());
-            } else {
-                driveSignal = new HolonomicDriveSignal(driveSignal.getTranslation(), rotation,
+            driveSignal = new HolonomicDriveSignal(driveSignal.getTranslation(), rotation,
                         driveSignal.isFieldOriented(), driveSignal.isOpenLoop());
-            }
+            
             Logger.recordOutput("heading/rotation", rotation);
             Logger.recordOutput("heading/gyro", gyro.getYaw().getDegrees());
             Logger.recordOutput("heading/target", headingTarget);
@@ -500,7 +484,7 @@ public class Swerve implements Updatable, Subsystem {
                 updateModules(driveSignal, dt);
                 break;
             case PATH_FOLLOWING:
-                updateModules(autoDriveSignal, dt);
+            //add custom pathfollowing
                 break;
             case EMPTY:
                 break;

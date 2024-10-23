@@ -28,18 +28,10 @@ import frc.robot.drivers.BeamBreak;
 import frc.robot.subsystems.limelight.Limelight;
 import frc.robot.utils.AllianceFlipUtil;
 import frc.robot.utils.ShootingDecider;
-import frc.robot.utils.Utils;
-import frc.robot.utils.ShootingDecider.Destination;
 import frc.robot.subsystems.swerve.Swerve;
-import frc.robot.commands.IntakerCommand;
-import frc.robot.commands.ShooterCommand;
-import frc.robot.commands.ShooterAmp;
-import frc.robot.commands.RumbleCommand;
 
 
 public class RobotContainer {
-    private BeamBreak intakerBeamBreakH = new BeamBreak(Constants.BeamBreakConstants.INTAKER_BEAMBREAKH_ID); // 3
-    private BeamBreak intakerBeamBreakL = new BeamBreak(Constants.BeamBreakConstants.INTAKER_BEAMBREAKL_ID); // 2
     private double distance;
     Supplier<ShootingDecider.Destination> destinationSupplier;
     Swerve swerve = Swerve.getInstance();
@@ -53,9 +45,6 @@ public class RobotContainer {
     private UpdateManager updateManager;
 
     public RobotContainer() {
-        OperatorDashboard.getInstance().updateRobotStatus(
-                false,
-                false);
         updateManager = new UpdateManager(swerve,
                 limelight,
                 display);
@@ -69,21 +58,18 @@ public class RobotContainer {
     /** Bind Auto */
     private void configureAuto() {
 
-        AutoBuilder.configureHolonomic(
-                () -> Swerve.getInstance().getLocalizer().getCoarseFieldPose(0),
-                (Pose2d pose2d) -> Swerve.getInstance().resetPose(pose2d),
-                () -> Swerve.getInstance().getChassisSpeeds(),
-                (ChassisSpeeds chassisSpeeds) -> Swerve.getInstance().driveSpeed(chassisSpeeds),
-                new HolonomicPathFollowerConfig(
-                        Constants.SwerveConstants.maxSpeed.magnitude(),
-                        0.55,
-                        new ReplanningConfig()),
-                Utils::flip,
-                swerve);
+        // AutoBuilder.configureHolonomic(
+        //         () -> Swerve.getInstance().getLocalizer().getCoarseFieldPose(0),
+        //         (Pose2d pose2d) -> Swerve.getInstance().resetPose(pose2d),
+        //         () -> Swerve.getInstance().getChassisSpeeds(),
+        //         (ChassisSpeeds chassisSpeeds) -> Swerve.getInstance().driveSpeed(chassisSpeeds),
+        //         new HolonomicPathFollowerConfig(
+        //                 Constants.SwerveConstants.maxSpeed.magnitude(),
+        //                 0.55,
+        //                 new ReplanningConfig()),
+        //         Utils::flip,
+        //         swerve);
 
-        autoChooser = new LoggedDashboardChooser<>("Chooser", AutoBuilder.buildAutoChooser());
-        // TODO: operator dashboard
-        dashboard.registerAutoSelector(autoChooser.getSendableChooser());
     }
 
     /** Bind controller keys to commands */
@@ -116,11 +102,10 @@ public class RobotContainer {
                 }).ignoringDisable(true));
         }
 
-        // intake
 
     public Command getAutonomousCommand() {
         // return autoChooser.get();
-        return AutoBuilder.buildAuto("B3");
+        return null;
 
     }
 }
