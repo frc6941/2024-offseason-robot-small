@@ -36,8 +36,5 @@
   - speaker LB
 - //自瞄 LT
 
-## swerve
-
-- 按键旋转
-- //lockheading true false A B
-- field oriented start button
+TODO:
+Fix Auto Event Maeker and Autobuilder

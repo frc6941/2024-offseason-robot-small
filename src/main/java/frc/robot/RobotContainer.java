@@ -25,7 +25,6 @@ import java.util.function.Supplier;
 import frc.robot.display.Display;
 import frc.robot.display.OperatorDashboard;
 import frc.robot.drivers.BeamBreak;
-import frc.robot.subsystems.limelight.Limelight;
 import frc.robot.utils.AllianceFlipUtil;
 import frc.robot.utils.ShootingDecider;
 import frc.robot.subsystems.swerve.Swerve;
@@ -35,7 +34,6 @@ public class RobotContainer {
     private double distance;
     Supplier<ShootingDecider.Destination> destinationSupplier;
     Swerve swerve = Swerve.getInstance();
-    Limelight limelight = Limelight.getInstance();
     Display display = Display.getInstance();
     OperatorDashboard dashboard = OperatorDashboard.getInstance();
     @Getter
@@ -46,7 +44,6 @@ public class RobotContainer {
 
     public RobotContainer() {
         updateManager = new UpdateManager(swerve,
-                limelight,
                 display);
         updateManager.registerAll();
 
@@ -75,7 +72,6 @@ public class RobotContainer {
     /** Bind controller keys to commands */
     private void configureBindings() {
         // swerve
-        distance = (Limelight.getInstance().getSpeakerRelativePosition().getNorm());
         swerve.setDefaultCommand(Commands
                 .runOnce(() -> swerve.drive(
                         new Translation2d(

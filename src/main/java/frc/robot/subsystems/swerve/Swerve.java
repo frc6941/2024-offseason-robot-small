@@ -1,8 +1,10 @@
 package frc.robot.subsystems.swerve;
 
+import com.pathplanner.lib.path.PathPlannerTrajectory;
 import com.team254.lib.util.MovingAverage;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -26,6 +28,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.Synchronized;
 import org.frcteam6941.control.HolonomicDriveSignal;
+import org.frcteam6941.control.HolonomicTrajectoryFollower;
 import org.frcteam6941.drivers.DummyGyro;
 import org.frcteam6941.drivers.Gyro;
 import org.frcteam6941.drivers.Pigeon2Gyro;
@@ -55,7 +58,11 @@ public class Swerve implements Updatable, Subsystem {
     // Logging
     private final NetworkTable dataTable = NetworkTableInstance.getDefault().getTable("Swerve");
     // Snap Rotation Controller
-    private final ProfiledPIDController headingController;
+    private final ProfiledPIDController headingController = new ProfiledPIDController(
+                Constants.SwerveConstants.headingController.HEADING_KP.get(),
+                Constants.SwerveConstants.headingController.HEADING_KI.get(),
+                Constants.SwerveConstants.headingController.HEADING_KD.get(),
+                new TrapezoidProfile.Constraints(400, 720));
     private boolean isLockHeading;
     /**
      * -- GETTER --
@@ -71,6 +78,11 @@ public class Swerve implements Updatable, Subsystem {
     private double headingVelocityFeedforward = 0.00;
     // Control Targets
     private HolonomicDriveSignal driveSignal = new HolonomicDriveSignal(new Translation2d(), 0.0, true, false);
+
+    // Path Following Controller
+    private final HolonomicTrajectoryFollower trajectoryFollower = new HolonomicTrajectoryFollower(
+            new PIDController(2.0, 0.0, 0.0), new PIDController(2.0, 0.0, 0.0),
+            this.headingController, Constants.SwerveConstants.DRIVETRAIN_FEEDFORWARD);
 
     private SwerveSetpoint setpoint;
     private SwerveSetpoint previousSetpoint;
@@ -100,8 +112,10 @@ public class Swerve implements Updatable, Subsystem {
                     new SimSwerveModuleDummy(3, Constants.SwerveConstants.BackRight),
             };
             gyro = new DummyGyro(Constants.LOOPER_DT);
-        }
 
+        }
+        headingController.setIntegratorRange(-0.5, 0.5);
+        headingController.enableContinuousInput(0, 360.0);
         swerveKinematics = new SwerveDriveKinematics(
                 Constants.SwerveConstants.modulePlacements);
         swerveLocalizer = new SwerveDeltaCoarseLocalizer(swerveKinematics, 50, 20, 20, getModulePositions());
@@ -118,13 +132,7 @@ public class Swerve implements Updatable, Subsystem {
         generator = new SwerveSetpointGenerator(Constants.SwerveConstants.modulePlacements);
         kinematicLimits = Constants.SwerveConstants.DRIVETRAIN_UNCAPPED;
 
-        headingController = new ProfiledPIDController(
-                Constants.SwerveConstants.headingController.HEADING_KP.get(),
-                Constants.SwerveConstants.headingController.HEADING_KI.get(),
-                Constants.SwerveConstants.headingController.HEADING_KD.get(),
-                new TrapezoidProfile.Constraints(400, 720));
-        headingController.setIntegratorRange(-0.5, 0.5);
-        headingController.enableContinuousInput(0, 360.0);
+        
     }
 
     private static double getDriveBaseRadius() {
@@ -272,7 +280,22 @@ public class Swerve implements Updatable, Subsystem {
         }
         driveSignal = new HolonomicDriveSignal(translationalVelocity, rotationalVelocity, isFieldOriented, isOpenLoop);
     }
+    
+    public void follow(PathPlannerTrajectory targetTrajectory, boolean isLockAngle,
+            boolean requiredOnTarget) {
+        this.trajectoryFollower.setLockAngle(isLockAngle);
+        this.trajectoryFollower.setRequiredOnTarget(requiredOnTarget);
+        resetHeadingController();
+        this.trajectoryFollower.follow(targetTrajectory);
+    }
 
+    public void cancelFollow() {
+        this.trajectoryFollower.cancel();
+    }
+
+    public HolonomicTrajectoryFollower getFollower(){
+        return this.trajectoryFollower;
+    }
 
     public void pointWheelsAt(Rotation2d rotation2d) {
         for (SwerveModuleBase mod : swerveMods) {
