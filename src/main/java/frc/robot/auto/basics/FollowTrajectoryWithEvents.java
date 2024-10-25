@@ -1,10 +1,10 @@
 package frc.robot.auto.basics;
 
-import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.commands.FollowPathWithEvents;
+import com.pathplanner.lib.path.PathPlannerTrajectory;
+
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.swerve.Swerve;
 
 import java.util.Map;
 

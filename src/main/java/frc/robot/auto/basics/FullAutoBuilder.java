@@ -35,7 +35,7 @@ public class FullAutoBuilder {
     }
 
     private Command getStopEventCommands(PathPlannerTrajectory.StopEvent stopEvent) {
-        List<CommandBase> commands = new ArrayList<>();
+        List<Command> commands = new ArrayList<>();
 
         int startIndex = stopEvent.executionBehavior == PathPlannerTrajectory.StopEvent.ExecutionBehavior.PARALLEL_DEADLINE ? 1 : 0;
         for (int i = startIndex; i < stopEvent.names.size(); i++) {
@@ -47,27 +47,27 @@ public class FullAutoBuilder {
 
         switch (stopEvent.executionBehavior) {
             case SEQUENTIAL:
-                return new SequentialCommandGroup(commands.toArray(CommandBase[]::new));
+                return new SequentialCommandGroup(commands.toArray(Command[]::new));
             case PARALLEL:
-                return new ParallelCommandGroup(commands.toArray(CommandBase[]::new));
+                return new ParallelCommandGroup(commands.toArray(Command[]::new));
             case PARALLEL_DEADLINE:
                 Command deadline =
                         eventMap.containsKey(stopEvent.names.get(0))
                                 ? wrappedEventCommand(eventMap.get(stopEvent.names.get(0)))
                                 : new InstantCommand();
-                return new ParallelDeadlineGroup(deadline, commands.toArray(CommandBase[]::new));
+                return new ParallelDeadlineGroup(deadline, commands.toArray(Command[]::new));
             default:
                 throw new IllegalArgumentException(
                         "Invalid stop event execution behavior: " + stopEvent.executionBehavior);
         }
     }
 
-    private CommandBase stopEventGroup(PathPlannerTrajectory.StopEvent stopEvent) {
+    private Command stopEventGroup(PathPlannerTrajectory.StopEvent stopEvent) {
         if (stopEvent.names.isEmpty()) {
             return new WaitCommand(stopEvent.waitTime);
         }
 
-        CommandBase eventCommands = getStopEventCommands(stopEvent);
+        Command eventCommands = getStopEventCommands(stopEvent);
 
         switch (stopEvent.waitBehavior) {
             case BEFORE:
@@ -84,11 +84,11 @@ public class FullAutoBuilder {
         }
     }
 
-    private CommandBase followPathWithEvents(PathPlannerTrajectory trajectory) {
+    private Command followPathWithEvents(PathPlannerTrajectory trajectory) {
         return new FollowTrajectoryWithEvents(swerve, trajectory, true, false, eventMap);
     }
 
-    private CommandBase resetPose(PathPlannerTrajectory trajectory) {
+    private Command resetPose(PathPlannerTrajectory trajectory) {
         return new InstantCommand(
             () -> {
             PathPlannerTrajectory.PathPlannerState initialState = trajectory.getInitialState();
@@ -98,12 +98,12 @@ public class FullAutoBuilder {
     }
 
 
-    public CommandBase fullAuto(PathPlannerTrajectory trajectory) {
+    public Command fullAuto(PathPlannerTrajectory trajectory) {
         return fullAuto(new ArrayList<>(List.of(trajectory)));
     }
 
-    public CommandBase fullAuto(List<PathPlannerTrajectory> pathGroup) {
-        List<CommandBase> commands = new ArrayList<>();
+    public Command fullAuto(List<PathPlannerTrajectory> pathGroup) {
+        List<Command> commands = new ArrayList<>();
 
         commands.add(resetPose(pathGroup.get(0)));
 
@@ -114,7 +114,7 @@ public class FullAutoBuilder {
 
         commands.add(stopEventGroup(pathGroup.get(pathGroup.size() - 1).getEndStopEvent()));
 
-        return new SequentialCommandGroup(commands.toArray(CommandBase[]::new));
+        return new SequentialCommandGroup(commands.toArray(Command[]::new));
 
     }
 }
