@@ -2,17 +2,14 @@ package frc.robot.auto.basics;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.*;
-import frc.robot.Constants;
-import frc.robot.subsystems.*;
+
 import frc.robot.subsystems.swerve.Swerve;
 import lombok.Getter;
 import lombok.Synchronized;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.PathPlannerTrajectory;
 

@@ -27,6 +27,9 @@ import frc.robot.utils.AllianceFlipUtil;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.Synchronized;
+
+import java.util.Optional;
+
 import org.frcteam6941.control.HolonomicDriveSignal;
 import org.frcteam6941.control.HolonomicTrajectoryFollower;
 import org.frcteam6941.drivers.DummyGyro;
@@ -469,7 +472,14 @@ public class Swerve implements Updatable, Subsystem {
 
     @Override
     public void update(double time, double dt) {
-        if (isLockHeading) {
+        Optional<HolonomicDriveSignal> trajectorySignal = trajectoryFollower.update(
+                swerveLocalizer.getLatestPose(),
+                swerveLocalizer.getMeasuredVelocity().getTranslation(),
+                swerveLocalizer.getMeasuredVelocity().getRotation().getDegrees(),
+                time, dt);
+        if (trajectorySignal.isPresent()) {
+            driveSignal = trajectorySignal.get();
+        }else if (isLockHeading) {
             headingTarget = AngleNormalization.placeInAppropriate0To360Scope(gyro.getYaw().getDegrees(), headingTarget);
 
             // clamp max rotation output value from the heading controller to prevent controller overshoot
@@ -503,11 +513,9 @@ public class Swerve implements Updatable, Subsystem {
             case BRAKE:
                 setModuleStatesBrake();
                 break;
-            case DRIVE:
-                updateModules(driveSignal, dt);
-                break;
+            case DRIVE:           
             case PATH_FOLLOWING:
-            //add custom pathfollowing
+              updateModules(driveSignal, dt);
                 break;
             case EMPTY:
                 break;

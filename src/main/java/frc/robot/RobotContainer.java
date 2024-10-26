@@ -48,27 +48,10 @@ public class RobotContainer {
                 display);
         updateManager.registerAll();
 
-        configureAuto();
         configureBindings();
         System.out.println("Init Completed!");
     }
 
-    /** Bind Auto */
-    private void configureAuto() {
-
-        // AutoBuilder.configureHolonomic(
-        //         () -> Swerve.getInstance().getLocalizer().getCoarseFieldPose(0),
-        //         (Pose2d pose2d) -> Swerve.getInstance().resetPose(pose2d),
-        //         () -> Swerve.getInstance().getChassisSpeeds(),
-        //         (ChassisSpeeds chassisSpeeds) -> Swerve.getInstance().driveSpeed(chassisSpeeds),
-        //         new HolonomicPathFollowerConfig(
-        //                 Constants.SwerveConstants.maxSpeed.magnitude(),
-        //                 0.55,
-        //                 new ReplanningConfig()),
-        //         Utils::flip,
-        //         swerve);
-
-    }
 
     /** Bind controller keys to commands */
     private void configureBindings() {
