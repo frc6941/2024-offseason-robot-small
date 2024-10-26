@@ -22,6 +22,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 
 import java.util.function.Supplier;
 
+import frc.robot.auto.basics.AutoActions;
 import frc.robot.display.Display;
 import frc.robot.display.OperatorDashboard;
 import frc.robot.drivers.BeamBreak;
@@ -101,7 +102,7 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
         // return autoChooser.get();
-        return null;
+        return AutoActions.followTrajectory(AutoActions.getTrajectory("T_1"), false);
 
     }
 }
