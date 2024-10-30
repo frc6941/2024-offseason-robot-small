@@ -29,8 +29,8 @@ public class SimSwerveModuleDummy implements SwerveModuleBase {
     @Override
     public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop, boolean overrideMotion) {
         currentState = desiredState;
-        int flipCoefficient = Utils.flip() ? -1 : 1;
-        currentPosition.distanceMeters += flipCoefficient * desiredState.speedMetersPerSecond * Constants.LOOPER_DT * 0.95;
+        //int flipCoefficient = Utils.flip() ? -1 : 1;
+        currentPosition.distanceMeters += desiredState.speedMetersPerSecond * Constants.LOOPER_DT * 0.95;
         currentPosition.angle = desiredState.angle;
     }
 
