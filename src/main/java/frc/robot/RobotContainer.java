@@ -63,7 +63,7 @@ public class RobotContainer {
                                         * Constants.SwerveConstants.maxSpeed.magnitude(),
                                 -Constants.RobotConstants.driverController.getLeftX()
                                         * Constants.SwerveConstants.maxSpeed.magnitude()),
-                        -Constants.RobotConstants.driverController.getRightX()
+                        -Constants.RobotConstants.driverController.getRawAxis(3)
                                 * Constants.SwerveConstants.maxAngularRate.magnitude(),
                         true,
                         false),

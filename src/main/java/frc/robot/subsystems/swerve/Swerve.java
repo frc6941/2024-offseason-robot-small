@@ -8,6 +8,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -58,8 +59,6 @@ public class Swerve implements Updatable, Subsystem {
     private final MovingAverage pitchVelocity;
     private final MovingAverage rollVelocity;
     private final MovingAverage yawVelocity;
-    // Logging
-    private final NetworkTable dataTable = NetworkTableInstance.getDefault().getTable("Swerve");
     // Snap Rotation Controller
     private final ProfiledPIDController headingController = new ProfiledPIDController(
                 Constants.SwerveConstants.headingController.HEADING_KP.get(),
@@ -268,10 +267,7 @@ public class Swerve implements Updatable, Subsystem {
      */
     public void drive(Translation2d translationalVelocity, double rotationalVelocity,
                       boolean isFieldOriented, boolean isOpenLoop) {
-        // if (Math.hypot(translationalVelocity.getX(), translationalVelocity.getY())
-        // < Constants.SwerveConstants.deadband) {
-        // translationalVelocity = new Translation2d(0, 0);
-        // }
+
         if (Math.abs(translationalVelocity.getX()) < Constants.SwerveConstants.deadband) {
             translationalVelocity = new Translation2d(0, translationalVelocity.getY());
         }
@@ -289,6 +285,10 @@ public class Swerve implements Updatable, Subsystem {
         this.trajectoryFollower.setLockAngle(isLockAngle);
         this.trajectoryFollower.setRequiredOnTarget(requiredOnTarget);
         resetHeadingController();
+        if (targetTrajectory == null) {
+            this.setState(State.PATH_FOLLOWING);
+            trajectoryFollower.cancel();
+        }
         this.trajectoryFollower.follow(targetTrajectory);
     }
 
@@ -302,7 +302,6 @@ public class Swerve implements Updatable, Subsystem {
 
     public void pointWheelsAt(Rotation2d rotation2d) {
         for (SwerveModuleBase mod : swerveMods) {
-            // System.out.println(setpoint.mModuleStates[mod.getModuleNumber()]);//add
             setpoint.mModuleStates[mod.getModuleNumber()].angle = rotation2d;
             setpoint.mModuleStates[mod.getModuleNumber()].speedMetersPerSecond = 0.0;
             mod.setDesiredState(setpoint.mModuleStates[mod.getModuleNumber()], true, false);
@@ -334,9 +333,7 @@ public class Swerve implements Updatable, Subsystem {
     }
 
     public void resetPose(Pose2d resetPose) {
-        gyro.setYaw(resetPose.getRotation().getDegrees() + (AllianceFlipUtil.shouldFlip() ? 180 : 0));
-        // System.out.println(resetPose.getRotation().getDegrees());
-        // System.out.println(gyro.getYaw().getDegrees());
+        gyro.setYaw(resetPose.getRotation().getDegrees());
         swerveLocalizer.reset(resetPose, getModulePositions());
     }
 
@@ -467,7 +464,6 @@ public class Swerve implements Updatable, Subsystem {
             mod.updateSignals();
         }
         updateOdometry(time, dt);
-        SmartDashboard.putString("swerve/localizer/fused_pose", getLocalizer().getCoarseFieldPose(time).toString());
     }
 
     @Override
@@ -524,28 +520,16 @@ public class Swerve implements Updatable, Subsystem {
 
     @Override
     public void telemetry() {
-        Pose2d latestPose = swerveLocalizer.getLatestPose();
-        dataTable.getEntry("Pose").setDoubleArray(
-                new double[] {
-                        latestPose.getX(), latestPose.getY(), latestPose.getRotation().getDegrees()
-                });
-        for (SwerveModuleBase mod : swerveMods) {
-            SmartDashboard.putNumber("Swerve/SPEED REQ" + mod.getModuleNumber(),
-                    setpoint.mModuleStates[mod.getModuleNumber()].speedMetersPerSecond);
-            SmartDashboard.putNumber("Swerve/SPEED ACT" + mod.getModuleNumber(),
-                    mod.getState().speedMetersPerSecond);
-            SmartDashboard.putNumber("Swerve/ANGLE REQ" + mod.getModuleNumber(),
-                    setpoint.mModuleStates[mod.getModuleNumber()].angle.getDegrees());
-            SmartDashboard.putNumber("Swerve/ANGLE ACT" + mod.getModuleNumber(),
-                    mod.getState().angle.getDegrees());
-        }
-        SmartDashboard.putNumber("Swerve/headingTarget", headingTarget);
         if (Constants.TUNING) {
             setHeadingControllerPID();
             SmartDashboard.putString("swerve/localizer/latest_pose", getLocalizer().getLatestPose().toString());
             SmartDashboard.putString("swerve/localizer/accel", getLocalizer().getMeasuredAcceleration().toString());
             SmartDashboard.putString("swerve/localizer/velocity", getLocalizer().getSmoothedVelocity().toString());
         }
+        Logger.recordOutput("CoarsedFieldPose",getLocalizer().getCoarseFieldPose(0));
+        Logger.recordOutput("isLockHeading", isLockHeading);
+
+        
     }
 
     @Override
@@ -567,7 +551,6 @@ public class Swerve implements Updatable, Subsystem {
         SmartDashboard.putBoolean("SwerveReady", dtReady);
         boolean angularSpeedReady = this.getLocalizer().getSmoothedVelocity().getRotation().getDegrees() < 3.14;
         SmartDashboard.putBoolean("SwerveAngularReady", angularSpeedReady);
-//        OperatorDashboard.getInstance().updateDrivetrainReady(dtReady);//TODO
         return dtReady && angularSpeedReady;
     }
 

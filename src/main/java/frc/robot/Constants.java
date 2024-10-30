@@ -460,7 +460,6 @@ public class Constants {
                     "HEADING PID/kd", 0.002);
             public static final frc.robot.utils.TunableNumber MAX_ERROR_CORRECTION_ANGLE = new frc.robot.utils.TunableNumber(
                     "HEADING/Max Error Correction Angle", 90.0);
-            // TODO
         }
 
     }

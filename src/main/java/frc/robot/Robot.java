@@ -7,6 +7,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.swerve.Swerve;
 
 import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.NT4Publisher;
 
 public class Robot extends LoggedRobot{
     private Command m_autonomousCommand;
@@ -17,6 +19,8 @@ public class Robot extends LoggedRobot{
 
     @Override
     public void robotInit() {
+        Logger.addDataReceiver(new NT4Publisher());
+        Logger.start();
         robotContainer = new RobotContainer();
         DriverStation.silenceJoystickConnectionWarning(true);
 
@@ -59,6 +63,7 @@ public class Robot extends LoggedRobot{
     public void autonomousExit() {
         robotContainer.getUpdateManager().invokeStop();
         swerve.normal();
+        swerve.cancelFollow();
     }
 
     @Override
@@ -66,6 +71,7 @@ public class Robot extends LoggedRobot{
         if (m_autonomousCommand != null) {
             m_autonomousCommand.cancel();
         }
+        swerve.normal();
         robotContainer.getUpdateManager().invokeStart();
 
     }
