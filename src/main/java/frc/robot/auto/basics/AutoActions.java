@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.*;
 
 import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.utils.AllianceFlipUtil;
 import lombok.Getter;
 import lombok.Synchronized;
 
@@ -12,6 +13,7 @@ import java.util.Map;
 
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.PathPlannerTrajectory;
+import com.pathplanner.lib.util.PathPlannerLogging;
 
 public class AutoActions {
     private final static Swerve swerve = Swerve.getInstance();
@@ -29,14 +31,22 @@ public class AutoActions {
     //         eventMap
     // );
 
-
+//load Traj from Path and flip according to alliance
     @Synchronized
     public static PathPlannerTrajectory getTrajectory(String name) {
-        return new PathPlannerTrajectory(
+        if (AllianceFlipUtil.shouldFlip()){
+            return new PathPlannerTrajectory(
+            PathPlannerPath.fromPathFile(name).flipPath(),
+            swerve.getChassisSpeeds(),
+            swerve.getLocalizer().getLatestPose().getRotation()
+            );
+        }else{
+            return new PathPlannerTrajectory(
             PathPlannerPath.fromPathFile(name),
             swerve.getChassisSpeeds(),
             swerve.getLocalizer().getLatestPose().getRotation()
             );
+        }
     }
 
 
@@ -61,8 +71,8 @@ public class AutoActions {
     // }
 
     @Synchronized
-    public static Command followTrajectory(PathPlannerTrajectory trajectory, boolean lockAngle) {
-        return new FollowTrajectory(swerve, trajectory, true, true);
+    public static Command followTrajectory(PathPlannerTrajectory trajectory, boolean angleLock, boolean requiredOnTarget) {
+        return new FollowTrajectory(swerve, trajectory, angleLock, requiredOnTarget);
     }
 
     @Synchronized

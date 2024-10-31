@@ -2,6 +2,7 @@ package frc.robot.auto.basics;
 
 
 import com.pathplanner.lib.path.PathPlannerTrajectory;
+import com.pathplanner.lib.util.PathPlannerLogging;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.swerve.Swerve;
@@ -24,6 +25,8 @@ public class FollowTrajectory extends Command {
     public void initialize() {
         mDrivebase.follow(trajectory, angleLock, onTarget);
     }
+
+ 
 
     @Override
     public void end(boolean interrupted) {

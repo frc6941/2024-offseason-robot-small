@@ -1,6 +1,8 @@
 package frc.robot.subsystems.swerve;
 
+import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.PathPlannerTrajectory;
+import com.pathplanner.lib.util.PathPlannerLogging;
 import com.team254.lib.util.MovingAverage;
 
 import edu.wpi.first.math.MathUtil;
@@ -533,6 +535,7 @@ public class Swerve implements Updatable, Subsystem {
         Logger.recordOutput("IsPathFollowing", trajectoryFollower.isPathFollowing());
         Logger.recordOutput("swerve/localizer/GyroAngle", gyro.getYaw());
         Logger.recordOutput("swerve/localizer/MeasuredVelocity",swerveLocalizer.getMeasuredVelocity());
+        //Logger.recordOutput("ActivePath", PathPlannerPath.fromPathFile("T_1").getPathPoses());
 
 
         
