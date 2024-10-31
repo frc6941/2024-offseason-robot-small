@@ -85,7 +85,7 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
         // return autoChooser.get();
-        return AutoActions.followTrajectory(AutoActions.getTrajectory("T_1"), false);
+        return AutoActions.followTrajectory(AutoActions.getTrajectory("T_1"), true, true);
 
     }
 }
