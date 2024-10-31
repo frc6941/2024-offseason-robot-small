@@ -198,8 +198,9 @@ public class Swerve implements Updatable, Subsystem {
 
             Rotation2d robotAngle = swerveLocalizer.getLatestPose().getRotation();
 
+            //flip drive signal for red side (no need to flip auto)
             if (driveSignal.isFieldOriented())
-                if (AllianceFlipUtil.shouldFlip() /* && this.state != State.PATH_FOLLOWING */) {
+                if (AllianceFlipUtil.shouldFlip()  && this.state != State.PATH_FOLLOWING ) {
                     desiredChassisSpeed = ChassisSpeeds.fromFieldRelativeSpeeds(x, y, rotation,
                             robotAngle.rotateBy(Rotation2d.fromDegrees(180)));
                 } else {
@@ -526,8 +527,13 @@ public class Swerve implements Updatable, Subsystem {
             SmartDashboard.putString("swerve/localizer/accel", getLocalizer().getMeasuredAcceleration().toString());
             SmartDashboard.putString("swerve/localizer/velocity", getLocalizer().getSmoothedVelocity().toString());
         }
-        Logger.recordOutput("CoarsedFieldPose",getLocalizer().getCoarseFieldPose(0));
+        Logger.recordOutput("swerve/localizer/CoarsedFieldPose",getLocalizer().getCoarseFieldPose(0));
         Logger.recordOutput("isLockHeading", isLockHeading);
+        Logger.recordOutput("DriveSignalRotation", driveSignal.getRotation());
+        Logger.recordOutput("IsPathFollowing", trajectoryFollower.isPathFollowing());
+        Logger.recordOutput("swerve/localizer/GyroAngle", gyro.getYaw());
+        Logger.recordOutput("swerve/localizer/MeasuredVelocity",swerveLocalizer.getMeasuredVelocity());
+
 
         
     }

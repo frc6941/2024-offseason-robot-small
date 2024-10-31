@@ -27,6 +27,13 @@
       }
     }
   },
+  "NetworkTables": {
+    "transitory": {
+      "FMSInfo": {
+        "open": true
+      }
+    }
+  },
   "NetworkTables Info": {
     "visible": true
   }

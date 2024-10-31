@@ -1,5 +1,7 @@
 package org.frcteam6941.control;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.pathplanner.lib.path.PathPlannerTrajectory;
 import com.pathplanner.lib.path.PathPlannerTrajectory.State;
 
@@ -24,6 +26,7 @@ public class HolonomicTrajectoryFollower extends PathPlannerTrajectoryFollowerBa
 
     private double TARGET_DISTANCE_ACCURACY_REQUIREMENT = 0.25;
     private double TARGET_VELOCITY_ACCURACY_REQUIREMENT = 0.25;
+
 
     public HolonomicTrajectoryFollower(PIDController xController, PIDController yController,
             ProfiledPIDController thetaController, SimpleMotorFeedforward feedforward) {
@@ -110,6 +113,8 @@ public class HolonomicTrajectoryFollower extends PathPlannerTrajectoryFollowerBa
     public boolean isPathFollowing() {
         return !finished;
     }
+
+    
 
     public void sendData() {
         // if (isPathFollowing()) {

@@ -62,7 +62,7 @@ public class AutoActions {
 
     @Synchronized
     public static Command followTrajectory(PathPlannerTrajectory trajectory, boolean lockAngle) {
-        return new FollowTrajectory(swerve, trajectory, lockAngle, true);
+        return new FollowTrajectory(swerve, trajectory, true, true);
     }
 
     @Synchronized

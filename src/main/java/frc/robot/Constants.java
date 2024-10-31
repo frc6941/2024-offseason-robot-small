@@ -428,7 +428,7 @@ public class Constants {
         public static final KinematicLimits DRIVETRAIN_UNCAPPED = new KinematicLimits(
                 4.5,
                 50.0,
-                2000.0);
+                5000.0);
         public static final KinematicLimits DRIVETRAIN_SMOOTHED = new KinematicLimits(
                 4.5,
                 30.0,

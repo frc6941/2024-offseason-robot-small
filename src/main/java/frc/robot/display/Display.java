@@ -29,7 +29,7 @@ public class Display implements Updatable {
     @Override
     public void update(double time, double dt) {
         fieldView.update(
-            swerve.getLocalizer().getCoarseFieldPose(time), 
+            swerve.getLocalizer().getLatestPose(), 
             swerve.getLocalizer().getPredictedPose(0.02)
         );
     }
