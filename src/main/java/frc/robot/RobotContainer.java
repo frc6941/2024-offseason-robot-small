@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.auto.basics.AutoActions;
 import frc.robot.display.Display;
 import frc.robot.display.OperatorDashboard;
+import frc.robot.subsystems.apriltagvision.AprilTagVision;
+import frc.robot.subsystems.apriltagvision.AprilTagVisionIONorthstar;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.utils.AllianceFlipUtil;
 import frc.robot.utils.ShootingDecider;
@@ -24,6 +26,10 @@ import java.util.function.Supplier;
 
 public class RobotContainer {
     Supplier<ShootingDecider.Destination> destinationSupplier;
+    @Getter
+    AprilTagVision aprilTagVision = new AprilTagVision(
+            this::getAprilTagLayoutType,
+            new AprilTagVisionIONorthstar(this::getAprilTagLayoutType, 0));
     Swerve swerve = Swerve.getInstance();
     Display display = Display.getInstance();
     OperatorDashboard dashboard = OperatorDashboard.getInstance();
@@ -80,5 +86,18 @@ public class RobotContainer {
         // return autoChooser.get();
         return AutoActions.followTrajectory(AutoActions.getTrajectory("T_1"), true, true);
 
+    }
+
+    /**
+     * Returns the current AprilTag layout type.
+     */
+    public Constants.FieldConstants.AprilTagLayoutType getAprilTagLayoutType() {
+//        if (aprilTagsSpeakerOnly.getAsBoolean()) {
+//            return FieldConstants.AprilTagLayoutType.SPEAKERS_ONLY;
+//        } else if (aprilTagsAmpOnly.getAsBoolean()) {
+//            return FieldConstants.AprilTagLayoutType.AMPS_ONLY;
+//        } else {
+        return Constants.FieldConstants.defaultAprilTagType;
+//        }
     }
 }
