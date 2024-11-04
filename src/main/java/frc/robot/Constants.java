@@ -4,6 +4,7 @@ import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.wpilibj.Filesystem;
 import org.frcteam6941.swerve.SwerveSetpointGenerator.KinematicLimits;
 
 import com.ctre.phoenix6.configs.Slot0Configs;
@@ -11,9 +12,13 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstantsFactory;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.Angle;
 import edu.wpi.first.units.Current;
@@ -29,8 +34,17 @@ import edu.wpi.first.units.Velocity;
 import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.utils.TunableNumber;
+import frc.robot.utils.TunableNumber;
+import lombok.Getter;
+import org.frcteam6941.swerve.SwerveSetpointGenerator.KinematicLimits;
+
+import java.io.IOException;
+import java.nio.file.Path;
+
+import static edu.wpi.first.units.Units.*;
 
 public class Constants {
+    public static final boolean disableHAL = false;
     public static final boolean TUNING = true;
     public static final double LOOPER_DT = 1 / 100.0;
 
@@ -55,6 +69,43 @@ public class Constants {
         public static final Translation2d ampCenter = new Translation2d(
                 edu.wpi.first.math.util.Units.inchesToMeters(72.455), fieldWidth);
         public static final double aprilTagWidth = edu.wpi.first.math.util.Units.inchesToMeters(6.50);
+
+        public static final AprilTagLayoutType defaultAprilTagType = AprilTagLayoutType.OFFICIAL;
+
+        @Getter
+        public enum AprilTagLayoutType {
+            OFFICIAL("2024-official"),
+            SPEAKERS_ONLY("2024-speakers"),
+            AMPS_ONLY("2024-amps"),
+            WPI("2024-wpi");
+
+            private final AprilTagFieldLayout layout;
+            private final String layoutString;
+
+            private AprilTagLayoutType(String name) {
+                if (Constants.disableHAL) {
+                    layout = null;
+                } else {
+                    try {
+                        layout =
+                                new AprilTagFieldLayout(
+                                        Path.of(Filesystem.getDeployDirectory().getPath(), "apriltags", name + ".json"));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                if (layout == null) {
+                    layoutString = "";
+                } else {
+                    try {
+                        layoutString = new ObjectMapper().writeValueAsString(layout);
+                    } catch (JsonProcessingException e) {
+                        throw new RuntimeException(
+                                "Failed to serialize AprilTag layout JSON " + toString() + "for Northstar");
+                    }
+                }
+            }
+        }
 
         /**
          * Staging locations for each note
@@ -297,13 +348,11 @@ public class Constants {
                 .withKS(0)
                 .withKV(0.12)
                 .withKA(0);
-
         /**
          * The closed-loop output type to use for the steer motors;
          * This affects the PID/FF gains for the steer motors
          */
         private static final SwerveModule.ClosedLoopOutputType steerClosedLoopOutput = SwerveModule.ClosedLoopOutputType.Voltage;
-
         /**
          * The closed-loop output type to use for the drive motors;
          * This affects the PID/FF gains for the drive motors
@@ -321,14 +370,11 @@ public class Constants {
         private static final Measure<Voltage> steerFrictionVoltage = Volts.of(0.25);
         /** Simulation only */
         private static final Measure<Voltage> driveFrictionVoltage = Volts.of(0.25);
-
         /**
          * Every 1 rotation of the azimuth results in COUPLE_RATIO drive motor turns;
          */
         private static final double COUPLE_RATIO = 3.5;
-
         private static final boolean STEER_MOTOR_REVERSED = true;
-
         private static final SwerveModuleConstantsFactory ConstantCreator = new SwerveModuleConstantsFactory()
                 .withDriveMotorGearRatio(DRIVE_GEAR_RATIO)
                 .withSteerMotorGearRatio(STEER_GEAR_RATIO)
@@ -411,10 +457,8 @@ public class Constants {
                 backRightXPos.magnitude(),
                 backRightYPos.magnitude(),
                 true);
-
-        public static SwerveModuleConstants[] modules = { FrontLeft, FrontRight, BackLeft, BackRight };
-
-        public static final Translation2d[] modulePlacements = new Translation2d[] {
+        public static SwerveModuleConstants[] modules = {FrontLeft, FrontRight, BackLeft, BackRight};
+        public static final Translation2d[] modulePlacements = new Translation2d[]{
                 new Translation2d(SwerveConstants.FrontLeft.LocationX,
                         SwerveConstants.FrontLeft.LocationY),
                 new Translation2d(SwerveConstants.FrontRight.LocationX,
@@ -462,13 +506,6 @@ public class Constants {
                     "HEADING/Max Error Correction Angle", 90.0);
         }
 
-    }
-
-    public static class VisionConstants {
-        public static final String AIM_LIMELIGHT_NAME = "limelight";
-
-        public static double REJECT_ANGULAR_SPEED = 360;// degree
-        public static double REJECT_LINEAR_SPEED = 2.5;// m/s
     }
 
 }
