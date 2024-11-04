@@ -4,39 +4,30 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import static edu.wpi.first.units.Units.Seconds;
-import org.frcteam6941.looper.UpdateManager;
-import lombok.Getter;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
-import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
-
-import java.util.function.Supplier;
-
 import frc.robot.auto.basics.AutoActions;
 import frc.robot.display.Display;
 import frc.robot.display.OperatorDashboard;
-import frc.robot.drivers.BeamBreak;
+import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.utils.AllianceFlipUtil;
 import frc.robot.utils.ShootingDecider;
-import frc.robot.subsystems.swerve.Swerve;
+import lombok.Getter;
+import org.frcteam6941.looper.UpdateManager;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+
+import java.util.function.Supplier;
 
 
 public class RobotContainer {
-    private double distance;
     Supplier<ShootingDecider.Destination> destinationSupplier;
     Swerve swerve = Swerve.getInstance();
     Display display = Display.getInstance();
     OperatorDashboard dashboard = OperatorDashboard.getInstance();
+    private double distance;
     @Getter
     private LoggedDashboardChooser<Command> autoChooser;
 
@@ -53,20 +44,22 @@ public class RobotContainer {
     }
 
 
-    /** Bind controller keys to commands */
+    /**
+     * Bind controller keys to commands
+     */
     private void configureBindings() {
         // swerve
         swerve.setDefaultCommand(Commands
                 .runOnce(() -> swerve.drive(
-                        new Translation2d(
-                                -Constants.RobotConstants.driverController.getLeftY()
-                                        * Constants.SwerveConstants.maxSpeed.magnitude(),
-                                -Constants.RobotConstants.driverController.getLeftX()
-                                        * Constants.SwerveConstants.maxSpeed.magnitude()),
-                        -Constants.RobotConstants.driverController.getRightX()
-                                * Constants.SwerveConstants.maxAngularRate.magnitude(),
-                        true,
-                        false),
+                                new Translation2d(
+                                        -Constants.RobotConstants.driverController.getLeftY()
+                                                * Constants.SwerveConstants.maxSpeed.magnitude(),
+                                        -Constants.RobotConstants.driverController.getLeftX()
+                                                * Constants.SwerveConstants.maxSpeed.magnitude()),
+                                -Constants.RobotConstants.driverController.getRightX()
+                                        * Constants.SwerveConstants.maxAngularRate.magnitude(),
+                                true,
+                                false),
                         swerve));
 
         // initial
@@ -76,11 +69,11 @@ public class RobotContainer {
                     swerve.resetPose(
                             new Pose2d(
                                     AllianceFlipUtil.apply(
-                                            Constants.FieldConstants.Speaker.centerSpeakerOpening.toTranslation2d()),
+                                            new Translation2d(0, 0)),
                                     Rotation2d.fromDegrees(
                                             swerve.getLocalizer().getLatestPose().getRotation().getDegrees())));
                 }).ignoringDisable(true));
-        }
+    }
 
 
     public Command getAutonomousCommand() {
