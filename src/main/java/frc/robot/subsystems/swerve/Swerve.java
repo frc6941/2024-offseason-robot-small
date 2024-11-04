@@ -1,16 +1,12 @@
 package frc.robot.subsystems.swerve;
 
-import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.PathPlannerTrajectory;
-import com.pathplanner.lib.util.PathPlannerLogging;
 import com.team254.lib.util.MovingAverage;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -18,21 +14,15 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.Constants;
 import frc.robot.Constants.SwerveConstants;
-//import frc.robot.display.OperatorDashboard;
 import frc.robot.utils.AllianceFlipUtil;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.Synchronized;
-
-import java.util.Optional;
-
 import org.frcteam6941.control.HolonomicDriveSignal;
 import org.frcteam6941.control.HolonomicTrajectoryFollower;
 import org.frcteam6941.drivers.DummyGyro;
@@ -45,6 +35,8 @@ import org.frcteam6941.swerve.*;
 import org.frcteam6941.swerve.SwerveSetpointGenerator.KinematicLimits;
 import org.frcteam6941.utils.AngleNormalization;
 import org.littletonrobotics.junction.Logger;
+
+import java.util.Optional;
 
 /**
  * Rectangular Swerve Drivetrain.
@@ -63,10 +55,14 @@ public class Swerve implements Updatable, Subsystem {
     private final MovingAverage yawVelocity;
     // Snap Rotation Controller
     private final ProfiledPIDController headingController = new ProfiledPIDController(
-                Constants.SwerveConstants.headingController.HEADING_KP.get(),
-                Constants.SwerveConstants.headingController.HEADING_KI.get(),
-                Constants.SwerveConstants.headingController.HEADING_KD.get(),
-                new TrapezoidProfile.Constraints(400, 720));
+            Constants.SwerveConstants.headingController.HEADING_KP.get(),
+            Constants.SwerveConstants.headingController.HEADING_KI.get(),
+            Constants.SwerveConstants.headingController.HEADING_KD.get(),
+            new TrapezoidProfile.Constraints(400, 720));
+    // Path Following Controller
+    private final HolonomicTrajectoryFollower trajectoryFollower = new HolonomicTrajectoryFollower(
+            new PIDController(20.0, 0.0, 0.0), new PIDController(2.0, 0.0, 0.0),
+            this.headingController, Constants.SwerveConstants.DRIVETRAIN_FEEDFORWARD);
     private boolean isLockHeading;
     /**
      * -- GETTER --
@@ -82,12 +78,6 @@ public class Swerve implements Updatable, Subsystem {
     private double headingVelocityFeedforward = 0.00;
     // Control Targets
     private HolonomicDriveSignal driveSignal = new HolonomicDriveSignal(new Translation2d(), 0.0, true, false);
-
-    // Path Following Controller
-    private final HolonomicTrajectoryFollower trajectoryFollower = new HolonomicTrajectoryFollower(
-            new PIDController(2.0, 0.0, 0.0), new PIDController(2.0, 0.0, 0.0),
-            this.headingController, Constants.SwerveConstants.DRIVETRAIN_FEEDFORWARD);
-
     private SwerveSetpoint setpoint;
     private SwerveSetpoint previousSetpoint;
     @Getter
@@ -98,7 +88,7 @@ public class Swerve implements Updatable, Subsystem {
 
     private Swerve() {
         if (RobotBase.isReal()) {
-            swerveMods = new SwerveModuleBase[] {
+            swerveMods = new SwerveModuleBase[]{
                     new CTRESwerveModule(0, Constants.SwerveConstants.FrontLeft,
                             Constants.RobotConstants.CAN_BUS_NAME),
                     new CTRESwerveModule(1, Constants.SwerveConstants.FrontRight,
@@ -109,7 +99,7 @@ public class Swerve implements Updatable, Subsystem {
             };
             gyro = new Pigeon2Gyro(Constants.SwerveConstants.PIGEON_ID, Constants.RobotConstants.CAN_BUS_NAME);
         } else {
-            swerveMods = new SwerveModuleBase[] {
+            swerveMods = new SwerveModuleBase[]{
                     new SimSwerveModuleDummy(0, Constants.SwerveConstants.FrontLeft),
                     new SimSwerveModuleDummy(1, Constants.SwerveConstants.FrontRight),
                     new SimSwerveModuleDummy(2, Constants.SwerveConstants.BackLeft),
@@ -136,11 +126,11 @@ public class Swerve implements Updatable, Subsystem {
         generator = new SwerveSetpointGenerator(Constants.SwerveConstants.modulePlacements);
         kinematicLimits = Constants.SwerveConstants.DRIVETRAIN_UNCAPPED;
 
-        
+
     }
 
     private static double getDriveBaseRadius() {
-        var moduleLocations = new Translation2d[] {
+        var moduleLocations = new Translation2d[]{
                 new Translation2d(Constants.SwerveConstants.FrontLeft.LocationX,
                         Constants.SwerveConstants.FrontLeft.LocationY),
                 new Translation2d(Constants.SwerveConstants.FrontRight.LocationX,
@@ -202,7 +192,7 @@ public class Swerve implements Updatable, Subsystem {
 
             //flip drive signal for red side (no need to flip auto)
             if (driveSignal.isFieldOriented())
-                if (AllianceFlipUtil.shouldFlip()  && this.state != State.PATH_FOLLOWING ) {
+                if (AllianceFlipUtil.shouldFlip() && this.state != State.PATH_FOLLOWING) {
                     desiredChassisSpeed = ChassisSpeeds.fromFieldRelativeSpeeds(x, y, rotation,
                             robotAngle.rotateBy(Rotation2d.fromDegrees(180)));
                 } else {
@@ -282,9 +272,9 @@ public class Swerve implements Updatable, Subsystem {
         }
         driveSignal = new HolonomicDriveSignal(translationalVelocity, rotationalVelocity, isFieldOriented, isOpenLoop);
     }
-    
+
     public void follow(PathPlannerTrajectory targetTrajectory, boolean isLockAngle,
-            boolean requiredOnTarget) {
+                       boolean requiredOnTarget) {
         this.trajectoryFollower.setLockAngle(isLockAngle);
         this.trajectoryFollower.setRequiredOnTarget(requiredOnTarget);
         resetHeadingController();
@@ -299,7 +289,7 @@ public class Swerve implements Updatable, Subsystem {
         this.trajectoryFollower.cancel();
     }
 
-    public HolonomicTrajectoryFollower getFollower(){
+    public HolonomicTrajectoryFollower getFollower() {
         return this.trajectoryFollower;
     }
 
@@ -478,7 +468,7 @@ public class Swerve implements Updatable, Subsystem {
                 time, dt);
         if (trajectorySignal.isPresent()) {
             driveSignal = trajectorySignal.get();
-        }else if (isLockHeading) {
+        } else if (isLockHeading) {
             headingTarget = AngleNormalization.placeInAppropriate0To360Scope(gyro.getYaw().getDegrees(), headingTarget);
 
             // clamp max rotation output value from the heading controller to prevent controller overshoot
@@ -489,8 +479,8 @@ public class Swerve implements Updatable, Subsystem {
                             headingTarget, headingVelocityFeedforward)), -headingRotationLimit, headingRotationLimit);
 
             driveSignal = new HolonomicDriveSignal(driveSignal.getTranslation(), rotation,
-                        driveSignal.isFieldOriented(), driveSignal.isOpenLoop());
-            
+                    driveSignal.isFieldOriented(), driveSignal.isOpenLoop());
+
             Logger.recordOutput("heading/rotation", rotation);
             Logger.recordOutput("heading/gyro", gyro.getYaw().getDegrees());
             Logger.recordOutput("heading/target", headingTarget);
@@ -512,9 +502,9 @@ public class Swerve implements Updatable, Subsystem {
             case BRAKE:
                 setModuleStatesBrake();
                 break;
-            case DRIVE:           
+            case DRIVE:
             case PATH_FOLLOWING:
-              updateModules(driveSignal, dt);
+                updateModules(driveSignal, dt);
                 break;
             case EMPTY:
                 break;
@@ -529,16 +519,15 @@ public class Swerve implements Updatable, Subsystem {
             SmartDashboard.putString("swerve/localizer/accel", getLocalizer().getMeasuredAcceleration().toString());
             SmartDashboard.putString("swerve/localizer/velocity", getLocalizer().getSmoothedVelocity().toString());
         }
-        Logger.recordOutput("swerve/localizer/CoarsedFieldPose",getLocalizer().getCoarseFieldPose(0));
+        Logger.recordOutput("swerve/localizer/CoarsedFieldPose", getLocalizer().getCoarseFieldPose(0));
         Logger.recordOutput("isLockHeading", isLockHeading);
         Logger.recordOutput("DriveSignalRotation", driveSignal.getRotation());
         Logger.recordOutput("IsPathFollowing", trajectoryFollower.isPathFollowing());
         Logger.recordOutput("swerve/localizer/GyroAngle", gyro.getYaw());
-        Logger.recordOutput("swerve/localizer/MeasuredVelocity",swerveLocalizer.getMeasuredVelocity());
+        Logger.recordOutput("swerve/localizer/MeasuredVelocity", swerveLocalizer.getMeasuredVelocity());
         //Logger.recordOutput("ActivePath", PathPlannerPath.fromPathFile("T_1").getPathPoses());
 
 
-        
     }
 
     @Override
