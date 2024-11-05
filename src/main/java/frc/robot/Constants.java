@@ -308,7 +308,7 @@ public class Constants {
         private static final double STEER_GEAR_RATIO = 21.428571428571428571428571428571;
 
         /** Radius of the wheel in meters. */
-        private static final Measure<Distance> wheelRadius = Meters.of(0.05);
+        private static final Measure<Distance> wheelRadius = Meters.of(0.0479);
 
         /** The stator current at which the wheels start to slip */
         private static final Measure<Current> slipCurrent = Amps.of(150.0);
@@ -360,7 +360,7 @@ public class Constants {
         private static final SwerveModule.ClosedLoopOutputType driveClosedLoopOutput = SwerveModule.ClosedLoopOutputType.Voltage;
 
         /** Theoretical free speed (m/s) at 12v applied output; */
-        public static final Measure<Velocity<Distance>> speedAt12Volts = MetersPerSecond.of(6.0);
+        public static final Measure<Velocity<Distance>> speedAt12Volts = maxSpeed;
 
         /** Simulation only */
         private static final double STEER_INERTIA = 0.00001;
@@ -470,8 +470,8 @@ public class Constants {
         };
 
         public static final KinematicLimits DRIVETRAIN_UNCAPPED = new KinematicLimits(
-                4.5,
-                50.0,
+                maxSpeed.magnitude(),
+                13.0,
                 5000.0);
         public static final KinematicLimits DRIVETRAIN_SMOOTHED = new KinematicLimits(
                 4.5,

@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.auto.basics.AutoActions;
 import frc.robot.display.Display;
 import frc.robot.display.OperatorDashboard;
@@ -84,7 +85,11 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
         // return autoChooser.get();
-        return AutoActions.followTrajectory(AutoActions.getTrajectory("T_1"), true, true);
+        return new SequentialCommandGroup(
+                AutoActions.waitFor(0.00001),
+                AutoActions.followTrajectory(AutoActions.getTrajectory("T_1"), true, true),
+                AutoActions.followTrajectory(AutoActions.getTrajectory("T_2"), true, true)
+        );
 
     }
 

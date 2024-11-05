@@ -117,11 +117,11 @@ public class HolonomicTrajectoryFollower extends PathPlannerTrajectoryFollowerBa
     
 
     public void sendData() {
-        // if (isPathFollowing()) {
-        //     PathPlannerServer.sendActivePath(getCurrentTrajectory().get().getStates());
-        //     PathPlannerServer.sendPathFollowingData(
-        //             new Pose2d(lastState.positionMeters.getTranslation(), lastState.holonomicRotation), actualPose);
-        // }
+        if (isPathFollowing()) {
+            if(this.lastState != null){
+                Logger.recordOutput("swerve/PathPlanner/lastState", this.lastState.getTargetHolonomicPose());
+            }
+        }
     }
 
     @Override

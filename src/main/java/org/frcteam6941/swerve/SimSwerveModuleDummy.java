@@ -30,7 +30,7 @@ public class SimSwerveModuleDummy implements SwerveModuleBase {
     public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop, boolean overrideMotion) {
         currentState = desiredState;
         //int flipCoefficient = Utils.flip() ? -1 : 1;
-        currentPosition.distanceMeters += desiredState.speedMetersPerSecond * Constants.LOOPER_DT * 0.95;
+        currentPosition.distanceMeters += desiredState.speedMetersPerSecond * Constants.LOOPER_DT ;
         currentPosition.angle = desiredState.angle;
     }
 

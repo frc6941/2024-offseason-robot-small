@@ -61,7 +61,7 @@ public class Swerve implements Updatable, Subsystem {
             new TrapezoidProfile.Constraints(400, 720));
     // Path Following Controller
     private final HolonomicTrajectoryFollower trajectoryFollower = new HolonomicTrajectoryFollower(
-            new PIDController(20.0, 0.0, 0.0), new PIDController(2.0, 0.0, 0.0),
+            new PIDController(5.0, 0.0, 0.0), new PIDController(5.0, 0.0, 0.0),
             this.headingController, Constants.SwerveConstants.DRIVETRAIN_FEEDFORWARD);
     private boolean isLockHeading;
     /**
@@ -481,10 +481,10 @@ public class Swerve implements Updatable, Subsystem {
             driveSignal = new HolonomicDriveSignal(driveSignal.getTranslation(), rotation,
                     driveSignal.isFieldOriented(), driveSignal.isOpenLoop());
 
-            Logger.recordOutput("heading/rotation", rotation);
-            Logger.recordOutput("heading/gyro", gyro.getYaw().getDegrees());
-            Logger.recordOutput("heading/target", headingTarget);
-            Logger.recordOutput("heading/difference", Math.abs(headingTarget - gyro.getYaw().getDegrees()));
+            Logger.recordOutput("swerve/heading/rotation", rotation);
+            Logger.recordOutput("swerve/heading/gyro", gyro.getYaw().getDegrees());
+            Logger.recordOutput("swerve/heading/target", headingTarget);
+            Logger.recordOutput("swerve/heading/difference", Math.abs(headingTarget - gyro.getYaw().getDegrees()));
 
         } else if (overrideRotation != null) {
             driveSignal = new HolonomicDriveSignal(driveSignal.getTranslation(), overrideRotation,
@@ -520,11 +520,12 @@ public class Swerve implements Updatable, Subsystem {
             SmartDashboard.putString("swerve/localizer/velocity", getLocalizer().getSmoothedVelocity().toString());
         }
         Logger.recordOutput("swerve/localizer/CoarsedFieldPose", getLocalizer().getCoarseFieldPose(0));
-        Logger.recordOutput("isLockHeading", isLockHeading);
-        Logger.recordOutput("DriveSignalRotation", driveSignal.getRotation());
-        Logger.recordOutput("IsPathFollowing", trajectoryFollower.isPathFollowing());
+        Logger.recordOutput("swerve/isLockHeading", isLockHeading);
+        Logger.recordOutput("swerve/DriveSignalRotation", driveSignal.getRotation());
+        Logger.recordOutput("swerve/PathPlanner/IsPathFollowing", trajectoryFollower.isPathFollowing());
         Logger.recordOutput("swerve/localizer/GyroAngle", gyro.getYaw());
         Logger.recordOutput("swerve/localizer/MeasuredVelocity", swerveLocalizer.getMeasuredVelocity());
+        trajectoryFollower.sendData();
         //Logger.recordOutput("ActivePath", PathPlannerPath.fromPathFile("T_1").getPathPoses());
 
 
