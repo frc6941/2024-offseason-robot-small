@@ -51,6 +51,7 @@ public class AprilTagVision extends SubsystemBase {
     private Pose3d cameraPose;
     @Getter
     private Pose3d robotPose3d;
+    
 
     public AprilTagVision(Supplier<AprilTagLayoutType> aprilTagTypeSupplier, AprilTagVisionIO... io) {
         this.aprilTagTypeSupplier = aprilTagTypeSupplier;
