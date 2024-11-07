@@ -24,7 +24,7 @@ public class HolonomicTrajectoryFollower extends PathPlannerTrajectoryFollowerBa
     private boolean requiredOnTarget = false;
     private boolean lockAngle = true;
 
-    private double TARGET_DISTANCE_ACCURACY_REQUIREMENT = 0.25;
+    private double TARGET_DISTANCE_ACCURACY_REQUIREMENT =0.1;
     private double TARGET_VELOCITY_ACCURACY_REQUIREMENT = 0.25;
 
 
@@ -62,6 +62,7 @@ public class HolonomicTrajectoryFollower extends PathPlannerTrajectoryFollowerBa
         double y = yController.calculate(currentPose.getY(), lastState.positionMeters.getY());
         double rotation = 0.0;
         Translation2d translationVector = new Translation2d(x, y);
+
 
         if (this.lastState != null) {
             Translation2d targetDisplacement = lastState.positionMeters
@@ -120,6 +121,8 @@ public class HolonomicTrajectoryFollower extends PathPlannerTrajectoryFollowerBa
         if (isPathFollowing()) {
             if(this.lastState != null){
                 Logger.recordOutput("swerve/PathPlanner/lastState", this.lastState.getTargetHolonomicPose());
+                Logger.recordOutput("swerve/PathPlanner/xerror",xController.getVelocityError());
+                Logger.recordOutput("swerve/PathPlanner/yerror",xController.getVelocityTolerance());
             }
         }
     }

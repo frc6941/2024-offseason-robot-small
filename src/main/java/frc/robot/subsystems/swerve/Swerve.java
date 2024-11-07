@@ -61,7 +61,7 @@ public class Swerve implements Updatable, Subsystem {
             new TrapezoidProfile.Constraints(400, 720));
     // Path Following Controller
     private final HolonomicTrajectoryFollower trajectoryFollower = new HolonomicTrajectoryFollower(
-            new PIDController(5.0, 0.0, 0.0), new PIDController(5.0, 0.0, 0.0),
+            new PIDController(4.5, 0.0, 0.0), new PIDController(4.5, 0.0, 0.0),
             this.headingController, Constants.SwerveConstants.DRIVETRAIN_FEEDFORWARD);
     private boolean isLockHeading;
     /**
@@ -520,11 +520,13 @@ public class Swerve implements Updatable, Subsystem {
             SmartDashboard.putString("swerve/localizer/velocity", getLocalizer().getSmoothedVelocity().toString());
         }
         Logger.recordOutput("swerve/localizer/CoarsedFieldPose", getLocalizer().getCoarseFieldPose(0));
+        Logger.recordOutput("swerve/localizer/LatestPose",getLocalizer().getLatestPose());
         Logger.recordOutput("swerve/isLockHeading", isLockHeading);
         Logger.recordOutput("swerve/DriveSignalRotation", driveSignal.getRotation());
         Logger.recordOutput("swerve/PathPlanner/IsPathFollowing", trajectoryFollower.isPathFollowing());
         Logger.recordOutput("swerve/localizer/GyroAngle", gyro.getYaw());
         Logger.recordOutput("swerve/localizer/MeasuredVelocity", swerveLocalizer.getMeasuredVelocity());
+        Logger.recordOutput("swerve/localizer/MeasuredAcceleration", swerveLocalizer.getMeasuredAcceleration());
         trajectoryFollower.sendData();
         //Logger.recordOutput("ActivePath", PathPlannerPath.fromPathFile("T_1").getPathPoses());
 
@@ -556,5 +558,4 @@ public class Swerve implements Updatable, Subsystem {
     public enum State {
         BRAKE, DRIVE, PATH_FOLLOWING, EMPTY
     }
-
 }

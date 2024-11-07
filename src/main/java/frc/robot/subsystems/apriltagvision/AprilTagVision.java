@@ -9,12 +9,11 @@ package frc.robot.subsystems.apriltagvision;
 
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.*;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.FieldConstants.AprilTagLayoutType;
+import frc.robot.subsystems.swerve.Swerve;
 import lombok.Getter;
 import lombok.experimental.ExtensionMethod;
 import org.littletonrobotics.GeomUtil;
@@ -42,8 +41,6 @@ public class AprilTagVision extends SubsystemBase {
     private final AprilTagVisionIOInputs[] inputs;
     private final Map<Integer, Double> lastFrameTimes = new HashMap<>();
     private final Map<Integer, Double> lastTagDetectionTimes = new HashMap<>();
-    StructPublisher<Pose3d> CameraPosePublisher = NetworkTableInstance.getDefault()
-            .getStructTopic("CameraPose", Pose3d.struct).publish();
     private Pose3d demoTagPose = null;
     private double lastDemoTagPoseTimestamp = 0.0;
 
@@ -51,7 +48,7 @@ public class AprilTagVision extends SubsystemBase {
     private Pose3d cameraPose;
     @Getter
     private Pose3d robotPose3d;
-    
+
 
     public AprilTagVision(Supplier<AprilTagLayoutType> aprilTagTypeSupplier, AprilTagVisionIO... io) {
         this.aprilTagTypeSupplier = aprilTagTypeSupplier;
@@ -106,6 +103,7 @@ public class AprilTagVision extends SubsystemBase {
                         robotPose3d =
                                 cameraPose.transformBy(cameraPoses[instanceIndex].toTransform3d().inverse());
                         useVisionRotation = true;
+                        Logger.recordOutput("AprilTagVision/cameraPoseUsed", cameraPose);
                         break;
                     case 2:
                         // Two poses (one tag), disambiguate
@@ -127,11 +125,14 @@ public class AprilTagVision extends SubsystemBase {
                                 cameraPose0.transformBy(cameraPoses[instanceIndex].toTransform3d().inverse());
                         Pose3d robotPose3d1 =
                                 cameraPose1.transformBy(cameraPoses[instanceIndex].toTransform3d().inverse());
+                        Logger.recordOutput("AprilTagVision/cameraPose0", cameraPose0);
+                        Logger.recordOutput("AprilTagVision/cameraPose1", cameraPose1);
+
 
                         // Check for ambiguity and select based on estimated rotation
                         if (error0 < error1 * ambiguityThreshold || error1 < error0 * ambiguityThreshold) {
                             Rotation2d currentRotation =
-                                    RobotState.getInstance().getEstimatedPose().getRotation();
+                                    Swerve.getInstance().getLocalizer().getCoarseFieldPose(timestamp).getRotation();
                             Rotation2d visionRotation0 = robotPose3d0.toPose2d().getRotation();
                             Rotation2d visionRotation1 = robotPose3d1.toPose2d().getRotation();
                             if (Math.abs(currentRotation.minus(visionRotation0).getRadians())
@@ -142,6 +143,7 @@ public class AprilTagVision extends SubsystemBase {
                                 cameraPose = cameraPose1;
                                 robotPose3d = robotPose3d1;
                             }
+                            Logger.recordOutput("AprilTagVision/cameraPoseUsed", cameraPose);
                         }
                         break;
                 }
@@ -322,11 +324,11 @@ public class AprilTagVision extends SubsystemBase {
             // Send results to robot state
             allVisionObservations.stream()
                     .sorted(Comparator.comparingDouble(VisionObservation::timestamp))
-                    .forEach(RobotState.getInstance()::addVisionObservation);
+                    .forEach(observation -> Swerve.getInstance().getLocalizer().addMeasurement(
+                            observation.timestamp(), observation.visionPose(), observation.stdDevs()));
         }
         RobotState.getInstance().setDemoTagPose(demoTagPose);
-        if (cameraPose != null) {
-            CameraPosePublisher.set(cameraPose);
-        }
+
     }
 }
+

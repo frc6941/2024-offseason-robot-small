@@ -68,9 +68,10 @@ public class Constants {
 
         public static final Translation2d ampCenter = new Translation2d(
                 edu.wpi.first.math.util.Units.inchesToMeters(72.455), fieldWidth);
-        public static final double aprilTagWidth = edu.wpi.first.math.util.Units.inchesToMeters(6.50);
+        public static final double aprilTagWidth = edu.wpi.first.math.util.Units.inchesToMeters(6.5);
 
         public static final AprilTagLayoutType defaultAprilTagType = AprilTagLayoutType.OFFICIAL;
+
 
         @Getter
         public enum AprilTagLayoutType {

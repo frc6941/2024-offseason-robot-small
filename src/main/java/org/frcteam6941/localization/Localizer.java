@@ -1,6 +1,9 @@
 package org.frcteam6941.localization;
 
+import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 
 public interface Localizer {
     Pose2d getLatestPose();
@@ -18,4 +21,5 @@ public interface Localizer {
     double getDistanceDriven();
 
     void addMeasurement(double time, Pose2d measuredDelta, Pose2d stdDeviation);
+    void addMeasurement(double time, Pose2d measuredDelta, Matrix<N3, N1> stdDeviation);
 }

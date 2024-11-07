@@ -1,6 +1,7 @@
 package org.frcteam6941.localization;
 
 import edu.wpi.first.math.MatBuilder;
+import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -9,6 +10,8 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants;
 import lombok.Synchronized;
@@ -194,6 +197,17 @@ public class SwerveDeltaCoarseLocalizer implements Localizer {
                     measuredPose,
                     time,
                     MatBuilder.fill(Nat.N3(), Nat.N1(), stdDeviation.getX(), stdDeviation.getY(), stdDeviation.getRotation().getDegrees())
+            );
+        }
+    }
+
+    @Override
+    public synchronized void addMeasurement(double time, Pose2d measuredPose, Matrix<N3, N1> stdDeviation) {
+        synchronized (statusLock) {
+            poseEstimator.addVisionMeasurement(
+                    measuredPose,
+                    time,
+                    stdDeviation
             );
         }
     }
