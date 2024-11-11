@@ -1,15 +1,13 @@
 package org.frcteam6941.control;
 
-import org.littletonrobotics.junction.Logger;
-
 import com.pathplanner.lib.path.PathPlannerTrajectory;
 import com.pathplanner.lib.path.PathPlannerTrajectory.State;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import org.littletonrobotics.junction.Logger;
 
 public class HolonomicTrajectoryFollower extends PathPlannerTrajectoryFollowerBase<HolonomicDriveSignal> {
     private final PIDController xController;
@@ -20,16 +18,17 @@ public class HolonomicTrajectoryFollower extends PathPlannerTrajectoryFollowerBa
     private State lastState = null;
     private Pose2d actualPose = null;
 
+
     private boolean finished = false;
     private boolean requiredOnTarget = false;
     private boolean lockAngle = true;
 
-    private double TARGET_DISTANCE_ACCURACY_REQUIREMENT =0.1;
+    private double TARGET_DISTANCE_ACCURACY_REQUIREMENT = 0.2;
     private double TARGET_VELOCITY_ACCURACY_REQUIREMENT = 0.25;
 
 
     public HolonomicTrajectoryFollower(PIDController xController, PIDController yController,
-            ProfiledPIDController thetaController, SimpleMotorFeedforward feedforward) {
+                                       ProfiledPIDController thetaController, SimpleMotorFeedforward feedforward) {
         this.xController = xController;
         this.yController = yController;
         this.thetaController = thetaController;
@@ -41,8 +40,8 @@ public class HolonomicTrajectoryFollower extends PathPlannerTrajectoryFollowerBa
 
     @Override
     protected HolonomicDriveSignal calculateDriveSignal(Pose2d currentPose, Translation2d velocity,
-            double rotationalVelocity, PathPlannerTrajectory trajectory, double time,
-            double dt) {
+                                                        double rotationalVelocity, PathPlannerTrajectory trajectory, double time,
+                                                        double dt) {
         if (time > trajectory.getTotalTimeSeconds()) {
             if (this.requiredOnTarget) {
                 if (this.xController.atSetpoint() && this.yController.atSetpoint()) {
@@ -115,15 +114,25 @@ public class HolonomicTrajectoryFollower extends PathPlannerTrajectoryFollowerBa
         return !finished;
     }
 
-    
+    public Pose2d[] getTrajectoryPoses() {
+        PathPlannerTrajectory trajectory = getCurrentTrajectory().get();
+        Pose2d[] poses = new Pose2d[trajectory.getStates().size()];
+        for (int i = 0; i < trajectory.getStates().size(); i++) {
+            State state = trajectory.getStates().get(i);
+            poses[i] = state.getTargetHolonomicPose();
+        }
+        return poses;
+    }
+
 
     public void sendData() {
-        if (isPathFollowing()) {
-            if(this.lastState != null){
-                Logger.recordOutput("swerve/PathPlanner/lastState", this.lastState.getTargetHolonomicPose());
-                Logger.recordOutput("swerve/PathPlanner/xerror",xController.getVelocityError());
-                Logger.recordOutput("swerve/PathPlanner/yerror",xController.getVelocityTolerance());
-            }
+        if (isPathFollowing() && this.lastState != null && getCurrentTrajectory() != null) {
+
+            Logger.recordOutput("swerve/PathPlanner/lastState", this.lastState.getTargetHolonomicPose());
+            Logger.recordOutput("swerve/PathPlanner/xErrorV", xController.getVelocityError());
+            Logger.recordOutput("swerve/PathPlanner/xErrorP", xController.getPositionError());
+
+
         }
     }
 

@@ -12,7 +12,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
 
 public class AprilTagVisionConstants {
-    public static final double ambiguityThreshold = 0.4;
+    public static final double ambiguityThreshold = 0.15;
     public static final double targetLogTimeSecs = 0.1;
     public static final double fieldBorderMargin = 0.5;
     public static final double zMargin = 0.75;
@@ -23,7 +23,7 @@ public class AprilTagVisionConstants {
 
     public static final Pose3d[] cameraPoses =
             new Pose3d[]{
-                //RR
+                    //RR
                     new Pose3d(
                             -0.18,
                             0.247,

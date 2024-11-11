@@ -86,9 +86,9 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         // return autoChooser.get();
         return new SequentialCommandGroup(
-                AutoActions.waitFor(0.00001),
+                AutoActions.waitFor(0.000001),
                 AutoActions.followTrajectory(AutoActions.getTrajectory("T_1"), true, true),
-                AutoActions.followTrajectory(AutoActions.getTrajectory("T_3"), true, true)
+                AutoActions.followTrajectory(AutoActions.getTrajectory("T_2"), true, true)
         );
 
     }
