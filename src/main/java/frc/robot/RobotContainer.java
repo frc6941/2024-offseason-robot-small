@@ -9,8 +9,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.auto.basics.AutoActions;
+import frc.robot.auto.basics.CharacterizationDriveCommand;
 import frc.robot.display.Display;
 import frc.robot.display.OperatorDashboard;
 import frc.robot.subsystems.apriltagvision.AprilTagVision;
@@ -30,7 +29,8 @@ public class RobotContainer {
     @Getter
     AprilTagVision aprilTagVision = new AprilTagVision(
             this::getAprilTagLayoutType,
-            new AprilTagVisionIONorthstar(this::getAprilTagLayoutType, 0));
+            new AprilTagVisionIONorthstar(this::getAprilTagLayoutType, 0),
+            new AprilTagVisionIONorthstar(this::getAprilTagLayoutType, 1));
     Swerve swerve = Swerve.getInstance();
     Display display = Display.getInstance();
     OperatorDashboard dashboard = OperatorDashboard.getInstance();
@@ -85,11 +85,12 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
         // return autoChooser.get();
-        return new SequentialCommandGroup(
-                AutoActions.waitFor(0.000001),
-                AutoActions.followTrajectory(AutoActions.getTrajectory("T_1"), true, true),
-                AutoActions.followTrajectory(AutoActions.getTrajectory("T_2"), true, true)
-        );
+//        return new SequentialCommandGroup(
+//                AutoActions.waitFor(0.000001),
+//                AutoActions.followTrajectory(AutoActions.getTrajectory("T_1"), true, true),
+//                AutoActions.followTrajectory(AutoActions.getTrajectory("T_2"), true, true)
+//        );
+        return new CharacterizationDriveCommand(swerve, 2, 1.5, 5);
 
     }
 
