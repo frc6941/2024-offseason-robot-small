@@ -53,7 +53,10 @@ public class CharacterizationDriveCommand extends Command {
         double averageFalconVelocity = 0.0;
         for (SwerveModuleState state : moduleStates) {
             averageVelocity += Math.abs(state.speedMetersPerSecond);
-            averageFalconVelocity += Math.abs((state.speedMetersPerSecond * 60) / Constants.SwerveConstants.wheelCircumferenceMeters.magnitude() * Constants.SwerveConstants.DRIVE_GEAR_RATIO * (2048.0 / 600.0));
+            averageFalconVelocity += Math.abs(
+                    (state.speedMetersPerSecond * 60)
+                            / Constants.SwerveConstants.wheelCircumferenceMeters.magnitude()
+                            * Constants.SwerveConstants.DRIVE_GEAR_RATIO * (2048.0 / 600.0));
         }
         averageVelocity /= moduleStates.length;
         averageFalconVelocity /= moduleStates.length;

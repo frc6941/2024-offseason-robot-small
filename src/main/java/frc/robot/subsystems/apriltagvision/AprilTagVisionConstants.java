@@ -19,7 +19,7 @@ public class AprilTagVisionConstants {
     public static final double xyStdDevCoefficient = 0.005;
     public static final double thetaStdDevCoefficient = 0.01;
 
-    public static final double[] stdDevFactors = new double[]{1.0, 0.6, 1.0, 1.2};
+    public static final double[] stdDevFactors = new double[]{1.0, 1, 1.0, 1};
 
     public static final Pose3d[] cameraPoses =
             new Pose3d[]{
@@ -29,15 +29,13 @@ public class AprilTagVisionConstants {
                             0.209,
                             new Rotation3d(0.0, Units.degreesToRadians(-20), 0.0)
                                     .rotateBy(new Rotation3d(0.0, 0.0, Units.degreesToRadians(135)))),
-                    //RR
+
                     new Pose3d(
                             -0.18,
                             -0.247,
                             0.209,
                             new Rotation3d(0.0, Units.degreesToRadians(-20), 0.0)
                                     .rotateBy(new Rotation3d(0.0, 0.0, Units.degreesToRadians(225)))),
-                    //RR
-
 
                     new Pose3d(
                             Units.inchesToMeters(8.875),

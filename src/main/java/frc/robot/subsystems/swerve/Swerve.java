@@ -219,6 +219,7 @@ public class Swerve implements Updatable, Subsystem {
         setpoint = generator.generateSetpoint(
                 kinematicLimits, previousSetpoint, desiredChassisSpeed, dt);
         previousSetpoint = setpoint;
+        Logger.recordOutput("swerve/Kinematics/DesiredSpeedy", desiredChassisSpeed.vyMetersPerSecond);
 
         for (SwerveModuleBase mod : swerveMods) {
             mod.setDesiredState(setpoint.mModuleStates[mod.getModuleNumber()], driveSignal.isOpenLoop(), false);
@@ -481,11 +482,11 @@ public class Swerve implements Updatable, Subsystem {
 
             driveSignal = new HolonomicDriveSignal(driveSignal.getTranslation(), rotation,
                     driveSignal.isFieldOriented(), driveSignal.isOpenLoop());
-
-            Logger.recordOutput("swerve/heading/rotation", rotation);
-            Logger.recordOutput("swerve/heading/gyro", gyro.getYaw().getDegrees());
-            Logger.recordOutput("swerve/heading/target", headingTarget);
-            Logger.recordOutput("swerve/heading/difference", Math.abs(headingTarget - gyro.getYaw().getDegrees()));
+//
+//            Logger.recordOutput("swerve/heading/rotation", rotation);
+//            Logger.recordOutput("swerve/heading/gyro", gyro.getYaw().getDegrees());
+//            Logger.recordOutput("swerve/heading/target", headingTarget);
+//            Logger.recordOutput("swerve/heading/difference", Math.abs(headingTarget - gyro.getYaw().getDegrees()));
 
         } else if (overrideRotation != null) {
             driveSignal = new HolonomicDriveSignal(driveSignal.getTranslation(), overrideRotation,
@@ -528,6 +529,7 @@ public class Swerve implements Updatable, Subsystem {
         Logger.recordOutput("swerve/localizer/GyroAngle", gyro.getYaw());
         Logger.recordOutput("swerve/localizer/MeasuredVelocity", swerveLocalizer.getMeasuredVelocity());
         Logger.recordOutput("swerve/localizer/MeasuredAcceleration", swerveLocalizer.getMeasuredAcceleration());
+
         trajectoryFollower.sendData();
         //Logger.recordOutput("ActivePath", PathPlannerPath.fromPathFile("T_1").getPathPoses());
 

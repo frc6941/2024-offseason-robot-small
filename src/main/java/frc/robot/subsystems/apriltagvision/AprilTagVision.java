@@ -103,7 +103,7 @@ public class AprilTagVision extends SubsystemBase {
                         robotPose3d =
                                 cameraPose.transformBy(cameraPoses[instanceIndex].toTransform3d().inverse());
                         useVisionRotation = true;
-                        Logger.recordOutput("AprilTagVision/cameraPoseUsed", cameraPose);
+
                         break;
                     case 2:
                         // Two poses (one tag), disambiguate
@@ -125,8 +125,6 @@ public class AprilTagVision extends SubsystemBase {
                                 cameraPose0.transformBy(cameraPoses[instanceIndex].toTransform3d().inverse());
                         Pose3d robotPose3d1 =
                                 cameraPose1.transformBy(cameraPoses[instanceIndex].toTransform3d().inverse());
-                        Logger.recordOutput("AprilTagVision/cameraPose0", cameraPose0);
-                        Logger.recordOutput("AprilTagVision/cameraPose1", cameraPose1);
 
 
                         // Check for ambiguity and select based on estimated rotation
@@ -143,7 +141,7 @@ public class AprilTagVision extends SubsystemBase {
                                 cameraPose = cameraPose1;
                                 robotPose3d = robotPose3d1;
                             }
-                            Logger.recordOutput("AprilTagVision/cameraPoseUsed", cameraPose);
+
                         }
                         break;
                 }

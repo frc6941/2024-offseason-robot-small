@@ -319,7 +319,7 @@ public class Constants {
         public static final Measure<Velocity<Distance>> speedAt12Volts = maxSpeed;
         public static final KinematicLimits DRIVETRAIN_UNCAPPED = new KinematicLimits(
                 maxSpeed.magnitude(),
-                13.0,
+                11.0,
                 5000.0);
         public static final KinematicLimits DRIVETRAIN_SMOOTHED = new KinematicLimits(
                 4.5,
@@ -492,12 +492,12 @@ public class Constants {
         }
 
         public static class driveGainsClass {
-            public static final TunableNumber DRIVE_KP = new TunableNumber("DRIVE PID/kp", 0.3);
+            public static final TunableNumber DRIVE_KP = new TunableNumber("DRIVE PID/kp", 0.5);
             public static final TunableNumber DRIVE_KI = new TunableNumber("DRIVE PID/ki", 0);
-            public static final TunableNumber DRIVE_KD = new TunableNumber("DRIVE PID/kd", 0);
+            public static final TunableNumber DRIVE_KD = new TunableNumber("DRIVE PID/kd", 0.025);
             public static final TunableNumber DRIVE_KA = new TunableNumber("DRIVE PID/ka", 0);
-            public static final TunableNumber DRIVE_KV = new TunableNumber("DRIVE PID/kv", 0.14);
-            public static final TunableNumber DRIVE_KS = new TunableNumber("DRIVE PID/ks", 0.12);
+            public static final TunableNumber DRIVE_KV = new TunableNumber("DRIVE PID/kv", 0.16);
+            public static final TunableNumber DRIVE_KS = new TunableNumber("DRIVE PID/ks", 0.045);
         }
 
         public static class headingController {
