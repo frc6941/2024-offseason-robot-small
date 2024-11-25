@@ -56,7 +56,7 @@ public class AprilTagVisionConstants {
 
     public static final String[] cameraIds =
             new String[]{
-                    "/dev/v4l/by-path/platform-fc800000.usb-usb-0:1:1.0-video-index0",
+                    "200",
                     "/dev/v4l/by-path/platform-fc880000.usb-usb-0:1:1.0-video-index0",
                     "/dev/v4l/by-path/platform-fc800000.usb-usb-0:1:1.0-video-index0",
                     "/dev/v4l/by-path/platform-fc880000.usb-usb-0:1:1.0-video-index0"
