@@ -1,25 +1,14 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.BaseStatusSignal;
-import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
-import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
-import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.units.Measure;
-import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.drivers.BeamBreak;
 
-import static edu.wpi.first.units.Units.*;
-
-public class ShooterSubsystem extends SubsystemBase{
+public class ShooterSubsystem extends SubsystemBase {
     private final TalonFX shooterHighMotor = new TalonFX(Constants.ShooterConstants.SHOOTER_MOTORH_ID, Constants.RobotConstants.CAN_BUS_NAME);
     private final TalonFX shooterLowMotor = new TalonFX(Constants.ShooterConstants.SHOOTER_MOTORL_ID, Constants.RobotConstants.CAN_BUS_NAME);
     private final BeamBreak intakerBeamBreak = new BeamBreak(Constants.BeamBreakConstants.INTAKER_BEAMBREAK_ID);
@@ -45,6 +34,8 @@ public class ShooterSubsystem extends SubsystemBase{
 
         boolean isIntakerBeamBreakOn = intakerBeamBreak.get();
         boolean isShooterBeamBreakOn = shooterBeamBreak.get();
+        shooterLowMotor.setInverted(true);
+        shooterHighMotor.setInverted(true);
         if (!lastRecordedState && isIntakerBeamBreakOn) {
             noteState = true;
         }
@@ -52,7 +43,7 @@ public class ShooterSubsystem extends SubsystemBase{
 
     }
 
-    public void setShooterRPM(double highMotorVelocityRPM, double lowMotorVelocityRPM ) {
+    public void setShooterRPM(double highMotorVelocityRPM, double lowMotorVelocityRPM) {
         var highMotorVelocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(highMotorVelocityRPM);
         var lowMotorVelocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(lowMotorVelocityRPM);
         shooterHighMotor.setControl(new VelocityVoltage(
@@ -77,10 +68,15 @@ public class ShooterSubsystem extends SubsystemBase{
         ));
     }
 
+    public void setShooterDirectVoltage(double voltage) {
+        shooterHighMotor.setVoltage(voltage);
+        shooterLowMotor.setVoltage(voltage);
+    }
+
 
     public boolean isShootComplete() {
         return !shooterBeamBreak.get();
     }
-    
+
 }
 
