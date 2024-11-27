@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.auto.basics.AutoActions;
 import frc.robot.commands.ChassisAimCommand;
+import frc.robot.commands.DeliverNoteCommand;
+import frc.robot.commands.IntakeCommand;
 import frc.robot.display.Display;
 import frc.robot.display.OperatorDashboard;
 import frc.robot.subsystems.apriltagvision.AprilTagVision;
@@ -36,6 +38,10 @@ public class RobotContainer {
             new AprilTagVisionIONorthstar(this::getAprilTagLayoutType, 1));
     Swerve swerve = Swerve.getInstance();
     Display display = Display.getInstance();
+
+    ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
+    IntakerSubsystem intakerSubsystem = new IntakerSubsystem();
+
     OperatorDashboard dashboard = OperatorDashboard.getInstance();
     CommandXboxController driverController = new CommandXboxController(0);
     CommandXboxController operatorController = new CommandXboxController(1);
@@ -86,6 +92,12 @@ public class RobotContainer {
                 }).ignoringDisable(true));
 
         driverController.x().whileTrue(speakerShot());
+
+        Command intake = new IntakeCommand(intakerSubsystem);
+        Command deliverNote = new DeliverNoteCommand(intakerSubsystem, shooterSubsystem);
+
+        driverController.leftBumper().whileTrue(intake);
+        driverController.rightBumper().whileTrue(deliverNote);
     }
 
     private Command speakerShot() {

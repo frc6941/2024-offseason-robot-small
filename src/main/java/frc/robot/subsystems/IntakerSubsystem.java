@@ -5,6 +5,8 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.drivers.BeamBreak;
@@ -35,7 +37,7 @@ public class IntakerSubsystem extends SubsystemBase{
                 .withKS(0.28475008));
     }
 
-    public void setIndexRPM(double velocityRPM) {
+    public void setIntakeRPM(double velocityRPM) {
         var velocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(velocityRPM);
         intakeMotor.setControl(new VelocityVoltage(
                 Units.radiansToRotations(velocityRadPerSec),
@@ -52,5 +54,9 @@ public class IntakerSubsystem extends SubsystemBase{
     public boolean intakerHasNote() {
         return noteState;
     }
+
+    public void setIntakeDirectVoltage(Measure<Voltage> volts) {
+		intakeTalon.setControl(new VoltageOut(volts.magnitude()));
+	}
     
 }
