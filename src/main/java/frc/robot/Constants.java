@@ -277,7 +277,7 @@ public class Constants {
         /**
          * The max speed of the swerve (should not larger than speedAt12Volts)
          */
-        public static final Measure<Velocity<Distance>> maxSpeed = MetersPerSecond.of(5);
+        public static final Measure<Velocity<Distance>> maxSpeed = MetersPerSecond.of(4.5);
         /**
          * The max turning speed of the swerve
          */
@@ -502,13 +502,13 @@ public class Constants {
 
         public static class headingController {
             public static final frc.robot.utils.TunableNumber HEADING_KP = new frc.robot.utils.TunableNumber(
-                    "HEADING PID/kp", 0.08);
+                    "HEADING PID/kp", 0.09);
             public static final frc.robot.utils.TunableNumber HEADING_KI = new frc.robot.utils.TunableNumber(
-                    "HEADING PID/ki", 0.0002);
+                    "HEADING PID/ki", 0.000);
             public static final frc.robot.utils.TunableNumber HEADING_KD = new frc.robot.utils.TunableNumber(
-                    "HEADING PID/kd", 0.002);
+                    "HEADING PID/kd", 0.004);
             public static final frc.robot.utils.TunableNumber MAX_ERROR_CORRECTION_ANGLE = new frc.robot.utils.TunableNumber(
-                    "HEADING/Max Error Correction Angle", 90.0);
+                    "HEADING/Max Error Correction Angle", 120.0);
         }
 
     }

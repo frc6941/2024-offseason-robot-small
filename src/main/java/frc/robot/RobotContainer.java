@@ -9,7 +9,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.auto.basics.CharacterizationDriveCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.auto.basics.AutoActions;
+import frc.robot.commands.ChassisAimCommand;
 import frc.robot.display.Display;
 import frc.robot.display.OperatorDashboard;
 import frc.robot.subsystems.apriltagvision.AprilTagVision;
@@ -34,10 +37,11 @@ public class RobotContainer {
     Swerve swerve = Swerve.getInstance();
     Display display = Display.getInstance();
     OperatorDashboard dashboard = OperatorDashboard.getInstance();
+    CommandXboxController driverController = new CommandXboxController(0);
+    CommandXboxController operatorController = new CommandXboxController(1);
     private double distance;
     @Getter
     private LoggedDashboardChooser<Command> autoChooser;
-
     @Getter
     private UpdateManager updateManager;
 
@@ -80,17 +84,22 @@ public class RobotContainer {
                                     Rotation2d.fromDegrees(
                                             swerve.getLocalizer().getLatestPose().getRotation().getDegrees())));
                 }).ignoringDisable(true));
+
+        driverController.x().whileTrue(speakerShot());
+    }
+
+    private Command speakerShot() {
+        return new ChassisAimCommand(swerve, () -> ShootingDecider.Destination.SPEAKER, driverController::getLeftX, driverController::getRightY);
     }
 
 
     public Command getAutonomousCommand() {
 //         return autoChooser.get();
-//        return new SequentialCommandGroup(
-//                AutoActions.waitFor(0.000001),
-//                AutoActions.followTrajectory(AutoActions.getTrajectory("T_1"), true, true),
-//                AutoActions.followTrajectory(AutoActions.getTrajectory("T_2"), true, true)
-//        );
-        return new CharacterizationDriveCommand(swerve, 1, 0.25, 2.5);
+        return new SequentialCommandGroup(
+                AutoActions.waitFor(0.000001),
+                AutoActions.followTrajectory(AutoActions.getTrajectory("T_4"), true, true)
+        );
+//        return new CharacterizationDriveCommand(swerve, 1, 0.25, 2.5);
 
     }
 
