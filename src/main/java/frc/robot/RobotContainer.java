@@ -42,7 +42,6 @@ public class RobotContainer {
     ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
     Display display = Display.getInstance();
 
-    ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
     IntakerSubsystem intakerSubsystem = new IntakerSubsystem();
 
     OperatorDashboard dashboard = OperatorDashboard.getInstance();
