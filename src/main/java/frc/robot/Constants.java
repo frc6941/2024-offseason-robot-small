@@ -207,51 +207,25 @@ public class Constants {
         public static final MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs()
                 .withNeutralMode(NeutralModeValue.Brake);
 
-        public final static double indexRPM = 1000;
         public final static double triggerRPM = 4500;
 
-        public static class indexerGainsClass {
-            public static final TunableNumber INDEXER_KP = new TunableNumber("INDEXER PID/kp", 0.25);
-            public static final TunableNumber INDEXER_KI = new TunableNumber("INDEXER PID/ki", 0.0);
-            public static final TunableNumber INDEXER_KD = new TunableNumber("INDEXER PID/kd", 0.001);
-            public static final TunableNumber INDEXER_KA = new TunableNumber("INDEXER PID/ka", 0.0037512677);
-            public static final TunableNumber INDEXER_KV = new TunableNumber("INDEXER PID/kv", 0.115);// 0.107853495
-            public static final TunableNumber INDEXER_KS = new TunableNumber("INDEXER PID/ks", 0.28475008);
-        }
     }
 
     public static class ShooterConstants {
         public static final int SHOOTER_MOTORH_ID = 17;
         public static final int SHOOTER_MOTORL_ID = 16;
 
-        public static final double SHOOTERH_SPEAKER_SPEED = 0.85;
-        public static final double SHOOTERL_SPEAKER_SPEED = 0.75;
-        public static final double SHOOTERH_SPEAKER_VELOCITY = 0.85 * 4800;
-        public static final double SHOOTERL_SPEAKER_VELOCITY = 0.75 * 4800;
 
-        public static final double SHOOTERH_AMP_SPEED = 0.17;
-        public static final double SHOOTERL_AMP_SPEED = 0.25;
-        public static final double SHOOTERH_AMP_VELOCITY = 0.17 * 4800;
-        public static final double SHOOTERL_AMP_VELOCITY = 0.25 * 4800;
-
-        public static final double SHOOTERH_PASS_SPEED = 0.98;
-        public static final double SHOOTERL_PASS_SPEED = 0.98;
-        public static final double SHOOTERH_PASS_VELOCITY = 0.98 * 4800;
-        public static final double SHOOTERL_PASS_VELOCITY = 0.98 * 4800;
-
-        public static final double SHOOTER_OUT_SPEED = -0.8;
-        public static final double SHOOTER_OUT_VELOCITY = -0.8 * 4800;
-
-        public static final double SHOOTER_IDLE_SPEED = 0.5;
-        public static final double SHOOTER_IDLE_VELOCITY = 0.7 * 4800;
+        public static final TunableNumber hShooterTestRPM = new TunableNumber("Shooter/highShooterTestRPM", 1000);
+        public static final TunableNumber lShooterTestRPM = new TunableNumber("Shooter/lowShooterTestRPM", 1000);
 
         public static class shooterGainsClass {
-            public static final TunableNumber SHOOTER_KP = new TunableNumber("SHOOTER PID/kp", 0.2);
-            public static final TunableNumber SHOOTER_KI = new TunableNumber("SHOOTER PID/ki", 0);
-            public static final TunableNumber SHOOTER_KD = new TunableNumber("SHOOTER PID/kd", 0.001);
-            public static final TunableNumber SHOOTER_KA = new TunableNumber("SHOOTER PID/ka", 0.0037512677);
-            public static final TunableNumber SHOOTER_KV = new TunableNumber("SHOOTER PID/kv", 0.113);// 0.107853495
-            public static final TunableNumber SHOOTER_KS = new TunableNumber("SHOOTER PID/ks", 0.28475008);
+            public static final TunableNumber SHOOTER_KP = new TunableNumber("Shooter/SHOOTER PID/kp", 0.2);
+            public static final TunableNumber SHOOTER_KI = new TunableNumber("Shooter/SHOOTER PID/ki", 0);
+            public static final TunableNumber SHOOTER_KD = new TunableNumber("Shooter/SHOOTER PID/kd", 0.001);
+            public static final TunableNumber SHOOTER_KA = new TunableNumber("Shooter/SHOOTER PID/ka", 0.0037512677);
+            public static final TunableNumber SHOOTER_KV = new TunableNumber("Shooter/SHOOTER PID/kv", 0.113);// 0.107853495
+            public static final TunableNumber SHOOTER_KS = new TunableNumber("Shooter/SHOOTER PID/ks", 0.28475008);
         }
     }
 

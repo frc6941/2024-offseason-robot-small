@@ -13,8 +13,10 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.auto.basics.AutoActions;
 import frc.robot.commands.ChassisAimCommand;
+import frc.robot.commands.FlyWheelRampUp;
 import frc.robot.display.Display;
 import frc.robot.display.OperatorDashboard;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.apriltagvision.AprilTagVision;
 import frc.robot.subsystems.apriltagvision.AprilTagVisionIONorthstar;
 import frc.robot.subsystems.swerve.Swerve;
@@ -35,6 +37,7 @@ public class RobotContainer {
             new AprilTagVisionIONorthstar(this::getAprilTagLayoutType, 0),
             new AprilTagVisionIONorthstar(this::getAprilTagLayoutType, 1));
     Swerve swerve = Swerve.getInstance();
+    ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
     Display display = Display.getInstance();
     OperatorDashboard dashboard = OperatorDashboard.getInstance();
     CommandXboxController driverController = new CommandXboxController(0);
@@ -86,12 +89,16 @@ public class RobotContainer {
                 }).ignoringDisable(true));
 
         driverController.x().whileTrue(speakerShot());
+        driverController.y().whileTrue(flywheelRampUp());
     }
 
     private Command speakerShot() {
         return new ChassisAimCommand(swerve, () -> ShootingDecider.Destination.SPEAKER, driverController::getLeftX, driverController::getRightY);
     }
 
+    private Command flywheelRampUp() {
+        return new FlyWheelRampUp(shooterSubsystem);
+    }
 
     public Command getAutonomousCommand() {
 //         return autoChooser.get();
