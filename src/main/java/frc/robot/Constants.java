@@ -1,11 +1,13 @@
 package frc.robot;
 
 import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstantsFactory;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -195,16 +197,27 @@ public class Constants {
     }
 
     public static class BeamBreakConstants {
-        public static final int INTAKER_BEAMBREAKH_ID = 3;
-        public static final int INTAKER_BEAMBREAKL_ID = 2;
+        public static final int SHOOTER_BEAMBREAK_ID = 3;
+        public static final int INTAKER_BEAMBREAK_ID = 2;
     }
 
     public static class IntakerConstants {
         public static final int INTAKE_MOTOR_ID = 15;
 
-        public static final double INTAKER_IN_SPEED = 0.5;
-        public static final double INTAKER_OUT_SPEED = -1;
-        public static final double INTAKER_SHOOT_SPEED = 1.0;
+        public static final MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs()
+                .withNeutralMode(NeutralModeValue.Brake);
+
+        public final static double indexRPM = 1000;
+        public final static double triggerRPM = 4500;
+
+        public static class indexerGainsClass {
+            public static final TunableNumber INDEXER_KP = new TunableNumber("INDEXER PID/kp", 0.25);
+            public static final TunableNumber INDEXER_KI = new TunableNumber("INDEXER PID/ki", 0.0);
+            public static final TunableNumber INDEXER_KD = new TunableNumber("INDEXER PID/kd", 0.001);
+            public static final TunableNumber INDEXER_KA = new TunableNumber("INDEXER PID/ka", 0.0037512677);
+            public static final TunableNumber INDEXER_KV = new TunableNumber("INDEXER PID/kv", 0.115);// 0.107853495
+            public static final TunableNumber INDEXER_KS = new TunableNumber("INDEXER PID/ks", 0.28475008);
+        }
     }
 
     public static class ShooterConstants {
