@@ -464,7 +464,7 @@ public class Swerve implements Updatable, Subsystem {
     @Override
     public void update(double time, double dt) {
         Optional<HolonomicDriveSignal> trajectorySignal = trajectoryFollower.update(
-                swerveLocalizer.getLatestPose(),
+                swerveLocalizer.getCoarseFieldPose(time),
                 swerveLocalizer.getMeasuredVelocity().getTranslation(),
                 swerveLocalizer.getMeasuredVelocity().getRotation().getDegrees(),
                 time, dt);

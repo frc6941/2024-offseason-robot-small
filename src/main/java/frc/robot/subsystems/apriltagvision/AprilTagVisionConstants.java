@@ -12,7 +12,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
 
 public class AprilTagVisionConstants {
-    public static final double ambiguityThreshold = 0.15;
+    public static final double ambiguityThreshold = 0.2;
     public static final double targetLogTimeSecs = 0.1;
     public static final double fieldBorderMargin = 0.5;
     public static final double zMargin = 0.75;
@@ -24,18 +24,18 @@ public class AprilTagVisionConstants {
     public static final Pose3d[] cameraPoses =
             new Pose3d[]{
                     new Pose3d(
-                            -0.18,
-                            0.247,
-                            0.209,
-                            new Rotation3d(0.0, Units.degreesToRadians(-20), 0.0)
-                                    .rotateBy(new Rotation3d(0.0, 0.0, Units.degreesToRadians(135)))),
-
-                    new Pose3d(
-                            -0.18,
+                            0.127,
                             -0.247,
                             0.209,
                             new Rotation3d(0.0, Units.degreesToRadians(-20), 0.0)
                                     .rotateBy(new Rotation3d(0.0, 0.0, Units.degreesToRadians(225)))),
+
+                    new Pose3d(
+                            -0.21,
+                            -0.007,
+                            0.455,
+                            new Rotation3d(0.0, Units.degreesToRadians(-10), 0.0)
+                                    .rotateBy(new Rotation3d(0.0, 0.0, Units.degreesToRadians(180)))),
 
                     new Pose3d(
                             Units.inchesToMeters(8.875),
@@ -56,8 +56,8 @@ public class AprilTagVisionConstants {
 
     public static final String[] cameraIds =
             new String[]{
-                    "200",
-                    "/dev/v4l/by-path/platform-fc880000.usb-usb-0:1:1.0-video-index0",
+                    "0",
+                    "2",
                     "/dev/v4l/by-path/platform-fc800000.usb-usb-0:1:1.0-video-index0",
                     "/dev/v4l/by-path/platform-fc880000.usb-usb-0:1:1.0-video-index0"
             };
