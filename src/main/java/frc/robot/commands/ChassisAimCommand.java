@@ -4,7 +4,7 @@ import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
+import frc.robot.RobotConstants;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.utils.ShootingDecider;
 import frc.robot.utils.ShootingParameters;
@@ -47,8 +47,8 @@ public class ChassisAimCommand extends Command {
     public void execute() {
         swerve.drive(
                 new Translation2d(
-                        -driverX.getAsDouble() * Constants.SwerveConstants.maxSpeed.magnitude(),
-                        -driverY.getAsDouble() * Constants.SwerveConstants.maxSpeed.magnitude()),
+                        -driverX.getAsDouble() * RobotConstants.SwerveConstants.maxSpeed.magnitude(),
+                        -driverY.getAsDouble() * RobotConstants.SwerveConstants.maxSpeed.magnitude()),
                 0,
                 true,
                 false);

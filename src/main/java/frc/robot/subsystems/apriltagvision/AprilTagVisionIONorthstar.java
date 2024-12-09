@@ -9,8 +9,6 @@ package frc.robot.subsystems.apriltagvision;
 
 import edu.wpi.first.networktables.*;
 import edu.wpi.first.wpilibj.Timer;
-import frc.robot.Constants.FieldConstants;
-import frc.robot.Constants.FieldConstants.AprilTagLayoutType;
 import org.littletonrobotics.Alert;
 
 import java.util.function.Supplier;
@@ -29,16 +27,16 @@ public class AprilTagVisionIONorthstar implements AprilTagVisionIO {
     private static final int contrast = 60;
     private static final int buffersize = 1;
     private static final double disconnectedTimeout = 0.5;
-    private final Supplier<AprilTagLayoutType> aprilTagTypeSupplier;
+    private final Supplier<frc.robot.FieldConstants.AprilTagLayoutType> aprilTagTypeSupplier;
     private final StringPublisher tagLayoutPublisher;
     private final DoubleArraySubscriber observationSubscriber;
     private final DoubleArraySubscriber demoObservationSubscriber;
     private final IntegerSubscriber fpsSubscriber;
     private final Alert disconnectedAlert;
     private final Timer disconnectedTimer = new Timer();
-    private AprilTagLayoutType lastAprilTagType = null;
+    private frc.robot.FieldConstants.AprilTagLayoutType lastAprilTagType = null;
 
-    public AprilTagVisionIONorthstar(Supplier<AprilTagLayoutType> aprilTagTypeSupplier, int index) {
+    public AprilTagVisionIONorthstar(Supplier<frc.robot.FieldConstants.AprilTagLayoutType> aprilTagTypeSupplier, int index) {
         this.aprilTagTypeSupplier = aprilTagTypeSupplier;
         var northstarTable = NetworkTableInstance.getDefault().getTable(instanceNames[index]);
         var configTable = northstarTable.getSubTable("config");
@@ -52,7 +50,7 @@ public class AprilTagVisionIONorthstar implements AprilTagVisionIO {
         configTable.getIntegerTopic("brightness").publish().set(brightness);
         configTable.getIntegerTopic("contrast").publish().set(contrast);
         configTable.getIntegerTopic("buffersize").publish().set(buffersize);
-        configTable.getDoubleTopic("fiducial_size_m").publish().set(FieldConstants.aprilTagWidth);
+        configTable.getDoubleTopic("fiducial_size_m").publish().set(frc.robot.FieldConstants.aprilTagWidth);
         tagLayoutPublisher = configTable.getStringTopic("tag_layout").publish();
 
         var outputTable = northstarTable.getSubTable("output");

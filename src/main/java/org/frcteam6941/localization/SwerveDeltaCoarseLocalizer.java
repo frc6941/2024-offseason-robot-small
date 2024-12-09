@@ -13,7 +13,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.Timer;
-import frc.robot.Constants;
+import frc.robot.RobotConstants;
 import lombok.Synchronized;
 import org.frcteam6941.utils.InterpolatingTreeMap;
 import org.frcteam6941.utils.MovingAveragePose2d;
@@ -58,7 +58,7 @@ public class SwerveDeltaCoarseLocalizer implements Localizer {
 
     public synchronized Pose2d updateWithTime(double time, double dt, Rotation2d gyroAngle,
                                               SwerveModulePosition[] moduleStates) {
-        dt = Constants.LOOPER_DT;
+        dt = RobotConstants.LOOPER_DT;
         synchronized (statusLock) {
             // Get pose from kinematics update
             Pose2d pose = swerveOdometry.update(gyroAngle, moduleStates);

@@ -1,16 +1,14 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.IntakerSubsystem;
-
-import static edu.wpi.first.units.Units.*;
+import frc.robot.subsystems.Intaker.Intaker;
 
 public class IntakeCommand extends Command {
 
-    private final IntakerSubsystem intakerSubsystem;
+    private final Intaker intaker;
 
-    public IntakeCommand(IntakerSubsystem intakerSubsystem) {
-        this.intakerSubsystem = intakerSubsystem;
+    public IntakeCommand(Intaker intaker) {
+        this.intaker = intaker;
     }
 
     @Override
@@ -20,16 +18,16 @@ public class IntakeCommand extends Command {
 
     @Override
     public void execute() {
-        intakerSubsystem.setIntakeRPM(1000);
+        intaker.setIntakeRPM(1500);
     }
 
     @Override
     public void end(boolean interrupted) {
-        intakerSubsystem.setIntakeDirectVoltage(Volts.of(0));
+        intaker.setIntakeRPM(0);
     }
 
     @Override
     public boolean isFinished() {
-        return intakerSubsystem.intakerHasNote();
+        return intaker.intakerHasNote();
     }
 }

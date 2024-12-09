@@ -31,10 +31,10 @@ public class AprilTagVisionConstants {
                                     .rotateBy(new Rotation3d(0.0, 0.0, Units.degreesToRadians(225)))),
 
                     new Pose3d(
-                            -0.21,
-                            -0.007,
-                            0.455,
-                            new Rotation3d(0.0, Units.degreesToRadians(-10), 0.0)
+                            -0.190,
+                            -0.045,
+                            0.22,
+                            new Rotation3d(0.0, Units.degreesToRadians(-20), 0.0)
                                     .rotateBy(new Rotation3d(0.0, 0.0, Units.degreesToRadians(180)))),
 
                     new Pose3d(

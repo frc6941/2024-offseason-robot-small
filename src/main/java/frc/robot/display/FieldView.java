@@ -3,19 +3,18 @@ package frc.robot.display;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.networktables.*;
+import edu.wpi.first.networktables.DoubleArraySubscriber;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.PubSubOption;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants.FieldConstants;
-import org.littletonrobotics.junction.LoggedRobot;
-import org.littletonrobotics.junction.Logger;
-import org.opencv.dnn.Net;
+import frc.robot.FieldConstants;
 
 public class FieldView {
 
     private final Field2d mField2d = new Field2d();
-//    NetworkTableInstance.
-    DoubleArraySubscriber doubleArray = NetworkTableInstance.getDefault().getDoubleArrayTopic("/orangePi5Plus/output/demo_observations/").subscribe(new double[] {}, PubSubOption.keepDuplicates(true),PubSubOption.sendAll(true));
+    //    NetworkTableInstance.
+    DoubleArraySubscriber doubleArray = NetworkTableInstance.getDefault().getDoubleArrayTopic("/orangePi5Plus/output/demo_observations/").subscribe(new double[]{}, PubSubOption.keepDuplicates(true), PubSubOption.sendAll(true));
 
     public FieldView() {
         SmartDashboard.putData(mField2d);
@@ -25,7 +24,7 @@ public class FieldView {
         Translation2d blueSpeakerTranslation = FieldConstants.Speaker.centerSpeakerOpening.toTranslation2d();
         Pose2d blueSpeaker = new Pose2d(blueSpeakerTranslation, Rotation2d.fromDegrees(180.0));
         Translation2d redSpeakerTranslation = new Translation2d(
-                FieldConstants.fieldLength - blueSpeakerTranslation.getX(), blueSpeakerTranslation.getY());
+                frc.robot.FieldConstants.fieldLength - blueSpeakerTranslation.getX(), blueSpeakerTranslation.getY());
         Pose2d redSpeaker = new Pose2d(redSpeakerTranslation, Rotation2d.fromDegrees(0.0));
 
         mField2d.getObject("Blue Speaker").setPose(blueSpeaker);
@@ -41,10 +40,8 @@ public class FieldView {
 
         mField2d.setRobotPose(pose);
         mField2d.getObject("Ghost").setPose(ghost);
-        if(doubleArray.exists())
-        {
-            if(doubleArray.get().length>3)
-            {
+        if (doubleArray.exists()) {
+            if (doubleArray.get().length > 3) {
 //            Logger.recordOutput("SouthStar",
 //                    new Pose2d(
 //                            doubleArray.get()[1],

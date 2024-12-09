@@ -17,8 +17,8 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.robot.Constants;
-import frc.robot.Constants.SwerveConstants;
+import frc.robot.RobotConstants;
+import frc.robot.RobotConstants.SwerveConstants;
 import frc.robot.utils.AllianceFlipUtil;
 import lombok.Getter;
 import lombok.Setter;
@@ -55,14 +55,14 @@ public class Swerve implements Updatable, Subsystem {
     private final MovingAverage yawVelocity;
     // Snap Rotation Controller
     private final ProfiledPIDController headingController = new ProfiledPIDController(
-            Constants.SwerveConstants.headingController.HEADING_KP.get(),
-            Constants.SwerveConstants.headingController.HEADING_KI.get(),
-            Constants.SwerveConstants.headingController.HEADING_KD.get(),
+            RobotConstants.SwerveConstants.headingController.HEADING_KP.get(),
+            RobotConstants.SwerveConstants.headingController.HEADING_KI.get(),
+            RobotConstants.SwerveConstants.headingController.HEADING_KD.get(),
             new TrapezoidProfile.Constraints(400, 720));
     // Path Following Controller
     private final HolonomicTrajectoryFollower trajectoryFollower = new HolonomicTrajectoryFollower(
             new PIDController(3.5, 0.0, 0.0), new PIDController(3.5, 0.0, 0.0),
-            this.headingController, Constants.SwerveConstants.DRIVETRAIN_FEEDFORWARD);
+            this.headingController, RobotConstants.SwerveConstants.DRIVETRAIN_FEEDFORWARD);
     private boolean isLockHeading;
     /**
      * -- GETTER --
@@ -89,29 +89,30 @@ public class Swerve implements Updatable, Subsystem {
     private Swerve() {
         if (RobotBase.isReal()) {
             swerveMods = new SwerveModuleBase[]{
-                    new CTRESwerveModule(0, Constants.SwerveConstants.FrontLeft,
-                            Constants.RobotConstants.CAN_BUS_NAME),
-                    new CTRESwerveModule(1, Constants.SwerveConstants.FrontRight,
-                            Constants.RobotConstants.CAN_BUS_NAME),
-                    new CTRESwerveModule(2, Constants.SwerveConstants.BackLeft, Constants.RobotConstants.CAN_BUS_NAME),
-                    new CTRESwerveModule(3, Constants.SwerveConstants.BackRight,
-                            Constants.RobotConstants.CAN_BUS_NAME),
+                    new CTRESwerveModule(0, RobotConstants.SwerveConstants.FrontLeft,
+                            RobotConstants.CAN_BUS_NAME),
+                    new CTRESwerveModule(1, RobotConstants.SwerveConstants.FrontRight,
+                            RobotConstants.CAN_BUS_NAME),
+                    new CTRESwerveModule(2, RobotConstants.SwerveConstants.BackLeft,
+                            RobotConstants.CAN_BUS_NAME),
+                    new CTRESwerveModule(3, RobotConstants.SwerveConstants.BackRight,
+                            RobotConstants.CAN_BUS_NAME),
             };
-            gyro = new Pigeon2Gyro(Constants.SwerveConstants.PIGEON_ID, Constants.RobotConstants.CAN_BUS_NAME);
+            gyro = new Pigeon2Gyro(RobotConstants.SwerveConstants.PIGEON_ID, RobotConstants.CAN_BUS_NAME);
         } else {
             swerveMods = new SwerveModuleBase[]{
-                    new SimSwerveModuleDummy(0, Constants.SwerveConstants.FrontLeft),
-                    new SimSwerveModuleDummy(1, Constants.SwerveConstants.FrontRight),
-                    new SimSwerveModuleDummy(2, Constants.SwerveConstants.BackLeft),
-                    new SimSwerveModuleDummy(3, Constants.SwerveConstants.BackRight),
+                    new SimSwerveModuleDummy(0, RobotConstants.SwerveConstants.FrontLeft),
+                    new SimSwerveModuleDummy(1, RobotConstants.SwerveConstants.FrontRight),
+                    new SimSwerveModuleDummy(2, RobotConstants.SwerveConstants.BackLeft),
+                    new SimSwerveModuleDummy(3, RobotConstants.SwerveConstants.BackRight),
             };
-            gyro = new DummyGyro(Constants.LOOPER_DT);
+            gyro = new DummyGyro(RobotConstants.LOOPER_DT);
 
         }
         headingController.setIntegratorRange(-0.5, 0.5);
         headingController.enableContinuousInput(0, 360.0);
         swerveKinematics = new SwerveDriveKinematics(
-                Constants.SwerveConstants.modulePlacements);
+                RobotConstants.SwerveConstants.modulePlacements);
         swerveLocalizer = new SwerveDeltaCoarseLocalizer(swerveKinematics, 50, 20, 20, getModulePositions());
 
         gyro.setYaw(0.0);
@@ -123,22 +124,22 @@ public class Swerve implements Updatable, Subsystem {
 
         setpoint = new SwerveSetpoint(new ChassisSpeeds(), getModuleStates());
         previousSetpoint = new SwerveSetpoint(new ChassisSpeeds(), getModuleStates());
-        generator = new SwerveSetpointGenerator(Constants.SwerveConstants.modulePlacements);
-        kinematicLimits = Constants.SwerveConstants.DRIVETRAIN_UNCAPPED;
+        generator = new SwerveSetpointGenerator(RobotConstants.SwerveConstants.modulePlacements);
+        kinematicLimits = RobotConstants.SwerveConstants.DRIVETRAIN_UNCAPPED;
 
 
     }
 
     private static double getDriveBaseRadius() {
         var moduleLocations = new Translation2d[]{
-                new Translation2d(Constants.SwerveConstants.FrontLeft.LocationX,
-                        Constants.SwerveConstants.FrontLeft.LocationY),
-                new Translation2d(Constants.SwerveConstants.FrontRight.LocationX,
-                        Constants.SwerveConstants.FrontRight.LocationY),
-                new Translation2d(Constants.SwerveConstants.BackLeft.LocationX,
-                        Constants.SwerveConstants.BackLeft.LocationY),
-                new Translation2d(Constants.SwerveConstants.BackRight.LocationX,
-                        Constants.SwerveConstants.BackRight.LocationY)
+                new Translation2d(RobotConstants.SwerveConstants.FrontLeft.LocationX,
+                        RobotConstants.SwerveConstants.FrontLeft.LocationY),
+                new Translation2d(RobotConstants.SwerveConstants.FrontRight.LocationX,
+                        RobotConstants.SwerveConstants.FrontRight.LocationY),
+                new Translation2d(RobotConstants.SwerveConstants.BackLeft.LocationX,
+                        RobotConstants.SwerveConstants.BackLeft.LocationY),
+                new Translation2d(RobotConstants.SwerveConstants.BackRight.LocationX,
+                        RobotConstants.SwerveConstants.BackRight.LocationY)
         };
 
         var driveBaseRadius = 0.0;
@@ -206,15 +207,15 @@ public class Swerve implements Updatable, Subsystem {
 
         Twist2d twist = new Pose2d().log(new Pose2d(
                 new Translation2d(
-                        desiredChassisSpeed.vxMetersPerSecond * Constants.LOOPER_DT,
-                        desiredChassisSpeed.vyMetersPerSecond * Constants.LOOPER_DT),
+                        desiredChassisSpeed.vxMetersPerSecond * RobotConstants.LOOPER_DT,
+                        desiredChassisSpeed.vyMetersPerSecond * RobotConstants.LOOPER_DT),
                 new Rotation2d(
-                        desiredChassisSpeed.omegaRadiansPerSecond * Constants.LOOPER_DT)));
+                        desiredChassisSpeed.omegaRadiansPerSecond * RobotConstants.LOOPER_DT)));
 
         desiredChassisSpeed = new ChassisSpeeds(
-                twist.dx / Constants.LOOPER_DT,
-                twist.dy / Constants.LOOPER_DT,
-                twist.dtheta / Constants.LOOPER_DT);
+                twist.dx / RobotConstants.LOOPER_DT,
+                twist.dy / RobotConstants.LOOPER_DT,
+                twist.dtheta / RobotConstants.LOOPER_DT);
 
         setpoint = generator.generateSetpoint(
                 kinematicLimits, previousSetpoint, desiredChassisSpeed, dt);
@@ -229,9 +230,9 @@ public class Swerve implements Updatable, Subsystem {
     public com.team254.lib.geometry.Twist2d getChassisTwist() {
         ChassisSpeeds speeds = getChassisSpeeds();
         return new com.team254.lib.geometry.Twist2d(
-                speeds.vxMetersPerSecond * Constants.LOOPER_DT,
-                speeds.vyMetersPerSecond * Constants.LOOPER_DT,
-                speeds.omegaRadiansPerSecond * Constants.LOOPER_DT);
+                speeds.vxMetersPerSecond * RobotConstants.LOOPER_DT,
+                speeds.vyMetersPerSecond * RobotConstants.LOOPER_DT,
+                speeds.omegaRadiansPerSecond * RobotConstants.LOOPER_DT);
     }
 
     @Synchronized
@@ -262,13 +263,13 @@ public class Swerve implements Updatable, Subsystem {
     public void drive(Translation2d translationalVelocity, double rotationalVelocity,
                       boolean isFieldOriented, boolean isOpenLoop) {
 
-        if (Math.abs(translationalVelocity.getX()) < Constants.SwerveConstants.deadband) {
+        if (Math.abs(translationalVelocity.getX()) < RobotConstants.SwerveConstants.deadband) {
             translationalVelocity = new Translation2d(0, translationalVelocity.getY());
         }
-        if (Math.abs(translationalVelocity.getY()) < Constants.SwerveConstants.deadband) {
+        if (Math.abs(translationalVelocity.getY()) < RobotConstants.SwerveConstants.deadband) {
             translationalVelocity = new Translation2d(translationalVelocity.getX(), 0);
         }
-        if (Math.abs(rotationalVelocity) < Constants.SwerveConstants.rotationalDeadband) {
+        if (Math.abs(rotationalVelocity) < RobotConstants.SwerveConstants.rotationalDeadband) {
             rotationalVelocity = 0;
         }
         driveSignal = new HolonomicDriveSignal(translationalVelocity, rotationalVelocity, isFieldOriented, isOpenLoop);
@@ -341,7 +342,7 @@ public class Swerve implements Updatable, Subsystem {
     public void setModuleStates(SwerveModuleState[] desiredStates, boolean isOpenLoop, boolean overrideMotion) {
         if (isOpenLoop) {
             SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates,
-                    Constants.SwerveConstants.MAX_VOLTAGE.magnitude());
+                    RobotConstants.SwerveConstants.MAX_VOLTAGE.magnitude());
         }
 
         for (SwerveModuleBase mod : swerveMods) {
@@ -354,7 +355,7 @@ public class Swerve implements Updatable, Subsystem {
      */
     private void setModuleStatesBrake() {
         for (SwerveModuleBase mod : swerveMods) {
-            Translation2d modulePosition = Constants.SwerveConstants.modulePlacements[mod.getModuleNumber()];
+            Translation2d modulePosition = RobotConstants.SwerveConstants.modulePlacements[mod.getModuleNumber()];
             Rotation2d angle = new Rotation2d(modulePosition.getX(), modulePosition.getY());
             mod.setDesiredState(new SwerveModuleState(0.0, angle.plus(Rotation2d.fromDegrees(180.0))), false, true);
         }
@@ -394,9 +395,9 @@ public class Swerve implements Updatable, Subsystem {
 
     public void setHeadingControllerPID() {
         headingController.setPID(
-                Constants.SwerveConstants.headingController.HEADING_KP.get(),
-                Constants.SwerveConstants.headingController.HEADING_KI.get(),
-                Constants.SwerveConstants.headingController.HEADING_KD.get());
+                RobotConstants.SwerveConstants.headingController.HEADING_KP.get(),
+                RobotConstants.SwerveConstants.headingController.HEADING_KI.get(),
+                RobotConstants.SwerveConstants.headingController.HEADING_KD.get());
     }
 
     /*
@@ -515,7 +516,7 @@ public class Swerve implements Updatable, Subsystem {
 
     @Override
     public void telemetry() {
-        if (Constants.TUNING) {
+        if (RobotConstants.TUNING) {
             setHeadingControllerPID();
             SmartDashboard.putString("swerve/localizer/latest_pose", getLocalizer().getLatestPose().toString());
             SmartDashboard.putString("swerve/localizer/accel", getLocalizer().getMeasuredAcceleration().toString());
@@ -553,7 +554,7 @@ public class Swerve implements Updatable, Subsystem {
     public boolean aimingReady(double offset) {
         var dtReady = Math.abs(gyro.getYaw().getDegrees() - headingTarget) < offset;
         SmartDashboard.putBoolean("SwerveReady", dtReady);
-        boolean angularSpeedReady = this.getLocalizer().getSmoothedVelocity().getRotation().getDegrees() < 3.14;
+        boolean angularSpeedReady = this.getLocalizer().getSmoothedVelocity().getRotation().getDegrees() < 2.14;
         SmartDashboard.putBoolean("SwerveAngularReady", angularSpeedReady);
         return dtReady && angularSpeedReady;
     }

@@ -12,13 +12,12 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.auto.basics.AutoActions;
-import frc.robot.commands.ChassisAimCommand;
-import frc.robot.commands.FlyWheelRampUp;
-import frc.robot.commands.DeliverNoteCommand;
 import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.SpeakerShootCommand;
 import frc.robot.display.Display;
 import frc.robot.display.OperatorDashboard;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.Intaker.Intaker;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.apriltagvision.AprilTagVision;
 import frc.robot.subsystems.apriltagvision.AprilTagVisionIONorthstar;
 import frc.robot.subsystems.swerve.Swerve;
@@ -39,10 +38,10 @@ public class RobotContainer {
             new AprilTagVisionIONorthstar(this::getAprilTagLayoutType, 0),
             new AprilTagVisionIONorthstar(this::getAprilTagLayoutType, 1));
     Swerve swerve = Swerve.getInstance();
-    ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
+    Shooter shooter = new Shooter();
     Display display = Display.getInstance();
 
-    IntakerSubsystem intakerSubsystem = new IntakerSubsystem();
+    Intaker intaker = new Intaker();
 
     OperatorDashboard dashboard = OperatorDashboard.getInstance();
     CommandXboxController driverController = new CommandXboxController(0);
@@ -71,18 +70,18 @@ public class RobotContainer {
         swerve.setDefaultCommand(Commands
                 .runOnce(() -> swerve.drive(
                                 new Translation2d(
-                                        -Constants.RobotConstants.driverController.getLeftY()
-                                                * Constants.SwerveConstants.maxSpeed.magnitude(),
-                                        -Constants.RobotConstants.driverController.getLeftX()
-                                                * Constants.SwerveConstants.maxSpeed.magnitude()),
-                                -Constants.RobotConstants.driverController.getRightX()
-                                        * Constants.SwerveConstants.maxAngularRate.magnitude(),
+                                        -RobotConstants.driverController.getLeftY()
+                                                * RobotConstants.SwerveConstants.maxSpeed.magnitude(),
+                                        -RobotConstants.driverController.getLeftX()
+                                                * RobotConstants.SwerveConstants.maxSpeed.magnitude()),
+                                -RobotConstants.driverController.getRightX()
+                                        * RobotConstants.SwerveConstants.maxAngularRate.magnitude(),
                                 true,
                                 false),
                         swerve));
 
         // initial
-        Constants.RobotConstants.driverController.start().onTrue(
+        RobotConstants.driverController.start().onTrue(
                 Commands.runOnce(() -> {
                     swerve.resetHeadingController();
                     swerve.resetPose(
@@ -94,27 +93,20 @@ public class RobotContainer {
                 }).ignoringDisable(true));
 
         driverController.x().whileTrue(speakerShot());
-        driverController.y().whileTrue(flywheelRampUp());
+
 
         driverController.leftBumper().whileTrue(intake());
-        driverController.rightBumper().whileTrue(trigger());
+
     }
 
     private Command speakerShot() {
-        return new ChassisAimCommand(swerve, () -> ShootingDecider.Destination.SPEAKER, driverController::getLeftX, driverController::getRightY);
+        return new SpeakerShootCommand(shooter, intaker, swerve, driverController::getLeftX, driverController::getRightY);
     }
 
-    private Command intake(){
-        new IntakeCommand(intakerSubsystem);
+    private Command intake() {
+        return new IntakeCommand(intaker);
     }
 
-    private Command trigger(){
-        new DeliverNoteCommand(intakerSubsystem, shooterSubsystem);
-    }
-
-    private Command flywheelRampUp() {
-        return new FlyWheelRampUp(shooterSubsystem);
-    }
 
     public Command getAutonomousCommand() {
 //         return autoChooser.get();
@@ -129,13 +121,13 @@ public class RobotContainer {
     /**
      * Returns the current AprilTag layout type.
      */
-    public Constants.FieldConstants.AprilTagLayoutType getAprilTagLayoutType() {
+    public FieldConstants.AprilTagLayoutType getAprilTagLayoutType() {
 //        if (aprilTagsSpeakerOnly.getAsBoolean()) {
 //            return FieldConstants.AprilTagLayoutType.SPEAKERS_ONLY;
 //        } else if (aprilTagsAmpOnly.getAsBoolean()) {
 //            return FieldConstants.AprilTagLayoutType.AMPS_ONLY;
 //        } else {
-        return Constants.FieldConstants.defaultAprilTagType;
+        return FieldConstants.defaultAprilTagType;
 //        }
     }
 }

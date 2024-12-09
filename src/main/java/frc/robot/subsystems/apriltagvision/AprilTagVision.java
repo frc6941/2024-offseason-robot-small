@@ -11,8 +11,6 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.FieldConstants;
-import frc.robot.Constants.FieldConstants.AprilTagLayoutType;
 import frc.robot.subsystems.swerve.Swerve;
 import lombok.Getter;
 import lombok.experimental.ExtensionMethod;
@@ -36,13 +34,15 @@ public class AprilTagVision extends SubsystemBase {
     private static final LoggedTunableNumber timestampOffset =
             new LoggedTunableNumber("AprilTagVision/TimestampOffset", -(1.0 / 50.0));
     private static final double demoTagPosePersistenceSecs = 0.5;
-    private final Supplier<AprilTagLayoutType> aprilTagTypeSupplier;
+    private final Supplier<frc.robot.FieldConstants.AprilTagLayoutType> aprilTagTypeSupplier;
     private final AprilTagVisionIO[] io;
     private final AprilTagVisionIOInputs[] inputs;
     private final Map<Integer, Double> lastFrameTimes = new HashMap<>();
     private final Map<Integer, Double> lastTagDetectionTimes = new HashMap<>();
     private Pose3d demoTagPose = null;
     private double lastDemoTagPoseTimestamp = 0.0;
+    private double lastPrint;
+    private double frameUpdateCount;
 
     @Getter
     private Pose3d cameraPose;
@@ -50,7 +50,7 @@ public class AprilTagVision extends SubsystemBase {
     private Pose3d robotPose3d;
 
 
-    public AprilTagVision(Supplier<AprilTagLayoutType> aprilTagTypeSupplier, AprilTagVisionIO... io) {
+    public AprilTagVision(Supplier<frc.robot.FieldConstants.AprilTagLayoutType> aprilTagTypeSupplier, AprilTagVisionIO... io) {
         this.aprilTagTypeSupplier = aprilTagTypeSupplier;
         this.io = io;
         inputs = new AprilTagVisionIOInputs[io.length];
@@ -75,12 +75,14 @@ public class AprilTagVision extends SubsystemBase {
         List<Pose2d> allRobotPoses = new ArrayList<>();
         List<Pose3d> allRobotPoses3d = new ArrayList<>();
         List<VisionObservation> allVisionObservations = new ArrayList<>();
+
         for (int instanceIndex = 0; instanceIndex < io.length; instanceIndex++) {
             // Loop over frames
             for (int frameIndex = 0; frameIndex < inputs[instanceIndex].timestamps.length; frameIndex++) {
                 lastFrameTimes.put(instanceIndex, Timer.getFPGATimestamp());
                 var timestamp = inputs[instanceIndex].timestamps[frameIndex] + timestampOffset.get();
                 var values = inputs[instanceIndex].frames[frameIndex];
+
 
                 // Exit if blank frame
                 if (values.length == 0 || values[0] == 0) {
@@ -156,9 +158,9 @@ public class AprilTagVision extends SubsystemBase {
 
                 // Exit if robot pose is off the field
                 if (robotPose3d.getX() < -fieldBorderMargin
-                        || robotPose3d.getX() > FieldConstants.fieldLength + fieldBorderMargin
+                        || robotPose3d.getX() > frc.robot.FieldConstants.fieldLength + fieldBorderMargin
                         || robotPose3d.getY() < -fieldBorderMargin
-                        || robotPose3d.getY() > FieldConstants.fieldWidth + fieldBorderMargin
+                        || robotPose3d.getY() > frc.robot.FieldConstants.fieldWidth + fieldBorderMargin
                         || robotPose3d.getZ() < -zMargin
                         || robotPose3d.getZ() > zMargin) {
                     continue;
@@ -203,6 +205,7 @@ public class AprilTagVision extends SubsystemBase {
                                 robotPose, timestamp, VecBuilder.fill(xyStdDev, xyStdDev, thetaStdDev)));
                 allRobotPoses.add(robotPose);
                 allRobotPoses3d.add(robotPose3d);
+                frameUpdateCount += 1;
 
                 // Log data from instance
                 Logger.recordOutput(

@@ -1,24 +1,24 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.RobotConstants;
+import frc.robot.subsystems.Shooter;
 import frc.robot.utils.ShootingDecider;
 
 public class FlyWheelRampUp extends Command {
-    private final ShooterSubsystem shooterSubsystem;
+    private final Shooter shooter;
     //private final Supplier<ShootingDecider.Destination> destinationSupplier;
     private final ShootingDecider shootingDecider;
 
     public FlyWheelRampUp(
-            ShooterSubsystem shooterSubsystem
+            Shooter shooter
 
 
     ) {
-        this.shooterSubsystem = shooterSubsystem;
+        this.shooter = shooter;
 //        this.destinationSupplier = destinationSupplier;
         this.shootingDecider = ShootingDecider.getInstance();
-        addRequirements(shooterSubsystem);
+        addRequirements(shooter);
     }
 
     @Override
@@ -28,14 +28,14 @@ public class FlyWheelRampUp extends Command {
 
     @Override
     public void execute() {
-        shooterSubsystem.setShooterRPM(
-                Constants.ShooterConstants.hShooterTestRPM.get(),
-                Constants.ShooterConstants.lShooterTestRPM.get()
+        shooter.setShooterRPM(
+                RobotConstants.ShooterConstants.hShooterTestRPM.get(),
+                RobotConstants.ShooterConstants.lShooterTestRPM.get()
         );
     }
 
     @Override
     public void end(boolean interrupted) {
-        shooterSubsystem.setShooterDirectVoltage(0);
+        shooter.setShooterDirectVoltage(0);
     }
 }

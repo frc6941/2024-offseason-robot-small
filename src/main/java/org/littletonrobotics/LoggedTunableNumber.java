@@ -7,7 +7,7 @@
 
 package org.littletonrobotics;
 
-import frc.robot.Constants;
+import frc.robot.RobotConstants;
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 
 import java.util.Arrays;
@@ -81,7 +81,7 @@ public class LoggedTunableNumber implements DoubleSupplier {
         if (!hasDefault) {
             hasDefault = true;
             this.defaultValue = defaultValue;
-            if (Constants.TUNING) {
+            if (RobotConstants.TUNING) {
                 dashboardNumber = new LoggedDashboardNumber(key, defaultValue);
             }
         }
@@ -96,7 +96,7 @@ public class LoggedTunableNumber implements DoubleSupplier {
         if (!hasDefault) {
             return 0.0;
         } else {
-            return Constants.TUNING ? dashboardNumber.get() : defaultValue;
+            return RobotConstants.TUNING ? dashboardNumber.get() : defaultValue;
         }
     }
 

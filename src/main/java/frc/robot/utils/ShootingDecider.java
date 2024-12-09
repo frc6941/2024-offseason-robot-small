@@ -4,13 +4,8 @@ import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants.FieldConstants;
+import frc.robot.FieldConstants;
 import frc.robot.display.Display;
-import frc.robot.display.OperatorDashboard;
-import frc.robot.utils.AllianceFlipUtil;
-import frc.robot.utils.FieldLayout;
-import frc.robot.utils.TunableNumber;
 import org.frcteam6941.looper.Updatable;
 
 public class ShootingDecider implements Updatable {
@@ -26,9 +21,9 @@ public class ShootingDecider implements Updatable {
     LaunchParameterTable lowFerryParams;
 
     private ShootingDecider() {
-        speakerParams = new LaunchParameterTable("Speaker");
-        highFerryParams = new LaunchParameterTable("HighFerry");
-        lowFerryParams = new LaunchParameterTable("Low Ferry");
+        speakerParams = new LaunchParameterTable("Params/Speaker");
+        highFerryParams = new LaunchParameterTable("Params/HighFerry");
+        lowFerryParams = new LaunchParameterTable("Params/Low Ferry");
 
         // ampAngle = new TunableNumber("Amp Angle Degs", 165.0);
         // ampVelocity = new TunableNumber("Amp Velocity Rpm", -3000.0);
@@ -96,7 +91,7 @@ public class ShootingDecider implements Updatable {
                 return new ShootingParameters(delta.getNorm(), launchParam.getFirst(), launchParam.getSecond(),
                         new Rotation2d(delta.getX(), delta.getY()).rotateBy(Rotation2d.fromDegrees(180)));
             case SPEAKER:
-                target = AllianceFlipUtil.apply(FieldConstants.Speaker.centerSpeakerOpening).toTranslation2d();
+                target = AllianceFlipUtil.apply(frc.robot.FieldConstants.Speaker.centerSpeakerOpening).toTranslation2d();
                 delta = target.minus(robotPose.getTranslation());
                 launchParam = speakerParams.getParameters(delta.getNorm());
                 return new ShootingParameters(delta.getNorm(), launchParam.getFirst(), launchParam.getSecond(),

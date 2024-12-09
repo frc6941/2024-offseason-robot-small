@@ -6,7 +6,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
+import frc.robot.RobotConstants;
 import frc.robot.subsystems.swerve.Swerve;
 
 import java.util.ArrayList;
@@ -55,8 +55,8 @@ public class CharacterizationDriveCommand extends Command {
             averageVelocity += Math.abs(state.speedMetersPerSecond);
             averageFalconVelocity += Math.abs(
                     (state.speedMetersPerSecond * 60)
-                            / Constants.SwerveConstants.wheelCircumferenceMeters.magnitude()
-                            * Constants.SwerveConstants.DRIVE_GEAR_RATIO * (2048.0 / 600.0));
+                            / RobotConstants.SwerveConstants.wheelCircumferenceMeters.magnitude()
+                            * RobotConstants.SwerveConstants.DRIVE_GEAR_RATIO * (2048.0 / 600.0));
         }
         averageVelocity /= moduleStates.length;
         averageFalconVelocity /= moduleStates.length;
@@ -105,8 +105,8 @@ public class CharacterizationDriveCommand extends Command {
         System.out.println("Drivetrain kV: " + regression.beta(1) + " V / ms^{-1}");
         System.out.println(
                 "Converted Module kV: "
-                        + regression.beta(1) / Constants.SwerveConstants.DRIVE_GEAR_RATIO
-                        * Constants.SwerveConstants.wheelCircumferenceMeters.magnitude()
+                        + regression.beta(1) / RobotConstants.SwerveConstants.DRIVE_GEAR_RATIO
+                        * RobotConstants.SwerveConstants.wheelCircumferenceMeters.magnitude()
                         + " V / rps");
 
         PolynomialRegression regressionFalcon = new PolynomialRegression(

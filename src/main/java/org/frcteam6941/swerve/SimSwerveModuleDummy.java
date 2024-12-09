@@ -3,8 +3,7 @@ package org.frcteam6941.swerve;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import frc.robot.Constants;
-import frc.robot.utils.Utils;
+import frc.robot.RobotConstants;
 
 public class SimSwerveModuleDummy implements SwerveModuleBase {
     private int moduleNumber;
@@ -30,7 +29,7 @@ public class SimSwerveModuleDummy implements SwerveModuleBase {
     public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop, boolean overrideMotion) {
         currentState = desiredState;
         //int flipCoefficient = Utils.flip() ? -1 : 1;
-        currentPosition.distanceMeters += desiredState.speedMetersPerSecond * Constants.LOOPER_DT ;
+        currentPosition.distanceMeters += desiredState.speedMetersPerSecond * RobotConstants.LOOPER_DT;
         currentPosition.angle = desiredState.angle;
     }
 

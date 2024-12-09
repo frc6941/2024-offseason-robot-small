@@ -8,193 +8,23 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstantsFactory;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.units.*;
-import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.utils.TunableNumber;
-import lombok.Getter;
 import org.frcteam6941.swerve.SwerveSetpointGenerator.KinematicLimits;
-
-import java.io.IOException;
-import java.nio.file.Path;
 
 import static edu.wpi.first.units.Units.*;
 
-public class Constants {
+public class RobotConstants {
     public static final boolean disableHAL = false;
     public static final boolean TUNING = true;
     public static final double LOOPER_DT = 1 / 100.0;
-
-    public static class FieldConstants {
-        public static final double fieldLength = edu.wpi.first.math.util.Units.inchesToMeters(651.223);
-        public static final double fieldWidth = edu.wpi.first.math.util.Units.inchesToMeters(323.277);
-        public static final double wingX = edu.wpi.first.math.util.Units.inchesToMeters(229.201);
-        public static final double wingOpponentX = fieldLength - wingX;
-        public static final double podiumX = edu.wpi.first.math.util.Units.inchesToMeters(126.75);
-        public static final double startingLineX = edu.wpi.first.math.util.Units.inchesToMeters(74.111);
-
-        public static final Translation2d ampCenter = new Translation2d(
-                edu.wpi.first.math.util.Units.inchesToMeters(72.455), fieldWidth);
-        public static final double aprilTagWidth = edu.wpi.first.math.util.Units.inchesToMeters(6.5);
-
-        public static final AprilTagLayoutType defaultAprilTagType = AprilTagLayoutType.OFFICIAL;
-
-
-        @Getter
-        public enum AprilTagLayoutType {
-            OFFICIAL("2024-official"),
-            SPEAKERS_ONLY("2024-speakers"),
-            AMPS_ONLY("2024-amps"),
-            WPI("2024-wpi");
-
-            private final AprilTagFieldLayout layout;
-            private final String layoutString;
-
-            private AprilTagLayoutType(String name) {
-                if (Constants.disableHAL) {
-                    layout = null;
-                } else {
-                    try {
-                        layout =
-                                new AprilTagFieldLayout(
-                                        Path.of(Filesystem.getDeployDirectory().getPath(), "apriltags", name + ".json"));
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-                if (layout == null) {
-                    layoutString = "";
-                } else {
-                    try {
-                        layoutString = new ObjectMapper().writeValueAsString(layout);
-                    } catch (JsonProcessingException e) {
-                        throw new RuntimeException(
-                                "Failed to serialize AprilTag layout JSON " + toString() + "for Northstar");
-                    }
-                }
-            }
-        }
-
-        /**
-         * Staging locations for each note
-         */
-        public static final class StagingLocations {
-            public static final double centerlineX = fieldLength / 2.0;
-
-            // need to update
-            public static final double centerlineFirstY = edu.wpi.first.math.util.Units.inchesToMeters(29.638);
-            public static final double centerlineSeparationY = edu.wpi.first.math.util.Units.inchesToMeters(66);
-            public static final double spikeX = edu.wpi.first.math.util.Units.inchesToMeters(114);
-            // need
-            public static final double spikeFirstY = edu.wpi.first.math.util.Units.inchesToMeters(161.638);
-            public static final double spikeSeparationY = edu.wpi.first.math.util.Units.inchesToMeters(57);
-
-            public static final Translation2d[] centerlineTranslations = new Translation2d[5];
-            public static final Translation2d[] spikeTranslations = new Translation2d[3];
-
-            static {
-                for (int i = 0; i < centerlineTranslations.length; i++) {
-                    centerlineTranslations[i] = new Translation2d(centerlineX,
-                            centerlineFirstY + (i * centerlineSeparationY));
-                }
-            }
-
-            static {
-                for (int i = 0; i < spikeTranslations.length; i++) {
-                    spikeTranslations[i] = new Translation2d(spikeX, spikeFirstY + (i * spikeSeparationY));
-                }
-            }
-        }
-
-        /**
-         * Each corner of the speaker *
-         */
-        public static final class Speaker {
-
-            // corners (blue alliance origin)
-            public static final Translation3d topRightSpeaker = new Translation3d(
-                    edu.wpi.first.math.util.Units.inchesToMeters(18.055),
-                    edu.wpi.first.math.util.Units.inchesToMeters(238.815),
-                    edu.wpi.first.math.util.Units.inchesToMeters(83.091));
-
-            public static final Translation3d topLeftSpeaker = new Translation3d(
-                    edu.wpi.first.math.util.Units.inchesToMeters(18.055),
-                    edu.wpi.first.math.util.Units.inchesToMeters(197.765),
-                    edu.wpi.first.math.util.Units.inchesToMeters(83.091));
-
-            public static final Translation3d bottomRightSpeaker = new Translation3d(0.0,
-                    edu.wpi.first.math.util.Units.inchesToMeters(238.815),
-                    edu.wpi.first.math.util.Units.inchesToMeters(78.324));
-            public static final Translation3d bottomLeftSpeaker = new Translation3d(0.0,
-                    edu.wpi.first.math.util.Units.inchesToMeters(197.765),
-                    edu.wpi.first.math.util.Units.inchesToMeters(78.324));
-
-            /**
-             * Center of the speaker opening (blue alliance)
-             */
-            public static final Translation3d centerSpeakerOpening = bottomLeftSpeaker.interpolate(topRightSpeaker,
-                    0.5);
-        }
-
-        public static final class Subwoofer {
-            public static final Pose2d ampFaceCorner = new Pose2d(
-                    edu.wpi.first.math.util.Units.inchesToMeters(35.775),
-                    edu.wpi.first.math.util.Units.inchesToMeters(239.366),
-                    Rotation2d.fromDegrees(-120));
-
-            public static final Pose2d sourceFaceCorner = new Pose2d(
-                    edu.wpi.first.math.util.Units.inchesToMeters(35.775),
-                    edu.wpi.first.math.util.Units.inchesToMeters(197.466),
-                    Rotation2d.fromDegrees(120));
-
-            public static final Pose2d centerFace = new Pose2d(
-                    edu.wpi.first.math.util.Units.inchesToMeters(35.775),
-                    edu.wpi.first.math.util.Units.inchesToMeters(218.416),
-                    Rotation2d.fromDegrees(180));
-        }
-
-        public static final class Stage {
-            public static final Pose2d center = new Pose2d(edu.wpi.first.math.util.Units.inchesToMeters(192.55),
-                    edu.wpi.first.math.util.Units.inchesToMeters(161.638), new Rotation2d());
-            public static final Pose2d podiumLeg = new Pose2d(edu.wpi.first.math.util.Units.inchesToMeters(126.75),
-                    edu.wpi.first.math.util.Units.inchesToMeters(161.638), new Rotation2d());
-            public static final Pose2d ampLeg = new Pose2d(
-                    edu.wpi.first.math.util.Units.inchesToMeters(220.873),
-                    edu.wpi.first.math.util.Units.inchesToMeters(212.425),
-                    Rotation2d.fromDegrees(-30));
-            public static final Pose2d sourceLeg = new Pose2d(
-                    edu.wpi.first.math.util.Units.inchesToMeters(220.873),
-                    edu.wpi.first.math.util.Units.inchesToMeters(110.837),
-                    Rotation2d.fromDegrees(30));
-
-            public static final Pose2d centerPodiumAmpChain = new Pose2d(
-                    podiumLeg.getTranslation().interpolate(ampLeg.getTranslation(), 0.5),
-                    Rotation2d.fromDegrees(120.0));
-            public static final double centerToChainDistance = center.getTranslation()
-                    .getDistance(centerPodiumAmpChain.getTranslation());
-            public static final Pose2d centerAmpSourceChain = new Pose2d(
-                    ampLeg.getTranslation().interpolate(sourceLeg.getTranslation(), 0.5), new Rotation2d());
-            public static final Pose2d centerSourcePodiumChain = new Pose2d(
-                    sourceLeg.getTranslation().interpolate(podiumLeg.getTranslation(), 0.5),
-                    Rotation2d.fromDegrees(240.0));
-        }
-
-        public static final class Amp {
-            public static final Translation2d ampTapeTopCorner = new Translation2d(
-                    edu.wpi.first.math.util.Units.inchesToMeters(130.0),
-                    edu.wpi.first.math.util.Units.inchesToMeters(305.256));
-            public static final double ampBottomY = fieldWidth - edu.wpi.first.math.util.Units.inchesToMeters(17.75);
-        }
-    }
+    public static final CommandXboxController driverController = new CommandXboxController(0);
+    public static final CommandXboxController operatorController = new CommandXboxController(1);
+    public static String CAN_BUS_NAME = "9620CANivore1";
 
     public static class BeamBreakConstants {
         public static final int SHOOTER_BEAMBREAK_ID = 3;
@@ -216,8 +46,8 @@ public class Constants {
         public static final int SHOOTER_MOTORL_ID = 16;
 
 
-        public static final TunableNumber hShooterTestRPM = new TunableNumber("Shooter/highShooterTestRPM", 1000);
-        public static final TunableNumber lShooterTestRPM = new TunableNumber("Shooter/lowShooterTestRPM", 1000);
+        public static final TunableNumber hShooterTestRPM = new TunableNumber("Shooter/highShooterTestRPM", 5000);
+        public static final TunableNumber lShooterTestRPM = new TunableNumber("Shooter/lowShooterTestRPM", 5000);
 
         public static class shooterGainsClass {
             public static final TunableNumber SHOOTER_KP = new TunableNumber("Shooter/SHOOTER PID/kp", 0.2);
@@ -232,14 +62,6 @@ public class Constants {
     public static class LedConstants {
         public static final int LED_PORT = 0;
         public static final int LED_BUFFER_LENGTH = 40;
-    }
-
-    public class RobotConstants {
-
-        public static final CommandXboxController driverController = new CommandXboxController(0);
-        public static final CommandXboxController operatorController = new CommandXboxController(1);
-        public static String CAN_BUS_NAME = "9620CANivore1";
-
     }
 
     public class SwerveConstants {
@@ -307,7 +129,7 @@ public class Constants {
         public static final KinematicLimits DRIVETRAIN_UNCAPPED = new KinematicLimits(
                 maxSpeed.magnitude(),
                 11.0,
-                5000.0);
+                1000.0);
         public static final KinematicLimits DRIVETRAIN_SMOOTHED = new KinematicLimits(
                 4.5,
                 30.0,
@@ -402,8 +224,8 @@ public class Constants {
         private static final int FRONT_LEFT_STEER_MOTOR_ID = 4;
         private static final int FRONT_LEFT_ENCODER_ID = 8;
         private static final double FRONT_LEFT_ENCODER_OFFSET = -0.60466015625;// 0.052955;//0.127686//0.5329550781
-        private static final Measure<Distance> frontLeftXPos = Meters.of(0.5);
-        private static final Measure<Distance> frontLeftYPos = Meters.of(0.5);
+        private static final Measure<Distance> frontLeftXPos = Meters.of(0.127);
+        private static final Measure<Distance> frontLeftYPos = Meters.of(0.247);
         public static final SwerveModuleConstants FrontLeft = ConstantCreator.createModuleConstants(
                 FRONT_LEFT_STEER_MOTOR_ID,
                 FRONT_LEFT_DRIVE_MOTOR_ID,
@@ -417,8 +239,8 @@ public class Constants {
         private static final int FRONT_RIGHT_STEER_MOTOR_ID = 5;
         private static final int FRONT_RIGHT_ENCODER_ID = 9;
         private static final double FRONT_RIGHT_ENCODER_OFFSET = 0.309041015625;// 0.125685;//0.13623046875//0.117686//0.046875
-        private static final Measure<Distance> frontRightXPos = Meters.of(0.5);
-        private static final Measure<Distance> frontRightYPos = Meters.of(-0.5);
+        private static final Measure<Distance> frontRightXPos = Meters.of(0.127);
+        private static final Measure<Distance> frontRightYPos = Meters.of(-0.247);
         public static final SwerveModuleConstants FrontRight = ConstantCreator.createModuleConstants(
                 FRONT_RIGHT_STEER_MOTOR_ID,
                 FRONT_RIGHT_DRIVE_MOTOR_ID,
@@ -432,8 +254,8 @@ public class Constants {
         private static final int BACK_LEFT_STEER_MOTOR_ID = 6;
         private static final int BACK_LEFT_ENCODER_ID = 10;
         private static final double BACK_LEFT_ENCODER_OFFSET = 0.666462890625;// 0.773925;//-0.223//0.401611//0.77392578125
-        private static final Measure<Distance> backLeftXPos = Meters.of(-0.5);
-        private static final Measure<Distance> backLeftYPos = Meters.of(0.5);
+        private static final Measure<Distance> backLeftXPos = Meters.of(-0.180);
+        private static final Measure<Distance> backLeftYPos = Meters.of(0.247);
         public static final SwerveModuleConstants BackLeft = ConstantCreator.createModuleConstants(
                 BACK_LEFT_STEER_MOTOR_ID,
                 BACK_LEFT_DRIVE_MOTOR_ID,
@@ -447,8 +269,8 @@ public class Constants {
         private static final int BACK_RIGHT_STEER_MOTOR_ID = 7;
         private static final int BACK_RIGHT_ENCODER_ID = 11;
         private static final double BACK_RIGHT_ENCODER_OFFSET = 0.257337890625;// 0.422119;//-0.5684550781//-0.064453//0.432279296875
-        private static final Measure<Distance> backRightXPos = Meters.of(-0.5);
-        private static final Measure<Distance> backRightYPos = Meters.of(-0.5);
+        private static final Measure<Distance> backRightXPos = Meters.of(-0.180);
+        private static final Measure<Distance> backRightYPos = Meters.of(-0.247);
         public static final SwerveModuleConstants BackRight = ConstantCreator.createModuleConstants(
                 BACK_RIGHT_STEER_MOTOR_ID,
                 BACK_RIGHT_DRIVE_MOTOR_ID,
@@ -479,11 +301,11 @@ public class Constants {
         }
 
         public static class driveGainsClass {
-            public static final TunableNumber DRIVE_KP = new TunableNumber("DRIVE PID/kp", 0.5);
+            public static final TunableNumber DRIVE_KP = new TunableNumber("DRIVE PID/kp", 0.03);
             public static final TunableNumber DRIVE_KI = new TunableNumber("DRIVE PID/ki", 0);
-            public static final TunableNumber DRIVE_KD = new TunableNumber("DRIVE PID/kd", 0.025);
+            public static final TunableNumber DRIVE_KD = new TunableNumber("DRIVE PID/kd", 0.0001);
             public static final TunableNumber DRIVE_KA = new TunableNumber("DRIVE PID/ka", 0);
-            public static final TunableNumber DRIVE_KV = new TunableNumber("DRIVE PID/kv", 0.16);
+            public static final TunableNumber DRIVE_KV = new TunableNumber("DRIVE PID/kv", 0.12);
             public static final TunableNumber DRIVE_KS = new TunableNumber("DRIVE PID/ks", 0.045);
         }
 
