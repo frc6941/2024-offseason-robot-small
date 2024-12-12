@@ -1,4 +1,4 @@
-package frc.robot.utils;
+package frc.robot.utils.shooting;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import lombok.Data;
@@ -6,17 +6,17 @@ import lombok.Data;
 @Data
 public class ShootingParameters {
     private double distance;
-    private double shootingVelocityL;
-    private double shootingVelocityH;
+    private double shootingVelocity;
+    private double shootingAngle;
     private Rotation2d fieldAimingAngle;
 
     public ShootingParameters(double distance,
-            double shootingVelocityL,
-            double shootingVelocityH,
+            double shootingVelocity,
+            double shootingAngle,
             Rotation2d fieldAimingAngle) {
         this.distance = distance;
-        this.shootingVelocityL = shootingVelocityL;
-        this.shootingVelocityH = shootingVelocityH;
+        this.shootingVelocity = shootingVelocity;
+        this.shootingAngle = shootingAngle;
         this.fieldAimingAngle = fieldAimingAngle;
     }
 }

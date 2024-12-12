@@ -24,6 +24,7 @@ public class RobotConstants {
     public static final double LOOPER_DT = 1 / 100.0;
     public static final CommandXboxController driverController = new CommandXboxController(0);
     public static final CommandXboxController operatorController = new CommandXboxController(1);
+    public static Measure<Angle> armPosition = Degrees.of(0);
     public static String CAN_BUS_NAME = "9620CANivore1";
 
     public static class BeamBreakConstants {
@@ -51,8 +52,8 @@ public class RobotConstants {
         public static final int SHOOTER_MOTORL_ID = 16;
 
 
-        public static final TunableNumber hShooterTestRPM = new TunableNumber("Shooter/highShooterTestRPM", 5000);
-        public static final TunableNumber lShooterTestRPM = new TunableNumber("Shooter/lowShooterTestRPM", 5000);
+        public static final TunableNumber hShooterTestRPM = new TunableNumber("Shooter/highShooterTestRPM", 5500);
+        public static final TunableNumber lShooterTestRPM = new TunableNumber("Shooter/lowShooterTestRPM", 5500);
 
         public static class shooterGainsClass {
             public static final TunableNumber SHOOTER_KP = new TunableNumber("Shooter/SHOOTER PID/kp", 0.2);

@@ -4,17 +4,17 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import frc.robot.utils.ShootingDecider.Destination;
+import frc.robot.utils.shooting.ShootingDecider;
 import lombok.Getter;
 
 @Getter
 public class OperatorDashboard {
     private static OperatorDashboard instance;
     private final ShuffleboardTab operatorTab;
-    private final GenericEntry intakerOn,intakerGet;
+    private final GenericEntry intakerOn, intakerGet;
     // TargetStatus
     @Getter
-    private Destination currDestination = Destination.SPEAKER;
+    private ShootingDecider.Destination currDestination = ShootingDecider.Destination.SPEAKER;
 
     private OperatorDashboard() {
         operatorTab = Shuffleboard.getTab("Operator");
@@ -44,7 +44,7 @@ public class OperatorDashboard {
                 .withPosition(0, 0);
     }
 
-    public void updateRobotStatus(boolean intakerOn,boolean intakerGet){
+    public void updateRobotStatus(boolean intakerOn, boolean intakerGet) {
         this.intakerOn.setBoolean(intakerOn);
         this.intakerGet.setBoolean(intakerGet);
     }
