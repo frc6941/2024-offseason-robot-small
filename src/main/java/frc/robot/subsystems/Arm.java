@@ -9,51 +9,64 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.Angle;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotConstants;
 import org.littletonrobotics.junction.Logger;
 
 import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.Rotations;
 
 public class Arm extends SubsystemBase {
-    private final TalonFX armMotor;
+    public final TalonFX armMotor;
 
     public Arm() {
-        armMotor = new TalonFX(0);
-        armMotor.getConfigurator().apply(new Slot0Configs()
-                .withKP(0.2)
-                .withKI(0)
-                .withKD(0.001)
-                .withKA(0.0037512677)
-                .withKV(0.115)
-                .withKS(0.28475008)
-        );
+        armMotor = new TalonFX(20, RobotConstants.CAN_BUS_NAME);
+
         armMotor.getConfigurator().apply(new TalonFXConfiguration()
                 .withMotionMagic(new MotionMagicConfigs()
-                        .withMotionMagicAcceleration(3)
-                        .withMotionMagicCruiseVelocity(2)
+                        .withMotionMagicAcceleration(1000)
+                        .withMotionMagicCruiseVelocity(1000)
                 )
                 .withMotorOutput(new MotorOutputConfigs()
                         .withNeutralMode(NeutralModeValue.Brake))
 
                 .withFeedback(new FeedbackConfigs()
                         .withFeedbackSensorSource(FeedbackSensorSourceValue.RotorSensor)
-                        .withSensorToMechanismRatio(90d / 24 * 90 / 24 * 84 / 14))
+                        .withSensorToMechanismRatio(175d / 1))
         );
+        armMotor.getConfigurator().apply(new Slot0Configs()
+                .withKP(100)
+                .withKI(0)
+                .withKD(0.001)
+                .withKA(0)
+                .withKV(0)
+                .withKS(0)
+        );
+        armMotor.setPosition(0);
 
     }
 
     public void setArmHome(Measure<Angle> rad) {
         armMotor.setPosition(rad.in(Rotations));
+
+    }
+
+    public void setArmVoltage(double voltage) {
+        armMotor.setVoltage(voltage);
+    }
+
+    public Measure<Angle> getArmPosition() {
+        return Radians.of(Units.rotationsToRadians(armMotor.getPosition().getValueAsDouble() / 175));
     }
 
 
     public void setArmPosition(Measure<Angle> rad) {
-        armMotor.setControl(new MotionMagicVoltage(rad.in(Rotations)));
+        armMotor.setControl(new MotionMagicVoltage(Units.degreesToRotations(rad.magnitude())));
     }
 
     @Override
     public void periodic() {
-        Logger.recordOutput("Arm/Position", Radians.of(Units.rotationsToDegrees(armMotor.getPosition().getValueAsDouble())));
+
+        Logger.recordOutput("Arm/position", getArmPosition());
     }
 
 }

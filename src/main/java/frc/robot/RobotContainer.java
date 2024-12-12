@@ -12,17 +12,15 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.auto.basics.AutoActions;
-import frc.robot.commands.IntakeCommand;
-import frc.robot.commands.SpeakerShootCommand;
+import frc.robot.commands.*;
 import frc.robot.display.Display;
 import frc.robot.display.OperatorDashboard;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intaker.Intaker;
 import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.apriltagvision.AprilTagVision;
-import frc.robot.subsystems.apriltagvision.AprilTagVisionIONorthstar;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.utils.AllianceFlipUtil;
-import frc.robot.utils.ShootingDecider;
+import frc.robot.utils.shooting.ShootingDecider;
 import lombok.Getter;
 import org.frcteam6941.looper.UpdateManager;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -32,16 +30,17 @@ import java.util.function.Supplier;
 
 public class RobotContainer {
     Supplier<ShootingDecider.Destination> destinationSupplier;
-    @Getter
-    AprilTagVision aprilTagVision = new AprilTagVision(
-            this::getAprilTagLayoutType,
-            new AprilTagVisionIONorthstar(this::getAprilTagLayoutType, 0),
-            new AprilTagVisionIONorthstar(this::getAprilTagLayoutType, 1));
+    //    @Getter
+//    AprilTagVision aprilTagVision = new AprilTagVision(
+//            this::getAprilTagLayoutType,
+//            new AprilTagVisionIONorthstar(this::getAprilTagLayoutType, 0),
+//            new AprilTagVisionIONorthstar(this::getAprilTagLayoutType, 1));
     Swerve swerve = Swerve.getInstance();
     Shooter shooter = new Shooter();
     Display display = Display.getInstance();
 
     Intaker intaker = new Intaker();
+    Arm arm = new Arm();
 
     OperatorDashboard dashboard = OperatorDashboard.getInstance();
     CommandXboxController driverController = new CommandXboxController(0);
@@ -93,14 +92,20 @@ public class RobotContainer {
                 }).ignoringDisable(true));
 
         driverController.x().whileTrue(speakerShot());
-
-
         driverController.leftBumper().whileTrue(intake());
+        driverController.back().whileTrue(resetArm());
+        driverController.povUp().whileTrue(new ArmUpCommand(arm));
+        driverController.povDown().whileTrue(new ArmDownCommand(arm));
+
 
     }
 
     private Command speakerShot() {
-        return new SpeakerShootCommand(shooter, intaker, swerve, driverController::getLeftX, driverController::getRightY);
+        return new SpeakerShootCommand(shooter, intaker, swerve, arm, driverController::getLeftX, driverController::getRightY);
+    }
+
+    private Command resetArm() {
+        return new ResetArmCommand(arm);
     }
 
     private Command intake() {
