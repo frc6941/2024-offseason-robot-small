@@ -10,10 +10,10 @@ import frc.robot.RobotConstants;
 import static edu.wpi.first.units.Units.*;
 
 public class IntakerSubsystem extends SubsystemBase {
-    private static final double COLLECTING_RPM = RobotConstants.IntakerConstants.COLLECTING_RPM.get();
-    private static final double OUTTAKING_RPM = RobotConstants.IntakerConstants.OUTTAKING_RPM.get();
-    private static final double REJECTING_RPM = RobotConstants.IntakerConstants.REJECTING_RPM.get();
-    private static final double IDLING_RPM = RobotConstants.IntakerConstants.IDLING_RPM.get();
+    private static double COLLECTING_RPM = RobotConstants.IntakerConstants.COLLECTING_RPM.get();
+    private static double OUTTAKING_RPM = RobotConstants.IntakerConstants.OUTTAKING_RPM.get();
+    private static double REJECTING_RPM = RobotConstants.IntakerConstants.REJECTING_RPM.get();
+    private static double IDLING_RPM = RobotConstants.IntakerConstants.IDLING_RPM.get();
 
     public enum WantedState {
         IDLE,
@@ -66,6 +66,14 @@ public class IntakerSubsystem extends SubsystemBase {
         // Stop moving when disabled
         if (DriverStation.isDisabled()) {
             systemState = SystemState.IDLING;
+        }
+
+        // refresh RPM tunable numbers
+        if (RobotConstants.TUNING) {
+            COLLECTING_RPM = RobotConstants.IntakerConstants.COLLECTING_RPM.get();
+            OUTTAKING_RPM = RobotConstants.IntakerConstants.OUTTAKING_RPM.get();
+            REJECTING_RPM = RobotConstants.IntakerConstants.REJECTING_RPM.get();
+            IDLING_RPM = RobotConstants.IntakerConstants.IDLING_RPM.get();
         }
 
         // set speeds based on state
