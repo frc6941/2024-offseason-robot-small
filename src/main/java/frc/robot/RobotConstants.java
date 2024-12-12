@@ -32,12 +32,17 @@ public class RobotConstants {
     }
 
     public static class IntakerConstants {
-        public static final int INTAKE_MOTOR_ID = 15;
+        public static final int INTAKER_MOTOR_ID = 15;
 
         public static final MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs()
                 .withNeutralMode(NeutralModeValue.Brake);
-
+        
+        //TODO:test and change RPM
         public final static double triggerRPM = 4500;
+        public static final TunableNumber COLLECTING_RPM  = new TunableNumber("Intaker/collectingRPM", 1500);
+        public static final TunableNumber OUTTAKING_RPM = new TunableNumber("Intaker/outtakingRPM", -1500);
+        public static final TunableNumber REJECTING_RPM= new TunableNumber("Intaker/rejectingRPM", 1500);
+        public static final TunableNumber IDLING_RPM = new TunableNumber("Intaker/idlingRPM", 0.0);
 
     }
 

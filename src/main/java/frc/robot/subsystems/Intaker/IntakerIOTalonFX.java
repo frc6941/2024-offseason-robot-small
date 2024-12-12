@@ -14,14 +14,14 @@ import frc.robot.drivers.BeamBreak;
 import static edu.wpi.first.units.Units.*;
 
 public class IntakerIOTalonFX implements IntakerIO {
-    private final TalonFX intakeMotor = new TalonFX(
-            RobotConstants.IntakerConstants.INTAKE_MOTOR_ID,
+    private final TalonFX intakerMotor = new TalonFX(
+            RobotConstants.IntakerConstants.INTAKER_MOTOR_ID,
             RobotConstants.CAN_BUS_NAME);
     private final BeamBreak intakerBeamBreak =
             new BeamBreak(RobotConstants.BeamBreakConstants.INTAKER_BEAMBREAK_ID);
 
     public IntakerIOTalonFX() {
-        intakeMotor.getConfigurator().apply(new Slot0Configs()
+        intakerMotor.getConfigurator().apply(new Slot0Configs()
                 .withKP(0.2)
                 .withKI(0)
                 .withKD(0.001)
@@ -34,19 +34,19 @@ public class IntakerIOTalonFX implements IntakerIO {
     @Override
     public void updateInputs(IntakerIOInputs inputs) {
         inputs.intakerConnected = BaseStatusSignal.refreshAll(
-                intakeMotor.getVelocity(),
-                intakeMotor.getMotorVoltage(),
-                intakeMotor.getSupplyCurrent()
+                intakerMotor.getVelocity(),
+                intakerMotor.getMotorVoltage(),
+                intakerMotor.getSupplyCurrent()
         ).isOK();
         inputs.beamBreakState = intakerBeamBreak.get();
-        inputs.intakerSpeed = RotationsPerSecond.of(intakeMotor.getVelocity().getValueAsDouble());
-        inputs.voltage = Volts.of(intakeMotor.getMotorVoltage().getValueAsDouble());
-        inputs.intakeSupplyCurrent = Amps.of(intakeMotor.getSupplyCurrent().getValueAsDouble());
+        inputs.intakerSpeed = RotationsPerSecond.of(intakerMotor.getVelocity().getValueAsDouble());
+        inputs.voltage = Volts.of(intakerMotor.getMotorVoltage().getValueAsDouble());
+        inputs.intakerSupplyCurrent = Amps.of(intakerMotor.getSupplyCurrent().getValueAsDouble());
     }
 
     @Override
     public void setVelocity(Measure<Velocity<Angle>> velocityRPM) {
-        intakeMotor.setControl(new VelocityVoltage(
+        intakerMotor.setControl(new VelocityVoltage(
                 velocityRPM.magnitude() / 60,
                 0.0,
                 true,
@@ -60,6 +60,6 @@ public class IntakerIOTalonFX implements IntakerIO {
 
     @Override
     public void setVoltage(Measure<Voltage> voltage) {
-        intakeMotor.setVoltage(voltage.magnitude());
+        intakerMotor.setVoltage(voltage.magnitude());
     }
 }

@@ -14,7 +14,7 @@ import frc.robot.drivers.BeamBreak;
 public class Intaker extends SubsystemBase {
     private final TalonFX intakeMotor =
             new TalonFX(
-                    RobotConstants.IntakerConstants.INTAKE_MOTOR_ID,
+                    RobotConstants.IntakerConstants.INTAKER_MOTOR_ID,
                     RobotConstants.CAN_BUS_NAME);
     private final BeamBreak intakerBeamBreak =
             new BeamBreak(RobotConstants.BeamBreakConstants.INTAKER_BEAMBREAK_ID);

@@ -21,7 +21,7 @@ public interface IntakerIO {
         public boolean intakerConnected = true;
         public Measure<Voltage> voltage = Volts.zero();
         public Measure<Velocity<Angle>> intakerSpeed = RotationsPerSecond.zero();
-        public Measure<Current> intakeSupplyCurrent = Amps.zero();
+        public Measure<Current> intakerSupplyCurrent = Amps.zero();
         public boolean beamBreakState = false;
     }
 }
