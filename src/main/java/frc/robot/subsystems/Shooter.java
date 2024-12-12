@@ -4,7 +4,6 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotConstants;
 import frc.robot.drivers.BeamBreak;
@@ -12,6 +11,7 @@ import frc.robot.drivers.BeamBreak;
 public class Shooter extends SubsystemBase {
     private final TalonFX shooterHighMotor = new TalonFX(RobotConstants.ShooterConstants.SHOOTER_MOTORH_ID, RobotConstants.CAN_BUS_NAME);
     private final TalonFX shooterLowMotor = new TalonFX(RobotConstants.ShooterConstants.SHOOTER_MOTORL_ID, RobotConstants.CAN_BUS_NAME);
+    private final TalonFX shooter3 = new TalonFX(0);
     private final BeamBreak shooterBeamBreak = new BeamBreak(RobotConstants.BeamBreakConstants.SHOOTER_BEAMBREAK_ID);
     private boolean lastRecordedState;
     private boolean noteState = false;
@@ -82,7 +82,6 @@ public class Shooter extends SubsystemBase {
         boolean velocityReadyHigh = Math.abs(highMotorVelocityRPM - shooterHighMotor.getVelocity().getValueAsDouble() * 60) < Units.radiansPerSecondToRotationsPerMinute(9);//1
         boolean velocityReadyLow = Math.abs(lowMotorVelocityRPM - shooterLowMotor.getVelocity().getValueAsDouble() * 60) < Units.radiansPerSecondToRotationsPerMinute(9);//1
         boolean velocityReady = velocityReadyHigh && velocityReadyLow;
-        SmartDashboard.putBoolean("velocityReady", velocityReady);
         return velocityReady;
     }
 

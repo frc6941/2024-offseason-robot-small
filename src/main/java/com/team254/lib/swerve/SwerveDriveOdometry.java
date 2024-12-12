@@ -7,9 +7,7 @@ package com.team254.lib.swerve;
 import com.team254.lib.geometry.Pose2d;
 import com.team254.lib.geometry.Rotation2d;
 import com.team254.lib.geometry.Twist2d;
-
 import edu.wpi.first.util.WPIUtilJNI;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Class for swerve drive odometry. Odometry allows you to track the robot's position on the field
@@ -31,7 +29,7 @@ public class SwerveDriveOdometry {
     /**
      * Constructs a SwerveDriveOdometry object.
      *
-     * @param kinematics The swerve drive kinematics for your drivetrain.
+     * @param kinematics  The swerve drive kinematics for your drivetrain.
      * @param initialPose The starting position of the robot on the field.
      */
     public SwerveDriveOdometry(
@@ -103,9 +101,9 @@ public class SwerveDriveOdometry {
      * is calculated from forward kinematics.
      *
      * @param currentTimeSeconds The current time in seconds.
-     * @param gyroAngle The angle reported by the gyroscope.
-     * @param moduleStates The current state of all swerve modules. Please provide the states in the
-     *     same order in which you instantiated your SwerveDriveKinematics.
+     * @param gyroAngle          The angle reported by the gyroscope.
+     * @param moduleStates       The current state of all swerve modules. Please provide the states in the
+     *                           same order in which you instantiated your SwerveDriveKinematics.
      * @return The new pose of the robot.
      */
     public Pose2d updateWithTime(
@@ -140,8 +138,8 @@ public class SwerveDriveOdometry {
 
         // Project along ideal angles.
         double average = 0.0;
-        for (int i = 0 ;i < moduleStates.length; ++i) {
-            double ratio = moduleStates[i].angle.rotateBy(idealStates[i].angle.inverse()).cos()*
+        for (int i = 0; i < moduleStates.length; ++i) {
+            double ratio = moduleStates[i].angle.rotateBy(idealStates[i].angle.inverse()).cos() *
                     (moduleStates[i].distanceMeters - m_previousDistances[i])
                     / (idealStates[i].speedMetersPerSecond * period);
             if (Double.isNaN(ratio) || Double.isInfinite(ratio) ||
@@ -153,8 +151,6 @@ public class SwerveDriveOdometry {
         }
         average = average / 4.0;
 
-        //System.out.println(chassisState);
-        SmartDashboard.putNumber("average", average);
 
         var newPose =
                 Pose2d.exp(
@@ -178,9 +174,9 @@ public class SwerveDriveOdometry {
      * from a velocity. This also takes in an angle parameter which is used instead of the angular
      * rate that is calculated from forward kinematics.
      *
-     * @param gyroAngle The angle reported by the gyroscope.
+     * @param gyroAngle    The angle reported by the gyroscope.
      * @param moduleStates The current state of all swerve modules. Please provide the states in the
-     *     same order in which you instantiated your SwerveDriveKinematics.
+     *                     same order in which you instantiated your SwerveDriveKinematics.
      * @return The new pose of the robot.
      */
     public Pose2d update(Rotation2d gyroAngle, SwerveModuleState[] moduleStates) {

@@ -5,10 +5,11 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.FieldConstants;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intaker.Intaker;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.swerve.Swerve;
-import frc.robot.utils.ShootingDecider;
+import frc.robot.utils.shooting.ShootingDecider;
 
 import java.util.function.DoubleSupplier;
 
@@ -17,6 +18,7 @@ public class SpeakerShootCommand extends ParallelCommandGroup {
             Shooter shooter,
             Intaker intakeSubsystem,
             Swerve Swerve,
+            Arm arm,
             DoubleSupplier driverX,
             DoubleSupplier driverY) {
         addCommands(
@@ -34,7 +36,8 @@ public class SpeakerShootCommand extends ParallelCommandGroup {
                                 Commands.runOnce(() -> Timer.delay(0.02)),
                                 new DeliverNoteCommand(intakeSubsystem, shooter)),
                         new ChassisAimCommand(Swerve, () -> ShootingDecider.Destination.SPEAKER, driverX, driverY),
-                        new FlyWheelRampUp(shooter)
+                        new FlyWheelRampUp(shooter),
+                        new ArmAimCommand(arm, () -> ShootingDecider.Destination.SPEAKER)
 
                 ));
 
