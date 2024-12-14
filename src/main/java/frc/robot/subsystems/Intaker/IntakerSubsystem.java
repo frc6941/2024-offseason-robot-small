@@ -7,27 +7,31 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotConstants;
 
-import static edu.wpi.first.units.Units.*;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static edu.wpi.first.units.Units.Volts;
 
 public class IntakerSubsystem extends SubsystemBase {
-    private static double COLLECTING_RPM = RobotConstants.IntakerConstants.COLLECTING_RPM.get();
-    private static double OUTTAKING_RPM = RobotConstants.IntakerConstants.OUTTAKING_RPM.get();
-    private static double REJECTING_RPM = RobotConstants.IntakerConstants.REJECTING_RPM.get();
-    private static double IDLING_RPM = RobotConstants.IntakerConstants.IDLING_RPM.get();
+    private static double collectVoltage = RobotConstants.IntakerConstants.collectingVoltage.get();
+    private static double outtakeVoltage = RobotConstants.IntakerConstants.outtakingVoltage.get();
+    private static double feedingRPM = RobotConstants.IntakerConstants.feedingRPM.get();
+    private static double triggerRPM = RobotConstants.IntakerConstants.triggerRPM.get();
+    private static double idleRPM = RobotConstants.IntakerConstants.idlingRPM.get();
 
     public enum WantedState {
         IDLE,
         COLLECT,
-        REJECT,
-        EJECT,
+        FEED,
+        TRIGGER,
+        OUTTAKE,
         OFF
     }
 
     public enum SystemState {
         IDLING,
         COLLECTING,
-        REJECTING,
-        EJECTING,
+        FEEDING,
+        TRIGGERING,
+        OUTTAKING,
         OFF
     }
 
@@ -37,13 +41,11 @@ public class IntakerSubsystem extends SubsystemBase {
     private WantedState wantedState = WantedState.IDLE;
     private SystemState systemState = SystemState.IDLING;
 
-    private BooleanSupplier beamBreakTripped;
 
     private final Alert intakerDisconnected = new Alert("Intaker motor disconnected!", Alert.AlertType.WARNING);
 
-    public IntakerSubsystem(IntakerIO io, BooleanSupplier isBeamBreakTripped) {
+    public IntakerSubsystem(IntakerIO io) {
         this.io = io;
-        this.beamBreakTripped = isBeamBreakTripped;
     }
     
     @Override
@@ -70,34 +72,35 @@ public class IntakerSubsystem extends SubsystemBase {
 
         // refresh RPM tunable numbers
         if (RobotConstants.TUNING) {
-            COLLECTING_RPM = RobotConstants.IntakerConstants.COLLECTING_RPM.get();
-            OUTTAKING_RPM = RobotConstants.IntakerConstants.OUTTAKING_RPM.get();
-            REJECTING_RPM = RobotConstants.IntakerConstants.REJECTING_RPM.get();
-            IDLING_RPM = RobotConstants.IntakerConstants.IDLING_RPM.get();
+            collectVoltage = RobotConstants.IntakerConstants.collectingVoltage.get();
+            outtakeVoltage = RobotConstants.IntakerConstants.outtakingVoltage.get();
+            feedingRPM = RobotConstants.IntakerConstants.feedingRPM.get();
+            triggerRPM = RobotConstants.IntakerConstants.triggerRPM.get();
+            idleRPM = RobotConstants.IntakerConstants.idlingRPM.get();
         }
 
         // set speeds based on state
         switch (systemState) {
-            case EJECTING:
-                intakerMotorRPM = OUTTAKING_RPM;
+            case TRIGGERING:
+                io.setVelocity(RotationsPerSecond.of(triggerRPM/60));
                 break;
-            case REJECTING:
-                intakerMotorRPM = REJECTING_RPM;
+            case FEEDING:
+                io.setVelocity(RotationsPerSecond.of(feedingRPM/60));
                 break;
             case COLLECTING:
-                intakerMotorRPM = COLLECTING_RPM;
+                io.setVoltage(Volts.of(collectVoltage));
                 break;
             case IDLING:
-                intakerMotorRPM = IDLING_RPM;
+                io.setVoltage(Volts.of(idleRPM));
                 break;
+            case OUTTAKING:
+                io.setVoltage(Volts.of(outtakeVoltage));
             case OFF:
             default:
-                intakerMotorRPM = 0.0;
+                io.setVelocity(RotationsPerSecond.of(0));
                 break;
         }
 
-        // write outputs
-        io.setVelocity(RotationsPerSecond.of(intakerMotorRPM));
 
         // Alerts
         intakerDisconnected.set(!inputs.intakerConnected);
@@ -106,14 +109,25 @@ public class IntakerSubsystem extends SubsystemBase {
     private SystemState handleStateTransition() {
         return switch (wantedState) {
             case OFF -> SystemState.OFF;
-            case EJECT -> SystemState.EJECTING;
-            case REJECT -> SystemState.REJECTING;
-            case COLLECT -> {
-                if (beamBreakTripped.getAsBoolean()) {
-                    //TODO:whether rejecting state needed
-                    yield SystemState.REJECTING;
+            case TRIGGER -> {
+                if(!inputs.beamBreakState) {
+                    yield  SystemState.OFF;
                 }
-                yield SystemState.COLLECTING;
+                yield SystemState.TRIGGERING;
+            }
+            case OUTTAKE -> SystemState.OUTTAKING;
+            case COLLECT -> {
+                if (!inputs.beamBreakState && inputs.intakerSpeed.magnitude()> 0) {
+                    //Decide if note has entered intaker
+                    yield SystemState.COLLECTING;
+                }
+                yield SystemState.FEEDING;
+            }
+            case FEED -> {
+                if (!inputs.beamBreakState ) {
+                    yield SystemState.FEEDING;
+                }
+                yield SystemState.IDLING;
             }
             default -> SystemState.IDLING;
         };
