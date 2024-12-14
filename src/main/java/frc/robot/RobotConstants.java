@@ -39,11 +39,11 @@ public class RobotConstants {
                 .withNeutralMode(NeutralModeValue.Brake);
         
         //TODO:test and change RPM
-        public final static double triggerRPM = 4500;
-        public static final TunableNumber COLLECTING_RPM  = new TunableNumber("Intaker/collectingRPM", 1500);
-        public static final TunableNumber OUTTAKING_RPM = new TunableNumber("Intaker/outtakingRPM", -1500);
-        public static final TunableNumber REJECTING_RPM= new TunableNumber("Intaker/rejectingRPM", 1500);
-        public static final TunableNumber IDLING_RPM = new TunableNumber("Intaker/idlingRPM", 0.0);
+        public final static TunableNumber triggerRPM  = new TunableNumber("Intaker/triggerRPM", 4000);
+        public static final TunableNumber collectingVoltage  = new TunableNumber("Intaker/collectingVoltage", 6);
+        public static final TunableNumber outtakingVoltage = new TunableNumber("Intaker/outtakingVoltage", -6);
+        public static final TunableNumber feedingRPM = new TunableNumber("Intaker/feedingRPM", 600);
+        public static final TunableNumber idlingRPM = new TunableNumber("Intaker/idlingRPM", 0.0);
 
     }
 
