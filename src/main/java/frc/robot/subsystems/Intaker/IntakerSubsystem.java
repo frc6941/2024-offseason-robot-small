@@ -91,7 +91,7 @@ public class IntakerSubsystem extends SubsystemBase {
                 io.setVoltage(Volts.of(collectVoltage));
                 break;
             case IDLING:
-                io.setVoltage(Volts.of(idleRPM));
+                io.setVelocity(RotationsPerSecond.of(idleRPM/60));
                 break;
             case OUTTAKING:
                 io.setVoltage(Volts.of(outtakeVoltage));
@@ -110,32 +110,30 @@ public class IntakerSubsystem extends SubsystemBase {
         return switch (wantedState) {
             case OFF -> SystemState.OFF;
             case TRIGGER -> {
-                if(!inputs.beamBreakState) {
+                if(!inputs.higherbeamBreakState) {
                     yield  SystemState.OFF;
                 }
                 yield SystemState.TRIGGERING;
             }
             case OUTTAKE -> SystemState.OUTTAKING;
             case COLLECT -> {
-                if (!inputs.beamBreakState && inputs.intakerSpeed.magnitude()> 0) {
+                if (inputs.lowerBeamBreakState) {
                     //Decide if note has entered intaker
-                    yield SystemState.COLLECTING;
-                }
-                yield SystemState.FEEDING;
-            }
-            case FEED -> {
-                if (!inputs.beamBreakState ) {
                     yield SystemState.FEEDING;
                 }
-                yield SystemState.IDLING;
+                yield SystemState.COLLECTING;
+            }
+            case FEED -> {
+                if (inputs.higherbeamBreakState) {
+                    yield SystemState.IDLING;
+                }
+                yield SystemState.FEEDING;
             }
             default -> SystemState.IDLING;
         };
     }
 
-    public boolean isBeamBreakTripped() {
-        return inputs.beamBreakState;
-    }
+
 
     /**
      * Sets the target state for the intake subsystem.

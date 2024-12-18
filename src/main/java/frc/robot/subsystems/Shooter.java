@@ -12,7 +12,7 @@ public class Shooter extends SubsystemBase {
     private final TalonFX shooterHighMotor = new TalonFX(RobotConstants.ShooterConstants.SHOOTER_MOTORH_ID, RobotConstants.CAN_BUS_NAME);
     private final TalonFX shooterLowMotor = new TalonFX(RobotConstants.ShooterConstants.SHOOTER_MOTORL_ID, RobotConstants.CAN_BUS_NAME);
     private final TalonFX shooter3 = new TalonFX(0);
-    private final BeamBreak shooterBeamBreak = new BeamBreak(RobotConstants.BeamBreakConstants.SHOOTER_BEAMBREAK_ID);
+    //private final BeamBreak shooterBeamBreak = new BeamBreak(RobotConstants.BeamBreakConstants.SHOOTER_BEAMBREAK_ID);
     private boolean lastRecordedState;
     private boolean noteState = false;
     private double highMotorVelocityRPM = 0, lowMotorVelocityRPM = 0;
@@ -34,10 +34,10 @@ public class Shooter extends SubsystemBase {
                 .withKS(0.28475008));
 
 
-        boolean isShooterBeamBreakOn = shooterBeamBreak.get();
+        //boolean isShooterBeamBreakOn = shooterBeamBreak.get();
         shooterLowMotor.setInverted(true);
         shooterHighMotor.setInverted(true);
-        lastRecordedState = isShooterBeamBreakOn;
+        //lastRecordedState = isShooterBeamBreakOn;
 
     }
 
@@ -74,9 +74,9 @@ public class Shooter extends SubsystemBase {
     }
 
 
-    public boolean isShootComplete() {
-        return !shooterBeamBreak.get();
-    }
+//    public boolean isShootComplete() {
+//        return !shooterBeamBreak.get();
+//    }
 
     public boolean ShooterVelocityReady() {
         boolean velocityReadyHigh = Math.abs(highMotorVelocityRPM - shooterHighMotor.getVelocity().getValueAsDouble() * 60) < Units.radiansPerSecondToRotationsPerMinute(9);//1

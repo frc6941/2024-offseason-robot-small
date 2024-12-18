@@ -28,8 +28,8 @@ public class RobotConstants {
     public static String CAN_BUS_NAME = "9620CANivore1";
 
     public static class BeamBreakConstants {
-        public static final int SHOOTER_BEAMBREAK_ID = 3;
-        public static final int INTAKER_BEAMBREAK_ID = 2;
+        public static final int LOWER_INTAKER_BEAMBREAK_ID = 3;
+        public static final int HIGHER_INTAKER_BEAMBREAK_ID = 2;
     }
 
     public static class IntakerConstants {

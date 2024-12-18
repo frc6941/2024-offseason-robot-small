@@ -24,7 +24,7 @@ public IntakerIOSim() {
 @Override
 public void updateInputs(IntakerIOInputs inputs) {
     intakeMotorSim.update(RobotConstants.LOOPER_DT);
-    inputs.beamBreakState = false;
+    inputs.higherbeamBreakState = false;
     inputs.intakerSpeed = RotationsPerSecond.of(intakeMotorSim.getAngularVelocityRPM()/60);
     inputs.intakerConnected = true;
     inputs.intakerSupplyCurrent = Amps.of(intakeMotorSim.getCurrentDrawAmps());

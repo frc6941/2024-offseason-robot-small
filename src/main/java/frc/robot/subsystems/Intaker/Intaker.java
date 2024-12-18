@@ -17,7 +17,7 @@ public class Intaker extends SubsystemBase {
                     RobotConstants.IntakerConstants.INTAKER_MOTOR_ID,
                     RobotConstants.CAN_BUS_NAME);
     private final BeamBreak intakerBeamBreak =
-            new BeamBreak(RobotConstants.BeamBreakConstants.INTAKER_BEAMBREAK_ID);
+            new BeamBreak(RobotConstants.BeamBreakConstants.HIGHER_INTAKER_BEAMBREAK_ID);
     private boolean lastRecordedState;
     private boolean noteState = false;
 
