@@ -17,6 +17,8 @@ import frc.robot.display.Display;
 import frc.robot.display.OperatorDashboard;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intaker.Intaker;
+import frc.robot.subsystems.Intaker.IntakerIOTalonFX;
+import frc.robot.subsystems.Intaker.IntakerSubsystem;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.apriltagvision.AprilTagVision;
 import frc.robot.subsystems.apriltagvision.AprilTagVisionIONorthstar;
@@ -32,16 +34,16 @@ import java.util.function.Supplier;
 
 public class RobotContainer {
     Supplier<ShootingDecider.Destination> destinationSupplier;
-        @Getter
-        AprilTagVision aprilTagVision = new AprilTagVision(
-            this::getAprilTagLayoutType,
-            new AprilTagVisionIONorthstar(this::getAprilTagLayoutType, 0),
-            new AprilTagVisionIONorthstar(this::getAprilTagLayoutType, 1));
+//        @Getter
+//        AprilTagVision aprilTagVision = new AprilTagVision(
+//            this::getAprilTagLayoutType,
+//            new AprilTagVisionIONorthstar(this::getAprilTagLayoutType, 0),
+//            new AprilTagVisionIONorthstar(this::getAprilTagLayoutType, 1));
     Swerve swerve = Swerve.getInstance();
     Shooter shooter = new Shooter();
     Display display = Display.getInstance();
 
-    Intaker intaker = new Intaker();
+    IntakerSubsystem intaker = new IntakerSubsystem(new IntakerIOTalonFX());
     Arm arm = new Arm();
 
     OperatorDashboard dashboard = OperatorDashboard.getInstance();
@@ -98,6 +100,8 @@ public class RobotContainer {
         driverController.back().whileTrue(resetArm());
         driverController.povUp().whileTrue(new ArmUpCommand(arm));
         driverController.povDown().whileTrue(new ArmDownCommand(arm));
+        //TODO change later
+        driverController.a().whileTrue(new OuttakeCommand(intaker));
 
 
     }

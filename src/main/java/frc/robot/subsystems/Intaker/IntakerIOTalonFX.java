@@ -17,8 +17,10 @@ public class IntakerIOTalonFX implements IntakerIO {
     private final TalonFX intakerMotor = new TalonFX(
             RobotConstants.IntakerConstants.INTAKER_MOTOR_ID,
             RobotConstants.CAN_BUS_NAME);
-    private final BeamBreak intakerBeamBreak =
-            new BeamBreak(RobotConstants.BeamBreakConstants.INTAKER_BEAMBREAK_ID);
+    private final BeamBreak higherintakerBeamBreak =
+            new BeamBreak(RobotConstants.BeamBreakConstants.HIGHER_INTAKER_BEAMBREAK_ID);
+    private final BeamBreak lowerIntakerBeamBreak =
+            new BeamBreak(RobotConstants.BeamBreakConstants.LOWER_INTAKER_BEAMBREAK_ID);
 
     public IntakerIOTalonFX() {
         intakerMotor.getConfigurator().apply(new Slot0Configs()
@@ -38,7 +40,8 @@ public class IntakerIOTalonFX implements IntakerIO {
                 intakerMotor.getMotorVoltage(),
                 intakerMotor.getSupplyCurrent()
         ).isOK();
-        inputs.beamBreakState = intakerBeamBreak.get();
+        inputs.higherbeamBreakState = higherintakerBeamBreak.get();
+        inputs.lowerBeamBreakState = lowerIntakerBeamBreak.get();
         inputs.intakerSpeed = RotationsPerSecond.of(intakerMotor.getVelocity().getValueAsDouble());
         inputs.voltage = Volts.of(intakerMotor.getMotorVoltage().getValueAsDouble());
         inputs.intakerSupplyCurrent = Amps.of(intakerMotor.getSupplyCurrent().getValueAsDouble());

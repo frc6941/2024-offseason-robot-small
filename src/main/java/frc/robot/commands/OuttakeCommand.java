@@ -3,11 +3,11 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Intaker.IntakerSubsystem;
 
-public class IntakeCommand extends Command {
+public class OuttakeCommand extends Command {
 
     private final IntakerSubsystem intaker;
 
-    public IntakeCommand(IntakerSubsystem intaker) {
+    public OuttakeCommand(IntakerSubsystem intaker) {
         this.intaker = intaker;
     }
 
@@ -18,7 +18,7 @@ public class IntakeCommand extends Command {
 
     @Override
     public void execute() {
-        intaker.setWantedState(IntakerSubsystem.WantedState.COLLECT);
+        intaker.setWantedState(IntakerSubsystem.WantedState.OUTTAKE);
     }
 
     @Override
