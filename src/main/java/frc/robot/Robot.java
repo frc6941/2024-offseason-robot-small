@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.swerve.Swerve;
@@ -12,6 +13,7 @@ public class Robot extends LoggedRobot {
     Swerve swerve = Swerve.getInstance();
     private Command m_autonomousCommand;
     private RobotContainer robotContainer;
+    Timer gcTimer = new Timer();
 
     @Override
     public void robotInit() {
@@ -20,12 +22,16 @@ public class Robot extends LoggedRobot {
         Logger.start();
         robotContainer = new RobotContainer();
         DriverStation.silenceJoystickConnectionWarning(true);
+        gcTimer.start();
     }
 
     @Override
     public void robotPeriodic() {
         CommandScheduler.getInstance().run();
         robotContainer.getUpdateManager().runEnableSingle();
+        if (gcTimer.advanceIfElapsed(5)){
+            System.gc();
+        }
     }
 
     @Override

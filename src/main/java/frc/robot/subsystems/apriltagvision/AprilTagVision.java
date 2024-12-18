@@ -140,11 +140,11 @@ public class AprilTagVision extends SubsystemBase {
                                     < Math.abs(currentRotation.minus(visionRotation1).getRadians())) {
                                 cameraPose = cameraPose0;
                                 robotPose3d = robotPose3d0;
-                                Logger.recordOutput("AprilTagVision/Inst" + instanceIndex + "/CameraPose", cameraPose0);
+                                //Logger.recordOutput("AprilTagVision/Inst" + instanceIndex + "/CameraPose", cameraPose0);
                             } else {
                                 cameraPose = cameraPose1;
                                 robotPose3d = robotPose3d1;
-                                Logger.recordOutput("AprilTagVision/Inst" + instanceIndex + "/CameraPose", cameraPose1);
+                                //Logger.recordOutput("AprilTagVision/Inst" + instanceIndex + "/CameraPose", cameraPose1);
                             }
 
                         }

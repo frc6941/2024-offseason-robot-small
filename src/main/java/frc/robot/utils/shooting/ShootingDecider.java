@@ -28,19 +28,20 @@ public class ShootingDecider implements Updatable {
         highFerryParams = new LaunchParameterTable("HighFerry");
         lowFerryParams = new LaunchParameterTable("Low Ferry");
 
-        ampAngle = new TunableNumber("Amp Angle Degs", 165.0);
+        ampAngle = new TunableNumber("Amp Angle Degs", 50.0);
         ampVelocity = new TunableNumber("Amp Velocity Rpm", -1500.0);
 
-        //The first speaker parameter will influence manual shoot, DO NOT CHANGE IT (0.2 is for bumper to robot center)
-        speakerParams.loadParameter(0.20 + 1, 5500, 48.3);
-        speakerParams.loadParameter(0.20 + 1.3, 5500, 45);
-        speakerParams.loadParameter(0.20 + 1.6, 5500, 41.45);
-        speakerParams.loadParameter(0.20 + 1.9, 5500, 37.55);
-        speakerParams.loadParameter(0.20 + 2.20, 5900, 36.65);
-        speakerParams.loadParameter(0.20 + 2.5, 5900, 32.9);
-        speakerParams.loadParameter(0.20 + 2.8, 5900, 31.2);
-        speakerParams.loadParameter(0.20 + 3.1, 5900, 30.9);
-        speakerParams.loadParameter(0.20 + 3.47, 5900, 30);
+
+        speakerParams.loadParameter( 1.5, 5500, 44.4);
+        speakerParams.loadParameter( 1.8, 5500, 40.5);
+        speakerParams.loadParameter( 2.1, 5500, 38.7);
+        speakerParams.loadParameter( 2.3, 5500, 36.6);
+        speakerParams.loadParameter( 2.6, 5900, 34.8);
+        speakerParams.loadParameter( 2.9, 5900, 32.3);
+        speakerParams.loadParameter( 3.2, 5900, 31.2);
+        speakerParams.loadParameter( 3.4, 5900, 29.7);
+        speakerParams.loadParameter( 3.7, 5900, 29.4);
+        speakerParams.loadParameter( 4, 5900, 29.3);
         speakerParams.ready();
 
         highFerryParams.loadParameter(5.0, -2000.0, 10.0);

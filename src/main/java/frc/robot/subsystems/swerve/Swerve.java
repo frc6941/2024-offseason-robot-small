@@ -531,6 +531,7 @@ public class Swerve implements Updatable, Subsystem {
         Logger.recordOutput("swerve/localizer/MeasuredVelocity", swerveLocalizer.getMeasuredVelocity());
         Logger.recordOutput("swerve/localizer/MeasuredAcceleration", swerveLocalizer.getMeasuredAcceleration());
 
+
         trajectoryFollower.sendData();
         //Logger.recordOutput("ActivePath", PathPlannerPath.fromPathFile("T_1").getPathPoses());
 
@@ -554,7 +555,7 @@ public class Swerve implements Updatable, Subsystem {
     public boolean aimingReady(double offset) {
         var dtReady = Math.abs(gyro.getYaw().getDegrees() - headingTarget) < offset;
         SmartDashboard.putBoolean("SwerveReady", dtReady);
-        boolean angularSpeedReady = this.getLocalizer().getSmoothedVelocity().getRotation().getDegrees() < 2.14;
+        boolean angularSpeedReady = this.getLocalizer().getSmoothedVelocity().getRotation().getDegrees() < 1.5;
         SmartDashboard.putBoolean("SwerveAngularReady", angularSpeedReady);
         return dtReady && angularSpeedReady;
     }

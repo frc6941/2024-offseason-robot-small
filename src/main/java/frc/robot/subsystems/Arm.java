@@ -69,4 +69,8 @@ public class Arm extends SubsystemBase {
         Logger.recordOutput("Arm/position", getArmPosition());
     }
 
+    public boolean armReady (){
+        boolean armReady = Math.abs(armMotor.getClosedLoopError().getValueAsDouble())<0.05;
+        return armReady;
+    }
 }

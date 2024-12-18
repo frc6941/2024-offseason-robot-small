@@ -6,6 +6,7 @@ import frc.robot.RobotConstants;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.utils.shooting.ShootingDecider;
 import frc.robot.utils.shooting.ShootingParameters;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
@@ -53,6 +54,7 @@ public class ChassisAimCommand extends Command {
         double degrees = parameter.getFieldAimingAngle().getDegrees();
         swerve.setHeadingTarget(degrees);
         swerve.setLockHeading(true);
+        Logger.recordOutput("swerve/DistanceShooting",parameter.getDistance());
     }
 
     @Override

@@ -27,11 +27,12 @@ public class SpeakerShootCommand extends ParallelCommandGroup {
                                 new WaitUntilCommand(() -> {
                                     boolean swerveReady = Swerve.aimingReady(10);
                                     boolean shooterReady = shooter.ShooterVelocityReady();
+                                    boolean armReady = arm.armReady();
                                     boolean distanceReady = Swerve.getLocalizer().getCoarseFieldPose(0).getTranslation().minus(
                                             FieldConstants.Speaker.centerSpeakerOpening.toTranslation2d()
                                     ).getNorm() < 1.5;
 
-                                    return swerveReady && shooterReady;
+                                    return swerveReady && shooterReady && armReady ;
                                 }),
                                 Commands.runOnce(() -> Timer.delay(0.02)),
                                 new DeliverNoteCommand(intakeSubsystem, shooter)),
