@@ -34,11 +34,11 @@ import java.util.function.Supplier;
 
 public class RobotContainer {
     Supplier<ShootingDecider.Destination> destinationSupplier;
-//        @Getter
-//        AprilTagVision aprilTagVision = new AprilTagVision(
-//            this::getAprilTagLayoutType,
-//            new AprilTagVisionIONorthstar(this::getAprilTagLayoutType, 0),
-//            new AprilTagVisionIONorthstar(this::getAprilTagLayoutType, 1));
+        @Getter
+        AprilTagVision aprilTagVision = new AprilTagVision(
+            this::getAprilTagLayoutType,
+            new AprilTagVisionIONorthstar(this::getAprilTagLayoutType, 0),
+            new AprilTagVisionIONorthstar(this::getAprilTagLayoutType, 1));
     Swerve swerve = Swerve.getInstance();
     Shooter shooter = new Shooter();
     Display display = Display.getInstance();
