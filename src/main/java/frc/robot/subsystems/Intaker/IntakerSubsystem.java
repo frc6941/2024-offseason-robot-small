@@ -1,6 +1,8 @@
 package frc.robot.subsystems.Intaker;
 
 import java.util.function.BooleanSupplier;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.littletonrobotics.Alert;
 import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -79,6 +81,7 @@ public class IntakerSubsystem extends SubsystemBase {
             idleRPM = RobotConstants.IntakerConstants.idlingRPM.get();
         }
 
+        SmartDashboard.putString("Intaker/systemState",systemState.toString());
         // set speeds based on state
         switch (systemState) {
             case TRIGGERING:
@@ -107,6 +110,7 @@ public class IntakerSubsystem extends SubsystemBase {
     }
 
     private SystemState handleStateTransition() {
+        SmartDashboard.putString("Intaker/State",wantedState.toString());//TODO: make it in logger
         return switch (wantedState) {
             case OFF -> SystemState.OFF;
             case TRIGGER -> {
