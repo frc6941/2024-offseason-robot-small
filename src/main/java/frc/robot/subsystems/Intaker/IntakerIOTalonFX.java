@@ -48,9 +48,9 @@ public class IntakerIOTalonFX implements IntakerIO {
     }
 
     @Override
-    public void setVelocity(Measure<Velocity<Angle>> velocityRPM) {
+    public void setVelocity(Measure<Velocity<Angle>> velocityRPS) {
         intakerMotor.setControl(new VelocityVoltage(
-                velocityRPM.magnitude() / 60,
+                velocityRPS.magnitude(),
                 0.0,
                 true,
                 0,
