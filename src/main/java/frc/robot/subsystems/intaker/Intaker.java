@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Intaker;
+package frc.robot.subsystems.intaker;
 
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.VelocityVoltage;

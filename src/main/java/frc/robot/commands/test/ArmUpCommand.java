@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.test;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotConstants;
@@ -7,11 +7,12 @@ import org.littletonrobotics.junction.Logger;
 
 import static edu.wpi.first.units.Units.Degrees;
 
-public class ArmDownCommand extends Command {
+public class ArmUpCommand extends Command {
     private final Arm arm;
 
-    public ArmDownCommand(Arm arm) {
+    public ArmUpCommand(Arm arm) {
         this.arm = arm;
+
     }
 
     @Override
@@ -21,9 +22,9 @@ public class ArmDownCommand extends Command {
 
     @Override
     public void execute() {
-        RobotConstants.armPosition = RobotConstants.armPosition.minus(Degrees.of(0.3));
-        Logger.recordOutput("Arm/Position1: ", RobotConstants.armPosition.magnitude());
+        RobotConstants.armPosition = RobotConstants.armPosition.plus(Degrees.of(0.3));
         arm.setArmPosition(RobotConstants.armPosition);
+        Logger.recordOutput("Arm/Position1: ", RobotConstants.armPosition.magnitude());
     }
 
     @Override

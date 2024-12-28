@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Intaker;
+package frc.robot.subsystems.intaker;
 
 import edu.wpi.first.units.*;
 import org.littletonrobotics.junction.AutoLog;

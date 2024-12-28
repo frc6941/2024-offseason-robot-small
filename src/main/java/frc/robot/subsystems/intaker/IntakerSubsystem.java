@@ -1,8 +1,5 @@
-package frc.robot.subsystems.Intaker;
+package frc.robot.subsystems.intaker;
 
-import java.util.function.BooleanSupplier;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.littletonrobotics.Alert;
 import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -64,9 +61,6 @@ public class IntakerSubsystem extends SubsystemBase {
             systemState = newState;
         }
 
-        // holds the values to apply
-        double intakerMotorRPM;
-
         // Stop moving when disabled
         if (DriverStation.isDisabled()) {
             systemState = SystemState.IDLING;
@@ -80,8 +74,6 @@ public class IntakerSubsystem extends SubsystemBase {
             triggerRPM = RobotConstants.IntakerConstants.triggerRPM.get();
             idleRPM = RobotConstants.IntakerConstants.idlingRPM.get();
         }
-
-        SmartDashboard.putString("Intaker/systemState",systemState.toString());
         // set speeds based on state
         switch (systemState) {
             case TRIGGERING:
@@ -110,17 +102,19 @@ public class IntakerSubsystem extends SubsystemBase {
     }
 
     private SystemState handleStateTransition() {
-        SmartDashboard.putString("Intaker/State",wantedState.toString());//TODO: make it in logger
         return switch (wantedState) {
             case OFF -> SystemState.OFF;
             case TRIGGER -> {
                 if(!inputs.higherbeamBreakState) {
-                    yield  SystemState.OFF;
+                    yield  SystemState.IDLING;
                 }
                 yield SystemState.TRIGGERING;
             }
             case OUTTAKE -> SystemState.OUTTAKING;
             case COLLECT -> {
+                if (inputs.higherbeamBreakState) {
+                    yield SystemState.IDLING;
+                }
                 if (inputs.lowerBeamBreakState) {
                     //Decide if note has entered intaker
                     yield SystemState.FEEDING;

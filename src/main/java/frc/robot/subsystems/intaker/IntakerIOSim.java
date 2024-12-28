@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Intaker;
+package frc.robot.subsystems.intaker;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;

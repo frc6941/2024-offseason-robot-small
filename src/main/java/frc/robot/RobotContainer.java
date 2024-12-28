@@ -16,9 +16,8 @@ import frc.robot.commands.*;
 import frc.robot.display.Display;
 import frc.robot.display.OperatorDashboard;
 import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Intaker.Intaker;
-import frc.robot.subsystems.Intaker.IntakerIOTalonFX;
-import frc.robot.subsystems.Intaker.IntakerSubsystem;
+import frc.robot.subsystems.intaker.IntakerIOTalonFX;
+import frc.robot.subsystems.intaker.IntakerSubsystem;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.apriltagvision.AprilTagVision;
 import frc.robot.subsystems.apriltagvision.AprilTagVisionIONorthstar;
@@ -98,10 +97,8 @@ public class RobotContainer {
         driverController.x().whileTrue(speakerShot());
         driverController.leftBumper().whileTrue(intake());
         driverController.back().whileTrue(resetArm());
-        driverController.povUp().whileTrue(new ArmUpCommand(arm));
-        driverController.povDown().whileTrue(new ArmDownCommand(arm));
-        //TODO change later
-        driverController.a().whileTrue(new OuttakeCommand(intaker));
+
+        driverController.a().whileTrue(outtake());
 
 
     }
@@ -115,7 +112,17 @@ public class RobotContainer {
     }
 
     private Command intake() {
-        return new IntakeCommand(intaker);
+        return Commands.runEnd(
+                () -> intaker.setWantedState(IntakerSubsystem.WantedState.COLLECT),
+                () -> intaker.setWantedState(IntakerSubsystem.WantedState.IDLE),
+                intaker);
+    }
+
+    private Command outtake() {
+        return Commands.runEnd(
+                () -> intaker.setWantedState(IntakerSubsystem.WantedState.OUTTAKE),
+                () -> intaker.setWantedState(IntakerSubsystem.WantedState.IDLE),
+                intaker);
     }
 
 
